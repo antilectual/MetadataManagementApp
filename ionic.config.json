@@ -1,0 +1,7 @@
+{
+  "name": "helloGalaxy",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}
