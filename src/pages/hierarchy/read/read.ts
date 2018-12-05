@@ -12,6 +12,7 @@ import { Observable } from 'rxjs/Observable';
 export class ReadPage {
 
   items: any;
+  hierarchyTop: any;
   constructor(public navCtrl: NavController, public http: HttpClient) {
     this.getData();
   }
@@ -25,6 +26,7 @@ export class ReadPage {
     let data: Observable<any> = this.http.get(local);
     data.subscribe(result => {
       this.items = result;
+      this.hierarchyTop = this.items[0];
       console.log(result);
     });
   }
