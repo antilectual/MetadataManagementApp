@@ -12,9 +12,13 @@ import { Observable } from 'rxjs/Observable';
 export class ReadPage {
 
   item: any;
-  hierarchyTop: any;
+  dataObject: any;
+  dataURI: any;
   constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams) {
-      this.item = navParams.data;
+      this.item = navParams.data[0];
+      this.dataURI = navParams.data[1].dataURI;
+      this.getData();
+      console.log(this.dataURI);
   }
 
   ionViewDidLoad() {
@@ -22,12 +26,9 @@ export class ReadPage {
   }
 
   getData(){
-    let local = '../../assets/data/db.json';
-    let data: Observable<any> = this.http.get(local);
+    let data: Observable<any> = this.http.get(this.dataURI);
     data.subscribe(result => {
-      this.item = result;
-      this.hierarchyTop = items[0];
+      this.dataObject = result;
     });
   }
-
 }

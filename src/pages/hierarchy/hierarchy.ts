@@ -17,6 +17,7 @@ export class HierarchyPage {
 
   public items: any;
   public hierarchyTop: any;
+  public subURI: string;
   i = 0;
   constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams) {
     if(navParams.get('i') == null)
@@ -38,11 +39,17 @@ export class HierarchyPage {
 
   getData(i){
     let local = '../../assets/data/db.json';
-    let data: Observable<any> = this.http.get(local);
+    let remote = 'http://sensor.nevada.edu/GS/Services/Ragnarok/';
+    let dataRemote = 'http://sensor.nevada.edu/Services/NRDC/Infrastructure/Services/';
+    let data: Observable<any> = this.http.get(remote);
     data.subscribe(result => {
       this.items = result;
       this.hierarchyTop = result[i];
       this.i = i + 1;
+      this.subURI = this.hierarchyTop.Plural;
+      this.subURI = this.subURI.replace(/ +/g, "");
+      this.subURI = dataRemote + this.subURI + "svc/Get";
+      console.log(this.subURI);
     });
   }
 
@@ -54,6 +61,6 @@ export class HierarchyPage {
 
   viewCharacteristics()
   {
-    this.navCtrl.push(ReadPage,this.hierarchyTop);
+    this.navCtrl.push(ReadPage,[this.hierarchyTop,{dataURI:this.subURI}]);
   }
 }
