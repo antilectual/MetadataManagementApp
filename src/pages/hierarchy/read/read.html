@@ -1,17 +1,29 @@
 <ion-header>
 
   <ion-navbar>
+<<<<<<< HEAD
         <ion-title><img src="../../assets/imgs/black_logo.png"></ion-title>
+=======
+        <ion-title><img width="200" height="50" src="../../assets/imgs/black_logo_2.png"></ion-title>
+>>>>>>> origin/chris
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
+<<<<<<< HEAD
   {{item[0]?.Label}}
     <ion-item *ngFor="let char of item.Characteristics">
       <ion-input type="text" placeholder={{char?.Label}}></ion-input>
     </ion-item>
 
+=======
+  <ion-item *ngFor="let item of items">
+    <ion-item *ngFor="let char of item.Characteristics">
+      <ion-input type="text" placeholder={{char.Label}}></ion-input>
+    </ion-item>
+  </ion-item>
+>>>>>>> origin/chris
 
 </ion-content>

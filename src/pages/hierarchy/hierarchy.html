@@ -1,4 +1,5 @@
 <ion-header>
+<<<<<<< HEAD
 
   <ion-navbar>
     <button ion-button menuToggle start>
@@ -9,11 +10,20 @@
         <ion-title><img src="../../assets/imgs/black_logo.png"></ion-title>
   </ion-navbar>
 
+=======
+  <ion-navbar>
+    <button ion-button menuToggle start>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title><img width="200" height="50" src="../../assets/imgs/black_logo_2.png"></ion-title>
+  </ion-navbar>
+>>>>>>> origin/chris
 </ion-header>
 
 
 <ion-content padding>
 
+<<<<<<< HEAD
       <!--button ion-item *ngFor="let item of items" (click)="push()">
         {{item.Plural}}
       </button-->
@@ -23,5 +33,10 @@
       <button ion-item (click)="viewCharacteristics()">
         Details
       </button>
+=======
+      <button ion-item *ngIf=hierarchyTop?.Plural (click)="push()">
+        {{hierarchyTop?.Plural}}
+      </button>
+>>>>>>> origin/chris
 
 </ion-content>
