@@ -1,0 +1,21 @@
+<ion-header>
+
+  <ion-navbar>
+    <button ion-button menuToggle start>
+
+      <ion-icon name="menu"></ion-icon>
+    </button>
+
+        <ion-title><img src="../../assets/imgs/black_logo.png"></ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+      <button ion-item *ngFor="let item of items" (click)="push()">
+        {{item.Plural}}
+      </button>
+
+</ion-content>
