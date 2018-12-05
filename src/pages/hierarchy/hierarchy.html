@@ -1,0 +1,27 @@
+<ion-header>
+
+  <ion-navbar>
+    <button ion-button menuToggle start>
+
+      <ion-icon name="menu"></ion-icon>
+    </button>
+
+        <ion-title><img src="../../assets/imgs/black_logo.png"></ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+      <!--button ion-item *ngFor="let item of items" (click)="push()">
+        {{item.Plural}}
+      </button-->
+      <button ion-item *ngIf=hierarchyTop?.Plural (click)="push()">
+        {{hierarchyTop?.Plural}}
+      </button>
+      <button ion-item (click)="viewCharacteristics()">
+        Details
+      </button>
+
+</ion-content>

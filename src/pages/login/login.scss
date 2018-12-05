@@ -1,0 +1,20 @@
+page-login {
+  ion-content{
+      background-image: url("../../assets/imgs/bg.png");
+      background-size: cover;
+  }
+  .item.item-input {
+    background-color: transparent;
+  }
+  .text-input::-moz-placeholder {
+    color: white;
+  }
+
+  .text-input:-ms-input-placeholder {
+    color: white;
+  }
+
+  .text-input::-webkit-input-placeholder {
+    color: white;
+  }
+}

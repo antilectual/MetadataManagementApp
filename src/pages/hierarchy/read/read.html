@@ -1,0 +1,17 @@
+<ion-header>
+
+  <ion-navbar>
+        <ion-title><img src="../../assets/imgs/black_logo.png"></ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  {{item[0]?.Label}}
+    <ion-item *ngFor="let char of item.Characteristics">
+      <ion-input type="text" placeholder={{char?.Label}}></ion-input>
+    </ion-item>
+
+
+</ion-content>
