@@ -43,11 +43,6 @@ export class HierarchyPage {
       this.items = result;
       this.hierarchyTop = result[i];
       this.i = i + 1;
-<<<<<<< HEAD
-=======
-      console.log(this.hierarchyTop);
-      console.log(result);
->>>>>>> origin/chris
     });
   }
 
@@ -56,12 +51,9 @@ export class HierarchyPage {
     let locali = {i:this.i};
     this.navCtrl.push(HierarchyPage,locali);
   }
-<<<<<<< HEAD
 
   viewCharacteristics()
   {
     this.navCtrl.push(ReadPage,this.hierarchyTop);
   }
-=======
->>>>>>> origin/chris
 }
