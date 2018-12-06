@@ -13,7 +13,9 @@
       <!--div *ngIf='dataObject[char.Label]!==undefined;else isDefined' > undefined </div-->
       <!--ion-input type="text" placeholder={{char?.Label}}></ion-input-->
       <!--ng-template #isDefined> </ng-template-->
-      <ion-input type="text" placeholder={{dataObject[0][char.Label]}}></ion-input>
+
+      <!--ion-label color="dark">{{dataObject[0][char.Label]}}</ion-label-->
+      <ion-input type="text" value={{dataObject[0][char.Label]}}></ion-input>
       <!--{{dataObject[char.Label]}}-->
       <!--<ion-item *ngFor="let dataItem of dataObject.Characteristics">
 
