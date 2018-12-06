@@ -18,6 +18,8 @@ export class HierarchyPage {
   public items: any;
   public hierarchyTop: any;
   public subURI: string;
+  public dataObject: any;
+
   i = 0;
   constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams) {
     if(navParams.get('i') == null)
@@ -28,7 +30,6 @@ export class HierarchyPage {
     {
       this.i = navParams.get('i');
     }
-
     this.getData(this.i);
   }
 
@@ -48,8 +49,17 @@ export class HierarchyPage {
       this.i = i + 1;
       this.subURI = this.hierarchyTop.Plural;
       this.subURI = this.subURI.replace(/ +/g, "");
-      this.subURI = dataRemote + this.subURI + "svc/Get";
-      console.log(this.subURI);
+      this.subURI = dataRemote + this.subURI + ".svc/Get";
+      this.getNextData();
+    });
+  }
+
+  getNextData(){
+    console.log(this.subURI);
+    let data: Observable<any> = this.http.get(this.subURI);
+    data.subscribe(result => {
+      this.dataObject = result;
+      console.log(this.dataObject);
     });
   }
 
@@ -61,6 +71,7 @@ export class HierarchyPage {
 
   viewCharacteristics()
   {
-    this.navCtrl.push(ReadPage,[this.hierarchyTop,{dataURI:this.subURI}]);
+    //console.log(ReadPage, this.hierarchyTop, this.subURI);
+    this.navCtrl.push(ReadPage,[this.hierarchyTop,{dataURI:this.subURI}, this.dataObject]);
   }
 }

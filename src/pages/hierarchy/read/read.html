@@ -8,15 +8,21 @@
 
 
 <ion-content padding>
-  {{item[0]?.Label}}
+  asjflasf
+
+  <ng-container *ngIf='dataPresent'>
     <ion-item *ngFor="let char of item.Characteristics">
+      <!--div *ngIf='dataObject[char.Label]!==undefined;else isDefined' > undefined </div-->
       <!--ion-input type="text" placeholder={{char?.Label}}></ion-input-->
-      <ion-input type="text" placeholder={{dataObject[char.Label]}}></ion-input>
+      <!--ng-template #isDefined> </ng-template-->
+      <ion-input type="text" placeholder={{dataObject[0][char.Label]}}></ion-input>
+      <!--{{dataObject[char.Label]}}-->
       <!--<ion-item *ngFor="let dataItem of dataObject.Characteristics">
 
         <ion-input type="text" placeholder={{char?.Label}}></ion-input>
       </ion-item-->
     </ion-item>
+  </ng-container>
 
 
 </ion-content>
