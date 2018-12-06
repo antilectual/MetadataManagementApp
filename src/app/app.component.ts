@@ -1,7 +1,7 @@
 
-import { BrowserModule } from '@angular/platform-browser';
-import { ErrorHandler, NgModule } from '@angular/core';
-import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
+//import { BrowserModule } from '@angular/platform-browser';
+//import { ErrorHandler, NgModule } from '@angular/core';
+//import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 
 import { Component, ViewChild } from '@angular/core';
 import { Platform, Nav } from 'ionic-angular';
@@ -13,7 +13,7 @@ import { LoginPage } from '../pages/login/login';
 import { HierarchyPage } from '../pages/hierarchy/hierarchy';
 import { AboutPage } from '../pages/about/about';
 import { SettingsPage } from '../pages/settings/settings';
-import { ReadPage } from '../pages/hierarchy/read/read';
+//import { ReadPage } from '../pages/hierarchy/read/read';
 import { ExamplePage } from '../pages/example/example';
 
 

@@ -41,7 +41,7 @@ export class HierarchyPage {
   getData(i){
     let online = this.gvars.getOnline();
     let local = '../../assets/data/db.json';
-    let remote = 'http://sensor.nevada.edu/GS/Services/Ragnarok/';
+    //let remote = 'http://sensor.nevada.edu/GS/Services/Ragnarok/';
     let dataRemote = 'http://sensor.nevada.edu/Services/NRDC/Infrastructure/Services/';
     if(online)
     {
