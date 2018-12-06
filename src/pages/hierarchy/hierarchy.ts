@@ -45,7 +45,7 @@ export class HierarchyPage {
     let dataRemote = 'http://sensor.nevada.edu/Services/NRDC/Infrastructure/Services/';
     if(online)
     {
-      let data: Observable<any> = this.http.get(remote);
+      let data: Observable<any> = this.http.get(local);
       data.subscribe(result => {
         this.items = result;
         this.hierarchyTop = result[i];
