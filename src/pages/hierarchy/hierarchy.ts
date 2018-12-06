@@ -39,19 +39,23 @@ export class HierarchyPage {
 
 
   getData(i){
-    let local = '../../assets/data/db.json';
-    let remote = 'http://sensor.nevada.edu/GS/Services/Ragnarok/';
-    let dataRemote = 'http://sensor.nevada.edu/Services/NRDC/Infrastructure/Services/';
-    let data: Observable<any> = this.http.get(remote);
-    data.subscribe(result => {
-      this.items = result;
-      this.hierarchyTop = result[i];
-      this.i = i + 1;
-      this.subURI = this.hierarchyTop.Plural;
-      this.subURI = this.subURI.replace(/ +/g, "");
-      this.subURI = dataRemote + this.subURI + ".svc/Get";
-      this.getNextData();
-    });
+    let online = this.gvars.getOnline();
+    if(online)
+    {
+      let local = '../../assets/data/db.json';
+      let remote = 'http://sensor.nevada.edu/GS/Services/Ragnarok/';
+      let dataRemote = 'http://sensor.nevada.edu/Services/NRDC/Infrastructure/Services/';
+      let data: Observable<any> = this.http.get(remote);
+      data.subscribe(result => {
+        this.items = result;
+        this.hierarchyTop = result[i];
+        this.i = i + 1;
+        this.subURI = this.hierarchyTop.Plural;
+        this.subURI = this.subURI.replace(/ +/g, "");
+        this.subURI = dataRemote + this.subURI + ".svc/Get";
+        this.getNextData();
+      });
+    }
   }
 
   getNextData(){
@@ -71,7 +75,10 @@ export class HierarchyPage {
 
   viewCharacteristics()
   {
-    //console.log(ReadPage, this.hierarchyTop, this.subURI);
-    this.navCtrl.push(ReadPage,[this.hierarchyTop,{dataURI:this.subURI}, this.dataObject]);
+    let online = this.gvars.getOnline();
+    if(online)//console.log(ReadPage, this.hierarchyTop, this.subURI);
+    {
+      this.navCtrl.push(ReadPage,[this.hierarchyTop,{dataURI:this.subURI}, this.dataObject]);
+    }
   }
 }
