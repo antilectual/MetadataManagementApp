@@ -40,11 +40,11 @@ export class HierarchyPage {
 
   getData(i){
     let online = this.gvars.getOnline();
+    let local = '../../assets/data/db.json';
+    let remote = 'http://sensor.nevada.edu/GS/Services/Ragnarok/';
+    let dataRemote = 'http://sensor.nevada.edu/Services/NRDC/Infrastructure/Services/';
     if(online)
     {
-      let local = '../../assets/data/db.json';
-      let remote = 'http://sensor.nevada.edu/GS/Services/Ragnarok/';
-      let dataRemote = 'http://sensor.nevada.edu/Services/NRDC/Infrastructure/Services/';
       let data: Observable<any> = this.http.get(remote);
       data.subscribe(result => {
         this.items = result;
@@ -56,6 +56,15 @@ export class HierarchyPage {
         this.getNextData();
       });
     }
+    else
+    {
+      let data: Observable<any> = this.http.get(local);
+      data.subscribe(result => {
+        this.hierarchyTop = result[i];
+        this.i = i + 1;
+        this.items = result;});
+    }
+
   }
 
   getNextData(){
