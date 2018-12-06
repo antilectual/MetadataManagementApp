@@ -1,17 +1,31 @@
 <ion-header>
-
   <ion-navbar>
     <button ion-button menuToggle start>
-
-      <ion-icon name="menu"></ion-icon>
+      <ion-icon color = "light" name="menu"></ion-icon>
     </button>
-
-        <ion-title><img width="200" height="50" src="../../assets/imgs/black_logo_2.png"></ion-title>
+    <ion-title><img width="200" height="50" src="../../assets/imgs/white_logo.png"></ion-title>
   </ion-navbar>
-
 </ion-header>
 
 <ion-content padding>
-  <br>
+
   <h1><img src="../../assets/imgs/black_welcome.png"></h1>
+
+  <ion-list>
+  <ion-item>
+    <ion-label>Offline/Online</ion-label>
+    <ion-toggle (ionChange)="toggleOnline()"></ion-toggle>
+  </ion-item>
+  </ion-list>
+
+  <p>
+    Hello There!
+    <br><br>
+    Welcome to the NRDC QA Application demonstration. As this is a working prototype, funtionality will be limited. Please feel free to ask if there are any questions.
+    <br><br>
+    -Team 9 (Ragnarok)
+  </p>
+
+
+
 </ion-content>

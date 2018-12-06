@@ -12,6 +12,8 @@ import { AboutPage } from '../pages/about/about';
 import { HierarchyPage } from '../pages/hierarchy/hierarchy';
 import { SettingsPage } from '../pages/settings/settings';
 import { ReadPage } from '../pages/hierarchy/read/read';
+import { ExamplePage } from '../pages/example/example';
+import { GlobalvarsProvider } from '../providers/globalvars/globalvars';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,8 @@ import { ReadPage } from '../pages/hierarchy/read/read';
     HierarchyPage,
     AboutPage,
     SettingsPage,
-    ReadPage
+    ReadPage,
+    ExamplePage
   ],
   imports: [
     BrowserModule,
@@ -36,12 +39,14 @@ import { ReadPage } from '../pages/hierarchy/read/read';
     HierarchyPage,
     AboutPage,
     SettingsPage,
-    ReadPage
+    ReadPage,
+    ExamplePage
   ],
   providers: [
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    GlobalvarsProvider
   ]
 })
 export class AppModule {}

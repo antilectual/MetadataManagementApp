@@ -21,13 +21,5 @@ export class ReadPage {
     console.log('ionViewDidLoad ReadPage');
   }
 
-  getData(){
-    let local = '../../assets/data/db.json';
-    let data: Observable<any> = this.http.get(local);
-    data.subscribe(result => {
-      this.item = result;
-      this.hierarchyTop = items[0];
-    });
-  }
 
 }
