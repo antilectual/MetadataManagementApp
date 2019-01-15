@@ -33,7 +33,7 @@ export class MyApp {
         { title: 'Home', component: HomePage },
         { title: 'About', component: AboutPage },
         { title: 'Example', component: ExamplePage},
-        { title: 'Hierarchy Navigation', component: HierarchyPage },
+        { title: 'Metadata Entry', component: HierarchyPage },
         { title: 'Settings', component: SettingsPage },
         { title: 'Logout', component: LoginPage},
       ];
