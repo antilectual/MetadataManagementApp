@@ -12,8 +12,12 @@
       <!--button ion-item *ngFor="let item of items" (click)="push()">
         {{item.Plural}}
       </button-->
-      <button ion-item *ngIf=hierarchyTop?.Plural (click)="push()">
-        {{hierarchyTop?.Plural}}
+      <b>{{currentDisplayPath}}{{hierarchyTop?.Plural}}</b>
+      <!-- button ion-item *ngIf=hierarchyTop?.Plural (click)="push()">
+        <b>IGNOREME</b>
+      </button-->
+      <button ion-item *ngFor="let item of dataObject" (click)="push(item)">
+        {{item?.Name}}
       </button>
       <button ion-item (click)="viewCharacteristics()">
         Details
