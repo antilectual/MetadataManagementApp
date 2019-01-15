@@ -35,10 +35,10 @@ export class HierarchyPage {
     {
       this.i = navParams.get('i');
     }
+
     this.currentDisplayPath = navParams.get('name');
     this.getData(this.i);
   }
-
   ionViewDidLoad() {
     console.log('ionViewDidLoad HierarchyPage');
   }
