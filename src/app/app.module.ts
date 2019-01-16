@@ -18,13 +18,7 @@ import { GlobalvarsProvider } from '../providers/globalvars/globalvars';
 @NgModule({
   declarations: [
     MyApp,
-    HomePage,
-    LoginPage,
-    HierarchyPage,
-    AboutPage,
-    SettingsPage,
-    ReadPage,
-    ExamplePage
+    HomePage
   ],
   imports: [
     BrowserModule,

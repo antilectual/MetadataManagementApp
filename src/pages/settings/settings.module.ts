@@ -4,10 +4,10 @@ import { SettingsPage } from './settings';
 
 @NgModule({
   declarations: [
-    SettingsPage,
+    SettingsPage
   ],
   imports: [
-    IonicPageModule.forChild(SettingsPage),
+    IonicPageModule.forChild(SettingsPage)
   ],
 })
 export class SettingsPageModule {}
