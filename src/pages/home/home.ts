@@ -8,20 +8,19 @@ import { GlobalvarsProvider } from '../../providers/globalvars/globalvars';
 })
 export class HomePage {
 
+  status: any
   constructor(public navCtrl: NavController, public gvars: GlobalvarsProvider) {
+     if(this.gvars.getOnline())
+     {
+       this.status = 'y';
+     }
+     else
+     {
+       this.status = 'n';
+     }
 
   }
 
-  toggleOnline()
-  {
-    console.log("toggle");
-    if(this.gvars.getOnline()){
-      this.gvars.setOnline(false);
-    }
-    else{
-      this.gvars.setOnline(true);
-    }
-    console.log(this.gvars.getOnline());
-  }
+
 
 }

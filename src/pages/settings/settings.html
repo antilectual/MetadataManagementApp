@@ -8,16 +8,19 @@
 </ion-header>
 
 
+
 <ion-content padding>
 
   <ion-list>
   <ion-item>
-    <ion-label>Light/Dark Theme*</ion-label>
-    <ion-toggle [(ngModel)]="online"></ion-toggle>
+    <ion-label>Light/Dark Theme</ion-label>
+    <ion-toggle [(ngModel)]="theme" disabled="true"></ion-toggle>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>Offline/Online</ion-label>
+    <ion-toggle [(ngModel)]="status" (ionChange)="toggleOnline()"></ion-toggle>
   </ion-item>
   </ion-list>
 
-  <p>
-    *Currently not functional.
-  </p>
 </ion-content>
