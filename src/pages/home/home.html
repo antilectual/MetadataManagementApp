@@ -7,25 +7,19 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content padding text-center>
 
   <h1><img src="../../assets/imgs/black_welcome.png"></h1>
+  <ion-col class="icon icon-user"><ion-icon name="contact"></ion-icon></ion-col>
+  <h3>User Name</h3>
 
-  <ion-list>
-  <ion-item>
-    <ion-label>Offline/Online</ion-label>
-    <ion-toggle (ionChange)="toggleOnline()"></ion-toggle>
-  </ion-item>
-  </ion-list>
+  <button ion-button block>Favorites</button>
+  <button ion-button block>Last Activity</button>
 
-  <p>
-    Hello There!
-    <br><br>
-    Welcome to the NRDC QA Application demonstration. As this is a working prototype, funtionality will be limited. Please feel free to ask if there are any questions.
-    <br><br>
-    -Team 9 (Ragnarok)
-  </p>
+  <!-- <ion-col class="icon icon-online" *ngIf="status == 'y'" ><ion-icon name="cloud"></ion-icon></ion-col>
+  <ion-col class ="icon icon-offline" *ngIf="status == 'n'" ><ion-icon name="close-circle"></ion-icon></ion-col> -->
 
-
+  <h3 *ngIf="status == 'y'" > Connection Status: Online </h3>
+  <h3 *ngIf="status == 'n'" > Connection Status: Offline </h3>
 
 </ion-content>

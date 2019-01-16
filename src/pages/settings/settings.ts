@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { GlobalvarsProvider } from '../../providers/globalvars/globalvars';
 
 /**
  * Generated class for the SettingsPage page.
@@ -15,11 +16,32 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class SettingsPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  status: boolean;
+  constructor(public navCtrl: NavController, public gvars: GlobalvarsProvider) {
+    if(this.gvars.getOnline())
+    {
+      this.status = true;
+    }
+    else
+    {
+      this.status = false;
+    }
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad SettingsPage');
+  }
+
+  toggleOnline()
+  {
+    console.log("toggle");
+    if(this.gvars.getOnline()){
+      this.gvars.setOnline(false);
+    }
+    else{
+      this.gvars.setOnline(true);
+    }
+    console.log(this.gvars.getOnline());
   }
 
 }
