@@ -4,10 +4,10 @@ import { HierarchyPage } from './hierarchy';
 
 @NgModule({
   declarations: [
-    HierarchyPage,
+    HierarchyPage
   ],
   imports: [
-    IonicPageModule.forChild(HierarchyPage),
+    IonicPageModule.forChild(HierarchyPage)
   ],
 })
 export class HierarchyPageModule {}

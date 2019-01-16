@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
+import { GlobalvarsProvider } from '../../providers/globalvars/globalvars';
 
 @Component({
   selector: 'page-home',
@@ -7,8 +8,19 @@ import { NavController } from 'ionic-angular';
 })
 export class HomePage {
 
-  constructor(public navCtrl: NavController) {
+  status: any
+  constructor(public navCtrl: NavController, public gvars: GlobalvarsProvider) {
+     if(this.gvars.getOnline())
+     {
+       this.status = 'y';
+     }
+     else
+     {
+       this.status = 'n';
+     }
 
   }
+
+
 
 }

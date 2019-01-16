@@ -1,23 +1,31 @@
 <ion-header>
   <ion-navbar>
     <button ion-button menuToggle start>
-      <ion-icon name="menu"></ion-icon>
+      <ion-icon color = "light" name="menu"></ion-icon>
     </button>
-    <ion-title><img width="200" height="50" src="../../assets/imgs/black_logo_2.png"></ion-title>
+    <ion-title ><img width="200" height="50" (click)="goHome()" src="../../assets/imgs/white_logo.png"></ion-title>
   </ion-navbar>
 </ion-header>
-
 
 <ion-content padding>
 
       <!--button ion-item *ngFor="let item of items" (click)="push()">
         {{item.Plural}}
       </button-->
-      <button ion-item *ngIf=hierarchyTop?.Plural (click)="push()">
-        {{hierarchyTop?.Plural}}
+      <b>{{currentDisplayPath}}{{hierarchyTop?.Plural}}</b>
+      <!-- button ion-item *ngIf=hierarchyTop?.Plural (click)="push()">
+        <b>IGNOREME</b>
+      </button-->
+      <ng-container *ngFor="let item of dataObject">
+      <button ion-item *ngIf="i < maxIndex" (click)="push(item)">
+        {{item?.Name}}
       </button>
+      <div ion-item *ngIf="i >= maxIndex">
+        {{item?.Name}}
+      </div>
+      </ng-container>
       <button ion-item (click)="viewCharacteristics()">
-        Details
+        <font size = "-1">Details</font>
       </button>
 
 </ion-content>

@@ -5,7 +5,6 @@
 // roboto, and noto sans fonts
 $font-path: "../assets/fonts";
 
-
 // The app direction is used to include
 // rtl styles in your app. For more info, please see:
 // http://ionicframework.com/docs/theming/rtl-support/
@@ -38,9 +37,11 @@ $colors: (
   secondary:  #32db64,
   danger:     #f53d3d,
   light:      #f4f4f4,
-  dark:       #222
+  dark:       #222,
+  gray:       #9fa4a7
 );
 
+//$background-color: color($colors, gray);
 
 // App iOS Variables
 // --------------------------------------------------
@@ -86,3 +87,17 @@ $colors: (
 
 @import "roboto";
 @import "noto-sans";
+
+
+@font-face {
+    font-family: "Draft B";
+    src: url($font-path+'/Draft B Regular Italic.otf');
+}
+
+$font-family-base: "Draft B";
+$font-family-md-base: "Draft B";
+$font-family-ios-base: "Draft B";
+$font-family-wp-base: "Draft B";
+// $font-size-base:  24px;
+// $font-size-small: 20px;
+// $font-size-large: 28px;

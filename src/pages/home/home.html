@@ -1,17 +1,25 @@
 <ion-header>
-
   <ion-navbar>
     <button ion-button menuToggle start>
-
-      <ion-icon name="menu"></ion-icon>
+      <ion-icon color = "light" name="menu"></ion-icon>
     </button>
-
-        <ion-title><img width="200" height="50" src="../../assets/imgs/black_logo_2.png"></ion-title>
+    <ion-title><img width="200" height="50" src="../../assets/imgs/white_logo.png"></ion-title>
   </ion-navbar>
-
 </ion-header>
 
-<ion-content padding>
-  <br>
+<ion-content padding text-center>
+
   <h1><img src="../../assets/imgs/black_welcome.png"></h1>
+  <ion-col class="icon icon-user"><ion-icon name="contact"></ion-icon></ion-col>
+  <h3>User Name</h3>
+
+  <button ion-button block>Favorites</button>
+  <button ion-button block>Last Activity</button>
+
+  <!-- <ion-col class="icon icon-online" *ngIf="status == 'y'" ><ion-icon name="cloud"></ion-icon></ion-col>
+  <ion-col class ="icon icon-offline" *ngIf="status == 'n'" ><ion-icon name="close-circle"></ion-icon></ion-col> -->
+
+  <h3 *ngIf="status == 'y'" > Connection Status: Online </h3>
+  <h3 *ngIf="status == 'n'" > Connection Status: Offline </h3>
+
 </ion-content>
