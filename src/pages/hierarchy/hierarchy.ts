@@ -13,19 +13,24 @@ import { HomePage } from '../home/home';
   selector: 'page-hierarchy',
   templateUrl: 'hierarchy.html',
 })
-export class HierarchyPage {
-  // Ontology Items
+export class HierarchyPage
+{
+  // All locations in the Ontology
   public items: any;
   // Current header from ontology
   public hierarchyTop: any;
   // URL for getting the specific data
   public subURI: string;
+  // The data associated with the current hierarchy item (currently ALL data)
   public dataObject: any;
+  // Shows the name of the current location in the hierarchy
   public currentDisplayPath: any;
+  // Max depth of the hierarchy
   public maxIndex: any;
 
   i = 0;
-  constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, public gvars: GlobalvarsProvider) {
+  constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, public gvars: GlobalvarsProvider)
+  {
     if(navParams.get('i') == null)
     {
       this.i = 0;
@@ -44,22 +49,24 @@ export class HierarchyPage {
   }
 
 // Doesn't actually get the data. It gets the hierarchy/ontology! (RAGNAROK)
-  getData(i){
+  getData(i)
+  {
     let online = this.gvars.getOnline();
+    // TODO: Create a confi setting for this
+    // Local location containing the Ontology
     let local = '../../assets/data/db.json';
-    //let remote = 'http://sensor.nevada.edu/GS/Services/Ragnarok/';
+    // TODO: Create a confi setting for this
+    // Remote service containing the ontology
+    let remote = 'http://sensor.nevada.edu/GS/Services/Ragnarok/';
+    // TODO: Create a confi setting for this
+    // Remote database service containing the metadata
     let dataRemote = 'http://sensor.nevada.edu/Services/NRDC/Infrastructure/Services/';
     if(online)
     {
       let data: Observable<any> = this.http.get(local);
       data.subscribe(result => {
-        // Grab the json results from Ragnarok (Headers)
-        // i.e.
-        //  Site-Networks
-        //  Sites
-        //  Systems
-        //  Deployments
-        //  Components
+        // Grab the json results from Ragnarok (hierarchy)
+        // (i.e. Site-Networks, Sites, Systems, Deployments, Components
 
         this.items = result;
         // Get the current header item
@@ -89,7 +96,8 @@ export class HierarchyPage {
     }
   }
 
-  getNextData(){
+  getNextData()
+  {
     //DEBUG
     //console.log(this.subURI);
     let data: Observable<any> = this.http.get(this.subURI);

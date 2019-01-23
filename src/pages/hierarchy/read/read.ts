@@ -14,11 +14,11 @@ export class ReadPage {
   item: any;
   dataObject: any;
   dataURI: any;
-  dataPresent: boolean;
+  isDataPresent: boolean;
 
   constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams) {
       this.dataURI = navParams.data[1].dataURI;
-      this.dataPresent = false;
+      this.isDataPresent = false;
       // this.dataObject = navParams.data[2];
       this.getData();
       this.item = navParams.data[0];
@@ -34,7 +34,7 @@ export class ReadPage {
     let data: Observable<any> = this.http.get(this.dataURI);
     data.subscribe(result => {
       this.dataObject = result;
-      this.dataPresent = true;
+      this.isDataPresent = true;
 
       console.log(this.dataObject);
     });
