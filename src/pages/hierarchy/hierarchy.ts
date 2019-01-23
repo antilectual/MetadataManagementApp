@@ -27,7 +27,7 @@ export class HierarchyPage
   public currentDisplayPath: any;
   // Max depth of the hierarchy
   public maxIndex: any;
-  public title = "NRDC";
+  title = "NRDC";
 
   hierarchyDepth = 0;
   constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, public gvars: GlobalvarsProvider)
@@ -133,7 +133,8 @@ export class HierarchyPage
     this.navCtrl.setRoot(HomePage);
   }
 
-  viewCharacteristics()
+// Goes to the edit page
+  editCharacteristics()
   {
 
     // EXPERIMENTAL - TODO: REVIEW

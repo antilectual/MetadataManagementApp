@@ -27,8 +27,14 @@
         {{item?.Name}}
       </div>
       </ng-container>
-      <button ion-item *ngIf="hierarchyDepth - 1 > 0" (click)="viewCharacteristics()">
-        <font size = "-1">Details</font>
+      <ng-container *ngIf="hierarchyDepth - 1 > 0">
+      <br><font size = "-1">Details:</font>
+      <button ion-item (click)="goHome()">
+        View
       </button>
+      <button ion-item (click)="editCharacteristics()">
+        Edit
+      </button>
+      </ng-container>
 
 </ion-content>
