@@ -17,10 +17,10 @@
         <b>IGNOREME</b>
       </button-->
       <ng-container *ngFor="let item of dataObject">
-      <button ion-item *ngIf="i < maxIndex" (click)="push(item)">
+      <button ion-item *ngIf="hierarchyDepth < maxIndex" (click)="push(item)">
         {{item?.Name}}
       </button>
-      <div ion-item *ngIf="i >= maxIndex">
+      <div ion-item *ngIf="hierarchyDepth >= maxIndex">
         {{item?.Name}}
       </div>
       </ng-container>

@@ -28,28 +28,29 @@ export class HierarchyPage
   // Max depth of the hierarchy
   public maxIndex: any;
 
-  i = 0;
+  hierarchyDepth = 0;
   constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, public gvars: GlobalvarsProvider)
   {
-    if(navParams.get('i') == null)
+    if(navParams.get('hierarchydepth') == null)
     {
-      this.i = 0;
+      this.hierarchyDepth = 0;
     }
     else
     {
-      this.i = navParams.get('i');
+      this.hierarchyDepth = navParams.get('hierarchydepth');
     }
 
     this.currentDisplayPath = navParams.get('name');
-    this.getData(this.i);
+    this.getHierarchyData(this.hierarchyDepth);
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad HierarchyPage');
-  }
+  // DEBUG:
+  // ionViewDidLoad() {
+  //   console.log('ionViewDidLoad HierarchyPage');
+  // }
 
 // Doesn't actually get the data. It gets the hierarchy/ontology! (RAGNAROK)
-  getData(i)
+  getHierarchyData(depth)
   {
     let online = this.gvars.getOnline();
     // TODO: Create a confi setting for this
@@ -57,24 +58,25 @@ export class HierarchyPage
     let local = '../../assets/data/db.json';
     // TODO: Create a confi setting for this
     // Remote service containing the ontology
-    let remote = 'http://sensor.nevada.edu/GS/Services/Ragnarok/';
+    //let remote = 'http://sensor.nevada.edu/GS/Services/Ragnarok/';
+    let remote = '../../assets/data/db.json';
     // TODO: Create a confi setting for this
     // Remote database service containing the metadata
     let dataRemote = 'http://sensor.nevada.edu/Services/NRDC/Infrastructure/Services/';
     if(online)
     {
-      let data: Observable<any> = this.http.get(local);
+      let data: Observable<any> = this.http.get(remote);
       data.subscribe(result => {
         // Grab the json results from Ragnarok (hierarchy)
         // (i.e. Site-Networks, Sites, Systems, Deployments, Components
 
         this.items = result;
         // Get the current header item
-        this.hierarchyTop = result[i];
+        this.hierarchyTop = result[depth];
         // Find max length of navigation (for bug catching)
         this.maxIndex = result.length;
         // increases to next header item
-        this.i = i + 1;
+        this.hierarchyDepth = depth + 1;
         // Proper viewing name of header
         this.subURI = this.hierarchyTop.Plural;
         // Create URL for the items from this header
@@ -88,10 +90,10 @@ export class HierarchyPage
     {
       let data: Observable<any> = this.http.get(local);
       data.subscribe(result => {
-        this.hierarchyTop = result[i];
+        this.hierarchyTop = result[depth];
         // Find max length of navigation (for bug catching)
         this.maxIndex = result.length;
-        this.i = i + 1;
+        this.hierarchyDepth = depth + 1;
         this.items = result;});
     }
   }
@@ -110,15 +112,15 @@ export class HierarchyPage
 
   // push()
   // {
-  //   let localValues = {i:this.i};
+  //   let localValues = {hierarchydepth:this.hierarchyDepth};
   //   this.navCtrl.push(HierarchyPage,localValues);
   // }
 
   push(item)
   {
-    if(this.i <= this.maxIndex - 1)
+    if(this.hierarchyDepth <= this.maxIndex - 1)
     {
-      let localValues = {i:this.i, name:item.Name + " - "};
+      let localValues = {hierarchydepth:this.hierarchyDepth, name:item.Name + " - "};
       this.navCtrl.push(HierarchyPage,localValues);
     }
   }
