@@ -23,7 +23,7 @@ export class ReadPage {
 //    The selected items children (ParentOf)
 //    The selected item's pluralization (Plural)
 //  [1] - The URI to retrieve the metadata from (dataURI)
-//  [2] - JSON Containing [the wrong stuff TODO: Fix it]
+//  [2] - JSON Containing the info for the next level [TODO: this is wrong, fix it]
   constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams) {
       // DEBUG:
       console.log(navParams.data);
@@ -46,7 +46,7 @@ export class ReadPage {
     data.subscribe(result => {
       this.dataObject = result;
       this.isDataPresent = true;
-      // DEBUG:
+
       console.log(this.dataObject);
     });
   }

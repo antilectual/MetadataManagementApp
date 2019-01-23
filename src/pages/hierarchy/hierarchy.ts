@@ -27,6 +27,7 @@ export class HierarchyPage
   public currentDisplayPath: any;
   // Max depth of the hierarchy
   public maxIndex: any;
+  public title = "NRDC";
 
   hierarchyDepth = 0;
   constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, public gvars: GlobalvarsProvider)
@@ -39,7 +40,6 @@ export class HierarchyPage
     {
       this.hierarchyDepth = navParams.get('hierarchydepth');
     }
-
     this.currentDisplayPath = navParams.get('name');
     this.getHierarchyData(this.hierarchyDepth);
   }
@@ -79,9 +79,12 @@ export class HierarchyPage
         this.hierarchyDepth = depth + 1;
         // Proper viewing name of header
         this.subURI = this.hierarchyTop.Plural;
-        // Create URL for the items from this header
+        // Create URL for the items from this header (removing spaces first)
         this.subURI = this.subURI.replace(/ +/g, "");
         this.subURI = dataRemote + this.subURI + ".svc/Get";
+        //DEBUG
+        //console.log("SubURI is:");
+        //console.log(this.subURI);
 
         this.getNextData();
       });
@@ -120,7 +123,7 @@ export class HierarchyPage
   {
     if(this.hierarchyDepth <= this.maxIndex - 1)
     {
-      let localValues = {hierarchydepth:this.hierarchyDepth, name:item.Name + " - "};
+      let localValues = {hierarchydepth:this.hierarchyDepth, name:item.Name};
       this.navCtrl.push(HierarchyPage,localValues);
     }
   }
@@ -132,10 +135,35 @@ export class HierarchyPage
 
   viewCharacteristics()
   {
+
+    // EXPERIMENTAL - TODO: REVIEW
+    // Depth was increment +1 so revert it, and -1 more to go to item above it
+    let dataDepth = this.hierarchyDepth-2;
+    let hierarchyTop: any;
+    // Out of bounds checking
+    if(dataDepth >= 0)
+    {
+          hierarchyTop = this.items[dataDepth];
+    }
+    else
+    {
+        return;
+    }
+
+    // TODO: Update from config file
+    // Remote database service containing the metadata
+    let dataRemote = 'http://sensor.nevada.edu/Services/NRDC/Infrastructure/Services/';
+    // Proper viewing name of header
+    let subURI = hierarchyTop.Plural;
+    // Create URL for the items from this header (removing spaces first)
+    subURI = subURI.replace(/ +/g, "");
+    subURI = dataRemote + subURI + ".svc/Get";
+    // END EXPERIMENTAL
+
     let online = this.gvars.getOnline();
     if(online)//console.log(ReadPage, this.hierarchyTop, this.subURI);
     {
-      this.navCtrl.push(ReadPage,[this.hierarchyTop,{dataURI:this.subURI}, this.dataObject]);
+      this.navCtrl.push(ReadPage,[hierarchyTop,{dataURI:subURI}, this.dataObject]);
     }
   }
 }
