@@ -1,6 +1,6 @@
 
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, LoadingController } from 'ionic-angular';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { GlobalvarsProvider } from '../../providers/globalvars/globalvars';
@@ -27,10 +27,12 @@ export class HierarchyPage
   public currentDisplayPath: any;
   // Max depth of the hierarchy
   public maxIndex: any;
-  title = "NRDC";
 
+  // Title for Root of Hierarchy TODO: make this a configuration file value.
+  title = "NRDC";
   hierarchyDepth = 0;
-  constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, public gvars: GlobalvarsProvider)
+  loading;
+  constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, public gvars: GlobalvarsProvider, private loadingCtrl: LoadingController)
   {
     if(navParams.get('hierarchydepth') == null)
     {
@@ -50,8 +52,13 @@ export class HierarchyPage
   // }
 
 // Doesn't actually get the data. It gets the hierarchy/ontology! (RAGNAROK)
-  getHierarchyData(depth)
+  async getHierarchyData(depth)
   {
+    this.loading = await this.loadingCtrl.create({
+      message: 'Loading...'
+    });
+    this.loading.present();
+
     let online = this.gvars.getOnline();
     // TODO: Create a confi setting for this
     // Local location containing the Ontology
@@ -99,6 +106,7 @@ export class HierarchyPage
         this.hierarchyDepth = depth + 1;
         this.items = result;});
     }
+    this.loading.dismiss();
   }
 
   getNextData()
