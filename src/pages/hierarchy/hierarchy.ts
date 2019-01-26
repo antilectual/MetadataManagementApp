@@ -52,12 +52,12 @@ export class HierarchyPage
   // }
 
 // Doesn't actually get the data. It gets the hierarchy/ontology! (RAGNAROK)
-  async getHierarchyData(depth)
+  getHierarchyData(depth)
   {
-    this.loading = await this.loadingCtrl.create({
-      message: 'Loading...'
-    });
-    this.loading.present();
+    // this.loading = this.loadingCtrl.create({
+    //   message: 'Loading...'
+    // });
+    // this.loading.present();
 
     let online = this.gvars.getOnline();
     // TODO: Create a confi setting for this
@@ -106,7 +106,7 @@ export class HierarchyPage
         this.hierarchyDepth = depth + 1;
         this.items = result;});
     }
-    this.loading.dismiss();
+    // this.loading.dismiss();
   }
 
   getNextData()
