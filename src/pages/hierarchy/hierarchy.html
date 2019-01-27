@@ -12,20 +12,29 @@
       <!--button ion-item *ngFor="let item of items" (click)="push()">
         {{item.Plural}}
       </button-->
-      <b>{{currentDisplayPath}}{{hierarchyTop?.Plural}}</b>
+
+      <h6 *ngIf="currentDisplayPath != null" style="text-align:center;"><b>{{currentDisplayPath}}</b><br></h6>
+      <h6 *ngIf="currentDisplayPath == null" style="text-align:center;"><b>{{title}}</b><br></h6>
+      {{hierarchyTop?.Plural}}:
       <!-- button ion-item *ngIf=hierarchyTop?.Plural (click)="push()">
         <b>IGNOREME</b>
       </button-->
       <ng-container *ngFor="let item of dataObject">
-      <button ion-item *ngIf="i < maxIndex" (click)="push(item)">
+      <button ion-item *ngIf="hierarchyDepth < maxIndex" (click)="push(item)">
         {{item?.Name}}
       </button>
-      <div ion-item *ngIf="i >= maxIndex">
+      <div ion-item *ngIf="hierarchyDepth >= maxIndex">
         {{item?.Name}}
       </div>
       </ng-container>
-      <button ion-item (click)="viewCharacteristics()">
-        <font size = "-1">Details</font>
+      <ng-container *ngIf="hierarchyDepth - 1 > 0">
+      <br><font size = "-1">Details:</font>
+      <button ion-item (click)="goHome()">
+        View
       </button>
+      <button ion-item (click)="editCharacteristics()">
+        Edit
+      </button>
+      </ng-container>
 
 </ion-content>

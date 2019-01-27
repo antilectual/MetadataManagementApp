@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { HomePage } from '../home/home';
+import { GlobalvarsProvider } from '../../providers/globalvars/globalvars';
 
 /**
  * Generated class for the LoginPage page.
@@ -16,7 +17,7 @@ import { HomePage } from '../home/home';
 })
 export class LoginPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public gvars: GlobalvarsProvider) {
   }
 
   ionViewDidLoad() {
@@ -25,6 +26,7 @@ export class LoginPage {
 
 goToHome()
 {
+    this.gvars.setOnline(true);
     this.navCtrl.setRoot(HomePage);
 }
 

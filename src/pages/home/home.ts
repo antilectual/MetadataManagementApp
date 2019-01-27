@@ -18,9 +18,5 @@ export class HomePage {
      {
        this.status = 'n';
      }
-
   }
-
-
-
 }

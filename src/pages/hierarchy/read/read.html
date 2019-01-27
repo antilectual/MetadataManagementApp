@@ -8,7 +8,7 @@
 
 
 <ion-content>
-  <ng-container *ngIf='dataPresent'>
+  <ng-container *ngIf='isDataPresent'>
     <ion-item *ngFor="let char of item.Characteristics">
       <!--div *ngIf='dataObject[char.Label]!==undefined;else isDefined' > undefined </div-->
       <!--ion-input type="text" placeholder={{char?.Label}}></ion-input-->

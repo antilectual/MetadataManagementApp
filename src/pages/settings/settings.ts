@@ -34,14 +34,16 @@ export class SettingsPage {
 
   toggleOnline()
   {
-    console.log("toggle");
+    // DEBUG:
+    //console.log("toggle");
     if(this.gvars.getOnline()){
       this.gvars.setOnline(false);
     }
     else{
       this.gvars.setOnline(true);
     }
-    console.log(this.gvars.getOnline());
+    // DEBUG:
+    // console.log(this.gvars.getOnline());
   }
 
 }
