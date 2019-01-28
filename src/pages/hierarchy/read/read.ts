@@ -3,6 +3,8 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
+import { Base64 } from '@ionic-native/base64/ngx';
+
 
 @IonicPage()
 @Component({
@@ -15,6 +17,8 @@ export class ReadPage {
   dataObject: any;
   dataURI: any;
   isDataPresent: boolean;
+  base64Data: any;
+  image: any;
 
 // navParams.data contains the following:
 //  [0] - JSON containing:
@@ -24,9 +28,9 @@ export class ReadPage {
 //    The selected item's pluralization (Plural)
 //  [1] - The URI to retrieve the metadata from (dataURI)
 //  [2] - JSON Containing the info for the next level [TODO: this is wrong, fix it]
-  constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, private base64: Base64) {
       // DEBUG:
-      console.log(navParams.data);
+      //console.log(navParams.data);
       this.dataURI = navParams.data[1].dataURI;
       this.isDataPresent = false;
       // this.dataObject = navParams.data[2];
@@ -34,6 +38,9 @@ export class ReadPage {
       this.item = navParams.data[0];
       // DEBUG:
       //console.log(this.item);
+
+      this.image = "data:image/png;base64,"+ navParams.data[2][0].Photo;
+      console.log(this.image);
   }
 
   // DEBUG:
@@ -47,7 +54,7 @@ export class ReadPage {
       this.dataObject = result;
       this.isDataPresent = true;
 
-      console.log(this.dataObject);
+      //console.log(this.dataObject);
     });
   }
 }
