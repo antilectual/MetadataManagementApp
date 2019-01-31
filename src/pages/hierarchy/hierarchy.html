@@ -13,20 +13,25 @@
         {{item.Plural}}
       </button-->
 
+      <!-- Prints title given from top of JSON object, if NULL, prints NRDC -->
       <h6 *ngIf="currentDisplayPath != null" style="text-align:center;"><b>{{currentDisplayPath}}</b><br></h6>
       <h6 *ngIf="currentDisplayPath == null" style="text-align:center;"><b>{{title}}</b><br></h6>
       <div *ngIf="hierarchyDepth <= maxIndex">{{hierarchyTop?.Plural}}:</div>
       <!-- button ion-item *ngIf=hierarchyTop?.Plural (click)="push()">
         <b>IGNOREME</b>
       </button-->
+
+      <!-- Prints content buttons of JSON object -->
       <ng-container *ngFor="let item of dataObject">
       <button ion-item *ngIf="hierarchyDepth <= maxIndex" (click)="push(item)">
         {{item?.Name}}
       </button>
       </ng-container>
       <ng-container *ngIf="hierarchyDepth - 1 > 0">
+
+      <!-- Prints view and edit buttons under details -->
       <br><font size = "-1">Details:</font>
-      <button ion-item (click)="goHome()">
+      <button ion-item>
         View
       </button>
       <button ion-item (click)="editCharacteristics()">
