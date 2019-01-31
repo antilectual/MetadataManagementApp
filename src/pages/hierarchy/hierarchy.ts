@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import { GlobalvarsProvider } from '../../providers/globalvars/globalvars';
 import { ReadPage } from './read/read';
 import { HomePage } from '../home/home';
+import { File } from '@ionic-native/file';
 
 
 // @IonicPage()
@@ -30,10 +31,15 @@ export class HierarchyPage
 
   // Title for Root of Hierarchy TODO: make this a configuration file value.
   title = "NRDC";
+  // Depth of the hierarchy. (Sites-Networks->Sites->Deployments, etc).
   hierarchyDepth = 0;
+  //
   loading;
-  constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, public gvars: GlobalvarsProvider, private loadingCtrl: LoadingController)
+  constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, public gvars: GlobalvarsProvider, private loadingCtrl: LoadingController)//, private file: File)
   {
+    //test json copy
+    // this.file.writeFile(this.file.assets.data, 'test.json', 'hello, world', {replace: true}).then(_ => console.log('Directory exists')).catch(err => console.log('Directory doesn\'t exist'));
+    //
     if(navParams.get('hierarchydepth') == null)
     {
       this.hierarchyDepth = 0;
@@ -58,15 +64,14 @@ export class HierarchyPage
     //   message: 'Loading...'
     // });
     // this.loading.present();
-
     let online = this.gvars.getOnline();
     // TODO: Create a confi setting for this
     // Local location containing the Ontology
-    let local = '../../assets/data/db.json';
+    let local = '../../assets/data/test.json';
     // TODO: Create a confi setting for this
     // Remote service containing the ontology
     //let remote = 'http://sensor.nevada.edu/GS/Services/Ragnarok/';
-    let remote = '../../assets/data/db.json';
+    let remote = '../../assets/data/ontology.json';
     // TODO: Create a confi setting for this
     // Remote database service containing the metadata
     let dataRemote = 'http://sensor.nevada.edu/Services/NRDC/Infrastructure/Services/';
@@ -85,7 +90,8 @@ export class HierarchyPage
         // increases to next header item
         this.hierarchyDepth = depth + 1;
         // Proper viewing name of header
-        this.subURI = this.hierarchyTop.Plural;
+        if( depth < this.maxIndex){
+          this.subURI = this.hierarchyTop.Plural;
         // Create URL for the items from this header (removing spaces first)
         this.subURI = this.subURI.replace(/ +/g, "");
         this.subURI = dataRemote + this.subURI + ".svc/Get";
@@ -94,6 +100,8 @@ export class HierarchyPage
         //console.log(this.subURI);
 
         this.getNextData();
+        }
+
       });
     }
     else
@@ -109,6 +117,7 @@ export class HierarchyPage
     // this.loading.dismiss();
   }
 
+// This function actually gets the data from the URI accessing the database.
   getNextData()
   {
     //DEBUG
@@ -134,6 +143,12 @@ export class HierarchyPage
       let localValues = {hierarchydepth:this.hierarchyDepth, name:item.Name};
       this.navCtrl.push(HierarchyPage,localValues);
     }
+    else if(this.hierarchyDepth = this.maxIndex)
+    {
+      let localValues = {hierarchydepth:this.hierarchyDepth, name:item.Name};
+      this.navCtrl.push(HierarchyPage,localValues);
+    }
+
   }
 
   goHome()
@@ -145,7 +160,7 @@ export class HierarchyPage
   editCharacteristics()
   {
 
-    // EXPERIMENTAL - TODO: REVIEW
+    // EXPERIMENTAL
     // Depth was increment +1 so revert it, and -1 more to go to item above it
     let dataDepth = this.hierarchyDepth-2;
     let hierarchyTop: any;
