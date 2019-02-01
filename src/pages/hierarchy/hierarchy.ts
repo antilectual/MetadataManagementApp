@@ -28,6 +28,8 @@ export class HierarchyPage
   public currentDisplayPath: any;
   // Max depth of the hierarchy
   public maxIndex: any;
+  // Data on the current display page
+  public currentData: any;
 
   // Title for Root of Hierarchy TODO: make this a configuration file value.
   title = "NRDC";
@@ -48,6 +50,12 @@ export class HierarchyPage
     {
       this.hierarchyDepth = navParams.get('hierarchydepth');
     }
+    //Save current page data information if available (for edit and read page)
+    if(navParams.get('currentPageData') != null)
+    {
+      this.currentData = navParams.get('currentPageData');
+    }
+
     this.currentDisplayPath = navParams.get('name');
     this.getHierarchyData(this.hierarchyDepth);
   }
@@ -79,18 +87,19 @@ export class HierarchyPage
     {
       let data: Observable<any> = this.http.get(remote);
       data.subscribe(result => {
+
+        // Find max length of navigation (for bug catching)
+        this.maxIndex = result.length;
+
         // Grab the json results from Ragnarok (hierarchy)
         // (i.e. Site-Networks, Sites, Systems, Deployments, Components
-
+        if( depth < this.maxIndex){
         this.items = result;
         // Get the current header item
         this.hierarchyTop = result[depth];
-        // Find max length of navigation (for bug catching)
-        this.maxIndex = result.length;
         // increases to next header item
         this.hierarchyDepth = depth + 1;
         // Proper viewing name of header
-        if( depth < this.maxIndex){
           this.subURI = this.hierarchyTop.Plural;
         // Create URL for the items from this header (removing spaces first)
         this.subURI = this.subURI.replace(/ +/g, "");
@@ -100,6 +109,23 @@ export class HierarchyPage
         //console.log(this.subURI);
 
         this.getNextData();
+        }
+        else{
+          this.items = result;
+          // Get the current header item
+          this.hierarchyTop = result[depth - 1];
+          // increases to next header item
+          this.hierarchyDepth = depth + 1;
+          // Proper viewing name of header
+            this.subURI = this.hierarchyTop.Plural;
+          // Create URL for the items from this header (removing spaces first)
+          this.subURI = this.subURI.replace(/ +/g, "");
+          this.subURI = dataRemote + this.subURI + ".svc/Get";
+          //DEBUG
+          //console.log("SubURI is:");
+          //console.log(this.subURI);
+
+          this.getNextData();
         }
 
       });
@@ -126,7 +152,7 @@ export class HierarchyPage
     data.subscribe(result => {
       this.dataObject = result;
       //DEBUG
-      //console.log(this.dataObject);
+      console.log(this.dataObject);
     });
   }
 
@@ -140,12 +166,12 @@ export class HierarchyPage
   {
     if(this.hierarchyDepth <= this.maxIndex - 1)
     {
-      let localValues = {hierarchydepth:this.hierarchyDepth, name:item.Name};
+      let localValues = {hierarchydepth:this.hierarchyDepth, name:item.Name, currentPageData:item};
       this.navCtrl.push(HierarchyPage,localValues);
     }
     else if(this.hierarchyDepth = this.maxIndex)
     {
-      let localValues = {hierarchydepth:this.hierarchyDepth, name:item.Name};
+      let localValues = {hierarchydepth:this.hierarchyDepth, name:item.Name, currentPageData:item};
       this.navCtrl.push(HierarchyPage,localValues);
     }
 
@@ -181,13 +207,14 @@ export class HierarchyPage
     let subURI = hierarchyTop.Plural;
     // Create URL for the items from this header (removing spaces first)
     subURI = subURI.replace(/ +/g, "");
-    subURI = dataRemote + subURI + ".svc/Get";
+    //Add unique ID to gather specific page data
+    subURI = dataRemote + subURI + ".svc/Get/" + this.currentData["Unique Identifier"];
     // END EXPERIMENTAL
 
     let online = this.gvars.getOnline();
     if(online)//console.log(ReadPage, this.hierarchyTop, this.subURI);
     {
-      this.navCtrl.push(ReadPage,[hierarchyTop,{dataURI:subURI}, this.dataObject]);
+      this.navCtrl.push(ReadPage,[hierarchyTop, subURI, this.currentData]);
     }
   }
 }
