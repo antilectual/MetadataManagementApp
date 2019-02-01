@@ -20,9 +20,12 @@
         <b>IGNOREME</b>
       </button-->
       <ng-container *ngFor="let item of dataObject">
-      <button ion-item *ngIf="hierarchyDepth <= maxIndex" (click)="push(item)">
-        {{item?.Name}}
-      </button>
+        <!-- Check to make sure the application is only displaying items from the selection that was clicked -->
+        <ng-container *ngIf="item[previousPathIDName] == uniqueIdentifier">
+          <button ion-item *ngIf="hierarchyDepth <= maxIndex" (click)="push(item)">
+            {{item?.Name}}
+          </button>
+        </ng-container>
       </ng-container>
       <ng-container *ngIf="hierarchyDepth - 1 > 0">
       <br><font size = "-1">Details:</font>

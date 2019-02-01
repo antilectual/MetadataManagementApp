@@ -30,6 +30,10 @@ export class HierarchyPage
   public maxIndex: any;
   // Data on the current display page
   public currentData: any;
+  // The unique identifier field of the hierarchy item passed to this hierarchy page.
+  uniqueIdentifier: any;
+  // The key (label) for the unique identifier value.
+  previousPathIDName: any;
 
   // Title for Root of Hierarchy TODO: make this a configuration file value.
   title = "NRDC";
@@ -57,6 +61,20 @@ export class HierarchyPage
     }
 
     this.currentDisplayPath = navParams.get('name');
+
+    // uniqueIdentifier and previousPathIDName are used for filtering the values displayed in the hierarchy.
+    this.uniqueIdentifier = navParams.get('identifier');
+    this.previousPathIDName = navParams.get('pathName');
+
+    if(this.previousPathIDName != null)
+    {
+      // TEMPROARY hack to ignore data inconsistencies in the database when pulling sites.
+      this.previousPathIDName = this.previousPathIDName.replace(/Site Networks/g, "Networks");
+      // TEMPORARY
+      // Replace the S in the pluralization value in the anme and add ID.  This is used to find the ID used to filter the objects displayed.
+      this.previousPathIDName = this.previousPathIDName.substring(0, this.previousPathIDName.length - 1)  + " ID";
+    }
+
     this.getHierarchyData(this.hierarchyDepth);
   }
 
@@ -166,12 +184,12 @@ export class HierarchyPage
   {
     if(this.hierarchyDepth <= this.maxIndex - 1)
     {
-      let localValues = {hierarchydepth:this.hierarchyDepth, name:item.Name, currentPageData:item};
+      let localValues = {hierarchydepth:this.hierarchyDepth, name:item.Name, currentPageData:item, identifier:item["Unique Identifier"], pathName:this.hierarchyTop.Plural};
       this.navCtrl.push(HierarchyPage,localValues);
     }
     else if(this.hierarchyDepth = this.maxIndex)
     {
-      let localValues = {hierarchydepth:this.hierarchyDepth, name:item.Name, currentPageData:item};
+      let localValues = {hierarchydepth:this.hierarchyDepth, name:item.Name, currentPageData:item, identifier:item["Unique Identifier"], pathName:this.hierarchyTop.Plural};
       this.navCtrl.push(HierarchyPage,localValues);
     }
 
@@ -210,6 +228,10 @@ export class HierarchyPage
     //Add unique ID to gather specific page data
     subURI = dataRemote + subURI + ".svc/Get/" + this.currentData["Unique Identifier"];
     // END EXPERIMENTAL
+
+    //// DEBUG:
+    //  console.log(subURI);
+    //  console.log(hierarchyTop);
 
     let online = this.gvars.getOnline();
     if(online)//console.log(ReadPage, this.hierarchyTop, this.subURI);

@@ -19,6 +19,8 @@ export class ReadPage {
   isDataPresent: boolean;
   base64Data: any;
   image: any;
+  //String for filtering in html
+  uniqueIDCheck = "Unique Identifier";
 
 // navParams.data contains the following:
 //  [0] - JSON containing:
@@ -49,7 +51,7 @@ export class ReadPage {
   // ionViewDidLoad() {
   //   console.log('ionViewDidLoad ReadPage');
   // }
-
+ //Possible async error location (error intermittent)
   getData(){
     let data: Observable<any> = this.http.get(this.dataURI);
     data.subscribe(result => {
