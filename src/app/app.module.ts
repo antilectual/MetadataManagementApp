@@ -14,7 +14,7 @@ import { AboutPage } from '../pages/about/about';
 import { HierarchyPage } from '../pages/hierarchy/hierarchy';
 import { SettingsPage } from '../pages/settings/settings';
 import { ReadPage } from '../pages/hierarchy/read/read';
-import { ExamplePage } from '../pages/example/example';
+// import { ExamplePage } from '../pages/example/example';
 import { GlobalvarsProvider } from '../providers/globalvars/globalvars';
 
 @NgModule({
@@ -25,8 +25,8 @@ import { GlobalvarsProvider } from '../providers/globalvars/globalvars';
     HierarchyPage,
     AboutPage,
     SettingsPage,
-    ReadPage,
-    ExamplePage
+    ReadPage
+    // ExamplePage
   ],
   imports: [
     BrowserModule,
@@ -42,8 +42,8 @@ import { GlobalvarsProvider } from '../providers/globalvars/globalvars';
     HierarchyPage,
     AboutPage,
     SettingsPage,
-    ReadPage,
-    ExamplePage
+    ReadPage
+    // ExamplePage
   ],
   providers: [
     StatusBar,
