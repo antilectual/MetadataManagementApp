@@ -96,8 +96,10 @@ export class HierarchyPage
         this.items = result;
         //Get the previous ID name
         this.previousPathIDName = result[depth].referentialCharacteristic + " ID";
+        //Debug Logger
+        console.log(this.previousPathIDName);
         // Get the current header item
-        this.hierarchyTop = result[depth];s
+        this.hierarchyTop = result[depth];
         // increases to next header item
         this.hierarchyDepth = depth + 1;
         // Proper viewing name of header
