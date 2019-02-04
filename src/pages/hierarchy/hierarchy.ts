@@ -54,27 +54,9 @@ export class HierarchyPage
     {
       this.hierarchyDepth = navParams.get('hierarchydepth');
     }
-    //Save current page data information if available (for edit and read page)
-    if(navParams.get('currentPageData') != null)
-    {
-      this.currentData = navParams.get('currentPageData');
-    }
-
-    this.currentDisplayPath = navParams.get('name');
 
     // uniqueIdentifier and previousPathIDName are used for filtering the values displayed in the hierarchy.
     this.uniqueIdentifier = navParams.get('identifier');
-    this.previousPathIDName = navParams.get('pathName');
-
-    if(this.previousPathIDName != null)
-    {
-      // TEMPROARY hack to ignore data inconsistencies in the database when pulling sites.
-      this.previousPathIDName = this.previousPathIDName.replace(/Site Networks/g, "Networks");
-      // TEMPORARY
-      // Replace the S in the pluralization value in the anme and add ID.  This is used to find the ID used to filter the objects displayed.
-      this.previousPathIDName = this.previousPathIDName.substring(0, this.previousPathIDName.length - 1)  + " ID";
-    }
-
     this.getHierarchyData(this.hierarchyDepth);
   }
 
@@ -108,13 +90,14 @@ export class HierarchyPage
 
         // Find max length of navigation (for bug catching)
         this.maxIndex = result.length;
-
         // Grab the json results from Ragnarok (hierarchy)
         // (i.e. Site-Networks, Sites, Systems, Deployments, Components
         if( depth < this.maxIndex){
         this.items = result;
+        //Get the previous ID name
+        this.previousPathIDName = result[depth].referentialCharacteristic + " ID";
         // Get the current header item
-        this.hierarchyTop = result[depth];
+        this.hierarchyTop = result[depth];s
         // increases to next header item
         this.hierarchyDepth = depth + 1;
         // Proper viewing name of header
@@ -170,7 +153,7 @@ export class HierarchyPage
     data.subscribe(result => {
       this.dataObject = result;
       //DEBUG
-      console.log(this.dataObject);
+      //console.log(this.dataObject);
     });
   }
 
@@ -185,6 +168,9 @@ export class HierarchyPage
     if(this.hierarchyDepth <= this.maxIndex - 1)
     {
       let localValues = {hierarchydepth:this.hierarchyDepth, name:item.Name, currentPageData:item, identifier:item["Unique Identifier"], pathName:this.hierarchyTop.Plural};
+      //Debug Logger
+      //console.log(this.uniqueIdentifier);
+      //console.log(this.previousPathIDName);
       this.navCtrl.push(HierarchyPage,localValues);
     }
     else if(this.hierarchyDepth = this.maxIndex)

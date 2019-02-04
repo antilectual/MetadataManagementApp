@@ -29,6 +29,12 @@
             {{item?.Name}}
           </button>
         </ng-container>
+        <!-- For first page, there is no previous reference, so exclude -->
+        <ng-container *ngIf="uniqueIdentifier == NULL">
+          <button ion-item *ngIf="hierarchyDepth <= maxIndex" (click)="push(item)">
+            {{item?.Name}}
+          </button>
+        </ng-container>
       </ng-container>
       <ng-container *ngIf="hierarchyDepth - 1 > 0">
 
