@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import { GlobalvarsProvider } from '../../providers/globalvars/globalvars';
 import { ReadPage } from './read/read';
 import { HomePage } from '../home/home';
+import { File } from '@ionic-native/file';
 
 
 // @IonicPage()
@@ -27,14 +28,24 @@ export class HierarchyPage
   public currentDisplayPath: any;
   // Max depth of the hierarchy
   public maxIndex: any;
+  // Data on the current display page
+  public currentData: any;
+  // The unique identifier field of the hierarchy item passed to this hierarchy page.
+  uniqueIdentifier: any;
+  // The key (label) for the unique identifier value.
+  previousPathIDName: any;
 
   // Title for Root of Hierarchy TODO: make this a configuration file value.
   title = "NRDC";
   // Depth of the hierarchy. (Sites-Networks->Sites->Deployments, etc).
   hierarchyDepth = 0;
+  //
   loading;
-  constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, public gvars: GlobalvarsProvider, private loadingCtrl: LoadingController)
+  constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, public gvars: GlobalvarsProvider, private loadingCtrl: LoadingController)//, private file: File)
   {
+    //test json copy
+    // this.file.writeFile(this.file.assets.data, 'test.json', 'hello, world', {replace: true}).then(_ => console.log('Directory exists')).catch(err => console.log('Directory doesn\'t exist'));
+    //
     if(navParams.get('hierarchydepth') == null)
     {
       this.hierarchyDepth = 0;
@@ -43,7 +54,27 @@ export class HierarchyPage
     {
       this.hierarchyDepth = navParams.get('hierarchydepth');
     }
+    //Save current page data information if available (for edit and read page)
+    if(navParams.get('currentPageData') != null)
+    {
+      this.currentData = navParams.get('currentPageData');
+    }
+
     this.currentDisplayPath = navParams.get('name');
+
+    // uniqueIdentifier and previousPathIDName are used for filtering the values displayed in the hierarchy.
+    this.uniqueIdentifier = navParams.get('identifier');
+    this.previousPathIDName = navParams.get('pathName');
+
+    if(this.previousPathIDName != null)
+    {
+      // TEMPROARY hack to ignore data inconsistencies in the database when pulling sites.
+      this.previousPathIDName = this.previousPathIDName.replace(/Site Networks/g, "Networks");
+      // TEMPORARY
+      // Replace the S in the pluralization value in the anme and add ID.  This is used to find the ID used to filter the objects displayed.
+      this.previousPathIDName = this.previousPathIDName.substring(0, this.previousPathIDName.length - 1)  + " ID";
+    }
+
     this.getHierarchyData(this.hierarchyDepth);
   }
 
@@ -59,11 +90,10 @@ export class HierarchyPage
     //   message: 'Loading...'
     // });
     // this.loading.present();
-
     let online = this.gvars.getOnline();
     // TODO: Create a confi setting for this
     // Local location containing the Ontology
-    let local = '../../assets/data/ontology.json';
+    let local = '../../assets/data/test.json';
     // TODO: Create a confi setting for this
     // Remote service containing the ontology
     //let remote = 'http://sensor.nevada.edu/GS/Services/Ragnarok/';
@@ -75,18 +105,20 @@ export class HierarchyPage
     {
       let data: Observable<any> = this.http.get(remote);
       data.subscribe(result => {
+
+        // Find max length of navigation (for bug catching)
+        this.maxIndex = result.length;
+
         // Grab the json results from Ragnarok (hierarchy)
         // (i.e. Site-Networks, Sites, Systems, Deployments, Components
-
+        if( depth < this.maxIndex){
         this.items = result;
         // Get the current header item
         this.hierarchyTop = result[depth];
-        // Find max length of navigation (for bug catching)
-        this.maxIndex = result.length;
         // increases to next header item
         this.hierarchyDepth = depth + 1;
         // Proper viewing name of header
-        this.subURI = this.hierarchyTop.Plural;
+          this.subURI = this.hierarchyTop.Plural;
         // Create URL for the items from this header (removing spaces first)
         this.subURI = this.subURI.replace(/ +/g, "");
         this.subURI = dataRemote + this.subURI + ".svc/Get";
@@ -95,6 +127,25 @@ export class HierarchyPage
         //console.log(this.subURI);
 
         this.getNextData();
+        }
+        else{
+          this.items = result;
+          // Get the current header item
+          this.hierarchyTop = result[depth - 1];
+          // increases to next header item
+          this.hierarchyDepth = depth + 1;
+          // Proper viewing name of header
+            this.subURI = this.hierarchyTop.Plural;
+          // Create URL for the items from this header (removing spaces first)
+          this.subURI = this.subURI.replace(/ +/g, "");
+          this.subURI = dataRemote + this.subURI + ".svc/Get";
+          //DEBUG
+          //console.log("SubURI is:");
+          //console.log(this.subURI);
+
+          this.getNextData();
+        }
+
       });
     }
     else
@@ -119,7 +170,7 @@ export class HierarchyPage
     data.subscribe(result => {
       this.dataObject = result;
       //DEBUG
-      //console.log(this.dataObject);
+      console.log(this.dataObject);
     });
   }
 
@@ -133,9 +184,15 @@ export class HierarchyPage
   {
     if(this.hierarchyDepth <= this.maxIndex - 1)
     {
-      let localValues = {hierarchydepth:this.hierarchyDepth, name:item.Name};
+      let localValues = {hierarchydepth:this.hierarchyDepth, name:item.Name, currentPageData:item, identifier:item["Unique Identifier"], pathName:this.hierarchyTop.Plural};
       this.navCtrl.push(HierarchyPage,localValues);
     }
+    else if(this.hierarchyDepth = this.maxIndex)
+    {
+      let localValues = {hierarchydepth:this.hierarchyDepth, name:item.Name, currentPageData:item, identifier:item["Unique Identifier"], pathName:this.hierarchyTop.Plural};
+      this.navCtrl.push(HierarchyPage,localValues);
+    }
+
   }
 
   goHome()
@@ -168,13 +225,18 @@ export class HierarchyPage
     let subURI = hierarchyTop.Plural;
     // Create URL for the items from this header (removing spaces first)
     subURI = subURI.replace(/ +/g, "");
-    subURI = dataRemote + subURI + ".svc/Get";
+    //Add unique ID to gather specific page data
+    subURI = dataRemote + subURI + ".svc/Get/" + this.currentData["Unique Identifier"];
     // END EXPERIMENTAL
+
+    //// DEBUG:
+    //  console.log(subURI);
+    //  console.log(hierarchyTop);
 
     let online = this.gvars.getOnline();
     if(online)//console.log(ReadPage, this.hierarchyTop, this.subURI);
     {
-      this.navCtrl.push(ReadPage,[hierarchyTop,{dataURI:subURI}, this.dataObject]);
+      this.navCtrl.push(ReadPage,[hierarchyTop, subURI, this.currentData]);
     }
   }
 

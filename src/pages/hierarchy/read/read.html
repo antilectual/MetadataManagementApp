@@ -11,19 +11,20 @@
   <!-- <img [src]="image" width="200px" height="248px"> -->
   <p text-center><img src="{{image}}"></p>
   <ng-container *ngIf='isDataPresent'>
-    <ion-item *ngFor="let char of item.Characteristics">
+  <ng-container *ngFor="let char of item.Characteristics">
       <!--div *ngIf='dataObject[char.Label]!==undefined;else isDefined' > undefined </div-->
       <!--ion-input type="text" placeholder={{char?.Label}}></ion-input-->
       <!--ng-template #isDefined> </ng-template-->
-
-      <ion-label color="primary" stacked>{{char.Label}}</ion-label>
-      <ion-input type="text" value={{dataObject[0][char.Label]}}></ion-input>
+      <ion-item *ngIf='char.Label != uniqueIDCheck'>
+        <ion-label color="primary" stacked>{{char.Label}}</ion-label>
+        <ion-input type="text" value={{dataObject[char.Label]}}></ion-input>
+      </ion-item>
       <!--{{dataObject[char.Label]}}-->
       <!--<ion-item *ngFor="let dataItem of dataObject.Characteristics">
 
         <ion-input type="text" placeholder={{char?.Label}}></ion-input>
       </ion-item-->
-    </ion-item>
+  </ng-container>
   </ng-container>
 
 

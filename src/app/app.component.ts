@@ -14,7 +14,7 @@ import { HierarchyPage } from '../pages/hierarchy/hierarchy';
 import { AboutPage } from '../pages/about/about';
 import { SettingsPage } from '../pages/settings/settings';
 //import { ReadPage } from '../pages/hierarchy/read/read';
-import { ExamplePage } from '../pages/example/example';
+// import { ExamplePage } from '../pages/example/example';
 
 
 @Component({
@@ -32,7 +32,7 @@ export class MyApp {
       this.pages = [
         { title: 'Home', component: HomePage },
         { title: 'About', component: AboutPage },
-        { title: 'Example', component: ExamplePage},
+        // { title: 'Example', component: ExamplePage},
         { title: 'Metadata Entry', component: HierarchyPage },
         { title: 'Settings', component: SettingsPage },
         { title: 'Logout', component: LoginPage},
