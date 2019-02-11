@@ -20,6 +20,8 @@ export class ReadPage {
   base64Data: any;
   image: any;
 
+  tzOffset: any;
+
 // navParams.data contains the following:
 //  [0] - JSON containing:
 //    The selected item's Characteristics (Characteristics)
@@ -39,6 +41,8 @@ export class ReadPage {
       // DEBUG:
       //console.log(this.item);
 
+
+
       this.image = "data:image/png;base64,"+ navParams.data[2][0].Photo;
       console.log(this.image);
   }
@@ -53,8 +57,7 @@ export class ReadPage {
     data.subscribe(result => {
       this.dataObject = result;
       this.isDataPresent = true;
-
-      //console.log(this.dataObject);
     });
   }
+
 }
