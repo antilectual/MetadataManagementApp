@@ -22,6 +22,8 @@ export class ReadPage {
   //String for filtering in html
   uniqueIDCheck = "Unique Identifier";
 
+  tzOffset: any;
+
 // navParams.data contains the following:
 //  [0] - JSON containing:
 //    The selected item's Characteristics (Characteristics)
@@ -57,8 +59,7 @@ export class ReadPage {
     data.subscribe(result => {
       this.dataObject = result;
       this.isDataPresent = true;
-
-      //console.log(this.dataObject);
     });
   }
+
 }

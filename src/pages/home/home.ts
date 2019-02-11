@@ -9,6 +9,8 @@ import { GlobalvarsProvider } from '../../providers/globalvars/globalvars';
 export class HomePage {
 
   status: any
+  currentDate = new Date("2016-07-27T06:45:00Z");
+  
   constructor(public navCtrl: NavController, public gvars: GlobalvarsProvider) {
      if(this.gvars.getOnline())
      {
@@ -19,4 +21,6 @@ export class HomePage {
        this.status = 'n';
      }
   }
+
+
 }

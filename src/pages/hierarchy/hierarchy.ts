@@ -269,4 +269,34 @@ export class HierarchyPage
       this.navCtrl.push(ReadPage,[hierarchyTop, subURI, this.currentData]);
     }
   }
+
+  /**
+  * @brief adds a leading '0' to single digit number dates to make them 2-digit
+  * @param n the numerical digit to 'pad'
+  * @pre
+  * @post
+  */
+   pad(n){
+     if(n<10)
+       return '0' + n;
+     else
+       return n
+   }
+   /**
+   * @brief Converts a date in UTC time to Local time
+   * @param date The date to be converted, in UTC
+   * @pre
+   * @post
+   */
+   convertUTCtoLocal(date){
+     var tzOffset = -480;
+     //get actual tzOffset
+     var newTime = new Date(date.getTime() + tzOffset * 60 * 1000);
+
+     var hourOffset = tzOffset/60;
+
+     newTime.setHours(date.getHours() - hourOffset);
+
+     return newTime;
+   }
 }
