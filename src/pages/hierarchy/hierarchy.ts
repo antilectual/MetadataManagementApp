@@ -1,4 +1,8 @@
-
+/**
+* @file  hierarchy.ts
+* @author  Brianna Blain-Castelli, Christopher Eichstedt, Matthew johnson, Nicholas Jordy
+* @brief  main file for dynamic hierarchical navigation
+*/
 import { Component } from '@angular/core';
 import { NavController, NavParams, LoadingController } from 'ionic-angular';
 import { HttpClient } from '@angular/common/http';
@@ -41,6 +45,13 @@ export class HierarchyPage
   hierarchyDepth = 0;
   //
   loading;
+
+  /**
+* @brief
+* @param
+* @pre
+* @post
+*/
   constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, public gvars: GlobalvarsProvider, private loadingCtrl: LoadingController)//, private file: File)
   {
     //test json copy
@@ -57,6 +68,7 @@ export class HierarchyPage
 
     // uniqueIdentifier and previousPathIDName are used for filtering the values displayed in the hierarchy.
     this.uniqueIdentifier = navParams.get('identifier');
+    this.currentDisplayPath = navParams.get('name');
     this.getHierarchyData(this.hierarchyDepth);
   }
 
@@ -65,6 +77,12 @@ export class HierarchyPage
   //   console.log('ionViewDidLoad HierarchyPage');
   // }
 
+  /**
+* @brief
+* @param
+* @pre
+* @post
+*/
 // Doesn't actually get the data. It gets the hierarchy/ontology! (RAGNAROK)
   getHierarchyData(depth)
   {
@@ -146,6 +164,12 @@ export class HierarchyPage
     // this.loading.dismiss();
   }
 
+  /**
+* @brief
+* @param
+* @pre
+* @post
+*/
 // This function actually gets the data from the URI accessing the database.
   getNextData()
   {
@@ -165,6 +189,12 @@ export class HierarchyPage
   //   this.navCtrl.push(HierarchyPage,localValues);
   // }
 
+  /**
+* @brief
+* @param
+* @pre
+* @post
+*/
   push(item)
   {
     if(this.hierarchyDepth <= this.maxIndex - 1)
@@ -183,11 +213,23 @@ export class HierarchyPage
 
   }
 
+  /**
+* @brief
+* @param
+* @pre
+* @post
+*/
   goHome()
   {
     this.navCtrl.setRoot(HomePage);
   }
 
+  /**
+* @brief
+* @param
+* @pre
+* @post
+*/
 // Goes to the edit page
   editCharacteristics()
   {
