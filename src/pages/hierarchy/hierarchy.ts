@@ -66,6 +66,12 @@ export class HierarchyPage
       this.hierarchyDepth = navParams.get('hierarchydepth');
     }
 
+    //Save current page data information if available (for edit and read page)
+    if(navParams.get('currentPageData') != null)
+    {
+      this.currentData = navParams.get('currentPageData');
+    }
+
     // uniqueIdentifier and previousPathIDName are used for filtering the values displayed in the hierarchy.
     this.uniqueIdentifier = navParams.get('identifier');
     this.currentDisplayPath = navParams.get('name');
@@ -201,7 +207,7 @@ export class HierarchyPage
     {
       let localValues = {hierarchydepth:this.hierarchyDepth, name:item.Name, currentPageData:item, identifier:item["Unique Identifier"], pathName:this.hierarchyTop.Plural};
       //Debug Logger
-      //console.log(this.uniqueIdentifier);
+      //console.log(item);
       //console.log(this.previousPathIDName);
       this.navCtrl.push(HierarchyPage,localValues);
     }
@@ -247,6 +253,9 @@ export class HierarchyPage
     {
         return;
     }
+
+    //Debug log
+    //console.log(this.currentData);
 
     // TODO: Update from config file
     // Remote database service containing the metadata
