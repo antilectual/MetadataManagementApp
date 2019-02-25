@@ -10,6 +10,7 @@ import { Observable } from 'rxjs/Observable';
 import { GlobalvarsProvider } from '../../providers/globalvars/globalvars';
 import { ReadPage } from './read/read';
 import { HomePage } from '../home/home';
+import { EditPage } from './edit/edit';
 import { File } from '@ionic-native/file';
 
 
@@ -64,6 +65,12 @@ export class HierarchyPage
     else
     {
       this.hierarchyDepth = navParams.get('hierarchydepth');
+    }
+
+    //Save current page data information if available (for edit and read page)
+    if(navParams.get('currentPageData') != null)
+    {
+      this.currentData = navParams.get('currentPageData');
     }
 
     // uniqueIdentifier and previousPathIDName are used for filtering the values displayed in the hierarchy.
@@ -231,7 +238,7 @@ export class HierarchyPage
 * @post
 */
 // Goes to the edit page
-  editCharacteristics()
+  editCharacteristics(page)
   {
 
     // EXPERIMENTAL
@@ -266,7 +273,12 @@ export class HierarchyPage
     let online = this.gvars.getOnline();
     if(online)//console.log(ReadPage, this.hierarchyTop, this.subURI);
     {
-      this.navCtrl.push(ReadPage,[hierarchyTop, subURI, this.currentData]);
+      if(page == 'edit')
+      {
+        this.navCtrl.push(EditPage,[hierarchyTop, subURI, this.currentData]);
+      }
+      else
+        this.navCtrl.push(ReadPage,[hierarchyTop, subURI, this.currentData, this.currentDisplayPath]);
     }
   }
 
@@ -280,14 +292,16 @@ export class HierarchyPage
      if(n<10)
        return '0' + n;
      else
-       return n
+       return n;
    }
+
    /**
    * @brief Converts a date in UTC time to Local time
    * @param date The date to be converted, in UTC
    * @pre
    * @post
    */
+
    convertUTCtoLocal(date){
      var tzOffset = -480;
      //get actual tzOffset
@@ -299,4 +313,6 @@ export class HierarchyPage
 
      return newTime;
    }
+
+
 }

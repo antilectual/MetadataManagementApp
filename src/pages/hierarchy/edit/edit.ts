@@ -2,18 +2,22 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-import { EditPage } from '../edit/edit';
 
 import { Base64 } from '@ionic-native/base64/ngx';
 
+/**
+ * Generated class for the EditPage page.
+ *
+ * See https://ionicframework.com/docs/components/#navigation for more info on
+ * Ionic pages and navigation.
+ */
 
 @IonicPage()
 @Component({
-  selector: 'page-read',
-  templateUrl: 'read.html',
+  selector: 'page-edit',
+  templateUrl: 'edit.html',
 })
-export class ReadPage {
-
+export class EditPage {
   item: any;
   dataObject: any;
   dataURI: any;
@@ -24,7 +28,6 @@ export class ReadPage {
   uniqueIDCheck = "Unique Identifier";
 
   tzOffset: any;
-  currentDisplayPath: any;
   // displayTime: any;
 
 // navParams.data contains the following:
@@ -41,7 +44,6 @@ export class ReadPage {
       this.dataURI = navParams.data[1];
       this.isDataPresent = false;
       this.item = navParams.data[0];
-      this.currentDisplayPath = navParams.data[3];
       this.getData();
       //console.log(this.item);
       // DEBUG:
@@ -83,9 +85,7 @@ export class ReadPage {
           console.log(this.dataObject);
          this.dataObject[ this.item["Characteristics"][i]["Label"] ] = this.displayTime(this.item["Characteristics"][i], this.dataObject[ this.item["Characteristics"][i]["Label"] ]);
      }
-
     }
-
   }
 
   /**
@@ -149,13 +149,4 @@ export class ReadPage {
        return n;
    }
 
-   /**
-   * @brief adds a leading '0' to single digit number dates to make them 2-digit
-   * @pre
-   * @post
-   */
-   goToEdit()
-   {
-     this.navCtrl.push(EditPage,[this.item, this.dataURI, this.dataObject]);
-   }
 }
