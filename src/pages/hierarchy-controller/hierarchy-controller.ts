@@ -29,8 +29,10 @@ isOntologyLoaded: any;
 isDataSynced: any;
 // boolean that stores whether data is loaded
 isDataLoaded: any;
+// boolean that stores whether the ontology is done loading
+isOntologyDoneLoading = false;
 // boolean that stores whether the data is done loading
-isOntologyDoneLoading: any;
+isDataDoneLoading = false;
 // All locations in the Ontology
 public items: any;
 // URL for getting the specific data
@@ -53,12 +55,20 @@ previousPathIDName: any;
 * @post
 */
   constructor(public http: HttpClient, public navCtrl: NavController, public navParams: NavParams, public loadingController: LoadingController, public gvars: GlobalvarsProvider) {
+      this.loadAll();
+  }
+
+  async loadAll()
+  {
     //put a pin in it
     // TODO: Add try catch blocks for each function. Throw errors for offline and timeouts.
     this.getOntology();
+    await this.loadOntologyWaiting();
     this.getAllData();
-    // Wait for the data to be loaded before going to the hierarchy.
-    this.loadData();
+    await this.loadDataWaiting().then(() => {
+      this.goHierachyPage();
+    });
+    // this.goHierachyPage();
     // Error if data loading fails. Otherwise go to the hierarchy page.
     // if(this.isOntologyLoaded && this.isDataLoaded){this.goHierachyPage();}
   }
@@ -81,8 +91,26 @@ previousPathIDName: any;
   * @return none
   */
   goHierachyPage(){
+
+
       //TODO: create the variables needed to pass to the hierarchy page.
-      this.navCtrl.push(HierarchyPage);
+      //this.navCtrl.push(HierarchyPage);
+      //let localValues = {0, name:item.Name, currentPageData:item, identifier:item["Unique Identifier"], pathName:this.hierarchyTop.Plural};
+      //Debug Logger
+      //console.log(item);
+      //console.log(this.previousPathIDName);
+      this.navCtrl.setRoot(HierarchyPage);
+  }
+
+  /**
+* @brief
+* @param
+* @pre
+* @post
+*/
+  goHome()
+  {
+    this.navCtrl.setRoot(HomePage);
   }
 
   /**
@@ -231,12 +259,12 @@ previousPathIDName: any;
   * @return None
   */
   // TODO: pass in variable for what value to test.
-  async loadData()
+  async loadOntologyWaiting()
     {
         // the fun synchronous asynchronous code block -----------
         let loading = this.loadingController.create({
           spinner: null,
-          message: 'Please wait...',
+          content: 'Downloading hierarchy...',
           translucent: true,
           cssClass: 'custom-class custom-loading'
         });
@@ -244,6 +272,36 @@ previousPathIDName: any;
         while(!this.isOntologyDoneLoading){await this.delay(1);}
         loading.dismiss();
         // -----------
+    }
+
+    /**
+    * @brief Data loading test.
+    *
+    * @details Shows a loading symbol while waiting for data being loaded.
+    *
+    * @exception Boundary
+    * None
+    *
+    * @param[in] ____ is boolean value that is being tested against and is set when some data has been loaded.
+    *
+    * @param[Out] None
+    *
+    * @return None
+    */
+    // TODO: pass in variable for what value to test.
+    async loadDataWaiting()
+      {
+          // the fun synchronous asynchronous code block -----------
+          let loading = this.loadingController.create({
+            spinner: null,
+            content: 'Downloading data...',
+            translucent: true,
+            cssClass: 'custom-class custom-loading'
+          });
+          loading.present();
+          while(!this.isDataDoneLoading){await this.delay(1);}
+          loading.dismiss();
+          // -----------
       }
 
   /**
@@ -271,15 +329,6 @@ previousPathIDName: any;
     // Remote database service containing the metadata
     let dataRemote = 'http://sensor.nevada.edu/Services/NRDC/Infrastructure/Services/';
     // the fun synchronous asynchronous code block -----------
-    let loading = this.loadingController.create({
-      spinner: null,
-      message: 'Please wait...',
-      translucent: true,
-      cssClass: 'custom-class custom-loading'
-    });
-    loading.present();
-    while(!this.isOntologyDoneLoading){await this.delay(1);}
-    loading.dismiss();
     // -----------
     let i = 0;
     for (i; i < this.items.length; i++)
@@ -295,7 +344,7 @@ previousPathIDName: any;
         //console.log(this.subURI);
         let data: Observable<any> = this.http.get(this.subURI);
         let result = null;
-                // console.log(this.subURI);
+
         await data.subscribe(result => {
 
           if(this.dataObject == null)
@@ -307,7 +356,11 @@ previousPathIDName: any;
             this.dataObject.push(result);
           }
 
-         console.log(this.dataObject);
+         if(i == this.items.length)
+         {
+           console.log("DataDone");
+           this.isDataDoneLoading = true;
+         }
         });
     }
   }
