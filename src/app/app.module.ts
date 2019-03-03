@@ -28,7 +28,7 @@ import { GlobalvarsProvider } from '../providers/globalvars/globalvars';
     AboutPage,
     SettingsPage,
     ReadPage,
-    EditPage
+    EditPage,
     HierarchyControllerPage
     // ExamplePage
   ],
@@ -47,7 +47,7 @@ import { GlobalvarsProvider } from '../providers/globalvars/globalvars';
     AboutPage,
     SettingsPage,
     ReadPage,
-    EditPage
+    EditPage,
     HierarchyControllerPage
     // ExamplePage
   ],

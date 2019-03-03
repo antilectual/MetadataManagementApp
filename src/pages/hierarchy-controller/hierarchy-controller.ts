@@ -265,7 +265,6 @@ previousPathIDName: any;
         let loading = this.loadingController.create({
           spinner: null,
           content: 'Downloading hierarchy...',
-          translucent: true,
           cssClass: 'custom-class custom-loading'
         });
         loading.present();
@@ -295,7 +294,6 @@ previousPathIDName: any;
           let loading = this.loadingController.create({
             spinner: null,
             content: 'Downloading data...',
-            translucent: true,
             cssClass: 'custom-class custom-loading'
           });
           loading.present();

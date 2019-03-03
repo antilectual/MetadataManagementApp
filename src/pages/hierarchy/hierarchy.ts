@@ -162,7 +162,7 @@ export class HierarchyPage
       }
       else
       {
-        this.navCtrl.push(ReadPage,[this.hierarchyTiers[this.hierarchyDepth - 1], filteredObject]);
+        this.navCtrl.push(ReadPage,[this.hierarchyTiers[this.hierarchyDepth - 1], filteredObject, this.currentDisplayPath]);
       }
 
   }

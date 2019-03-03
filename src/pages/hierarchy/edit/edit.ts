@@ -5,12 +5,6 @@ import { Observable } from 'rxjs/Observable';
 
 import { Base64 } from '@ionic-native/base64/ngx';
 
-/**
- * Generated class for the EditPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
 
 @IonicPage()
 @Component({
@@ -18,6 +12,7 @@ import { Base64 } from '@ionic-native/base64/ngx';
   templateUrl: 'edit.html',
 })
 export class EditPage {
+
   item: any;
   dataObject: any;
   dataURI: any;
@@ -28,7 +23,6 @@ export class EditPage {
   uniqueIDCheck = "Unique Identifier";
 
   tzOffset: any;
-  // displayTime: any;
 
 // navParams.data contains the following:
 //  [0] - JSON containing:
@@ -39,37 +33,19 @@ export class EditPage {
 //  [1] - The URI to retrieve the metadata from (dataURI)
 //  [2] - JSON Containing the info for the next level [TODO: this is wrong, fix it]
   constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, private base64: Base64) {
-      // DEBUG:
-      //console.log(navParams.data);
-      this.dataURI = navParams.data[1];
-      this.isDataPresent = false;
+
       this.item = navParams.data[0];
-      this.getData();
-      //console.log(this.item);
+      this.dataObject = navParams.data[1];
       // DEBUG:
       //console.log(this.dataURI);
       //If there is a photo, display image
-      if(navParams.data[2].Photo != null){
-        this.image = "data:image/png;base64,"+ navParams.data[2].Photo;
+      if(navParams.data[1].Photo != null){
+        this.image = "data:image/png;base64,"+ navParams.data[1].Photo;
       }
-      //console.log(this.image);
-      // this.dataObject = navParams.data[2];
-
-  }
-
-  // DEBUG:
-  // ionViewDidLoad() {
-  //   console.log('ionViewDidLoad ReadPage');
-  // }
- //Possible async error location (error intermittent)
-  getData(){
-    let data: Observable<any> = this.http.get(this.dataURI);
-    data.subscribe(result => {
-      this.dataObject = result;
-      this.isDataPresent = true;
       this.editDateFields();
-    });
+      //console.log(this.image);
   }
+
 
   editDateFields()
   {
@@ -148,5 +124,6 @@ export class EditPage {
      else
        return n;
    }
+
 
 }
