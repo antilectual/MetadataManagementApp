@@ -47,51 +47,101 @@ uniqueIdentifier: any;
 previousPathIDName: any;
 
   /**
-* @brief
+* @brief Constructor for the hierarchy-controller
 * @param
 * @pre
 * @post
 */
   constructor(public http: HttpClient, public navCtrl: NavController, public navParams: NavParams, public loadingController: LoadingController, public gvars: GlobalvarsProvider) {
     //put a pin in it
+    // TODO: Add try catch blocks for each function. Throw errors for offline and timeouts.
     this.getOntology();
     this.getAllData();
+    // Wait for the data to be loaded before going to the hierarchy.
     this.loadData();
-
+    // Error if data loading fails. Otherwise go to the hierarchy page.
+    // if(this.isOntologyLoaded && this.isDataLoaded){this.goHierachyPage();}
   }
 
   /**
-* @brief
-* @param
-* @pre
-* @post
-*/
+  * @brief Go to the hierarchy page.
+  *
+  * @details Passes the ontology and database data that has been retrieved to the dynamic loading hierarchy page.
+  *
+  * @pre None
+  *
+  * @post None
+  *
+  * @par Algorithm
+  * Creates a variable that stores the ontology, abd the database data and passes it to the
+  *
+  * @exception Boundary
+  * None
+  *
+  * @return none
+  */
   goHierachyPage(){
+      //TODO: create the variables needed to pass to the hierarchy page.
       this.navCtrl.push(HierarchyPage);
   }
 
-/**
-* @brief
-* @param
-* @pre
-* @post
-*/
+  /**
+  * @brief Hierarchy retrieval function
+  *
+  * @details Calls the function that performs the remote hierarchical data retrieval if appropriate to do so.
+  *
+  * @pre None
+  *
+  * @post None
+  *
+  * @par Algorithm
+  * Checks for whether the ontology is already synced. If it is not, check if the ontology has been loaded previously.
+  * If it has not, call the function to grab the remote data.
+  *
+  * @exception Boundary
+  * Failure to load, specifically Offline or Timeout shall throw an exception.
+  *
+  * @param[in] None
+  *
+  * @param[Out] isOntologySynced isOntologyLoaded are updated if successful.
+  *
+  * @return None
+  */
+
   async getOntology(){
     if(!this.isOntologySynced){
       if(!this.isOntologyLoaded){
         // BEWARE: possibly volatile and could not save actual data
-        this.getHierarchyData(0); // zero means to grab the full hierarchy
+        // If getting hierarchy returns true then it is synced and loaded.
+        // Otherwise return failure
+        this.getHierarchyData();
         this.isOntologySynced = this.isOntologyLoaded = true;
       }
     }
   }
 
-/**
-* @brief
-* @param
-* @pre
-* @post
-*/
+  /**
+  * @brief  Remote database data retrieval function
+  *
+  * @details Calls the function that performs the remote database data retrieval if appropriate to do so.
+  *
+  * @pre None
+  *
+  * @post None
+  *
+  * @par Algorithm
+  * Checks for whether the database data is already synced. If it is not, check if the database data has been loaded previously.
+  * If it has not, call the function to grab the remote data.
+  *
+  * @exception Boundary
+  * Failure to load, specifically Offline or Timeout shall throw an exception.
+  *
+  * @param[in] None
+  *
+  * @param[Out] isDataSynced and isDataLoaded are updated based on succesful data retrieval.
+  *
+  * @return none
+  */
   async getAllData(){
     if(!this.isDataSynced){
       if(!this.isDataLoaded){
@@ -105,12 +155,20 @@ previousPathIDName: any;
   }
 
   /**
-* @brief
-* @param
-* @pre
-* @post
-*/
-// Doesn't actually get the data. It gets the hierarchy/ontology! (RAGNAROK)
+  * @brief Hierarchy retrieval function
+  *
+  * @details Gets and stores the tiers/categories to be used in the app via a remote server.
+  * This hierarchicy should be desribed in a JSON file created by the Ontology parsing back-end service.
+  *
+  * @pre None
+  *
+  * @post items contains the (ontology = hierarchy = tier) data.
+  *
+  * @exception Boundary
+  * Failure to load, specifically Offline or Timeout shall throw an exception.
+  *
+  * @return None
+  */
   async getHierarchyData()
   {
     let online = this.gvars.getOnline();
@@ -138,16 +196,41 @@ previousPathIDName: any;
     }
   }
 
+  /**
+  * @brief Timer delay function
+  *
+  * @details Delay function that will wait a number of milliseconds.
+  *
+  * @pre None
+  *
+  * @post None
+  *
+  * @exception Boundary
+  * None
+  *
+  * @param[in] ms is the number of milliseconds the function should wait.
+  *
+  * @return A promise indicating when the function is completed.
+  */
   async delay(ms: number) {
       return new Promise( resolve => setTimeout(resolve, ms) );
   }
 
-/**
-* @brief
-* @param
-* @pre
-* @post
-*/
+  /**
+  * @brief Data loading test.
+  *
+  * @details Shows a loading symbol while waiting for data being loaded.
+  *
+  * @exception Boundary
+  * None
+  *
+  * @param[in] ____ is boolean value that is being tested against and is set when some data has been loaded.
+  *
+  * @param[Out] None
+  *
+  * @return None
+  */
+  // TODO: pass in variable for what value to test.
   async loadData()
     {
         // the fun synchronous asynchronous code block -----------
@@ -164,12 +247,24 @@ previousPathIDName: any;
       }
 
   /**
-* @brief
-* @param
-* @pre
-* @post
-*/
-// This function actually gets the data from the URI accessing the database.
+  * @brief Database data retrieval.
+  *
+  * @details  Gets the data from each tier's URI that accesses the database. Stores all data in a javascript object.
+  *
+  * @pre None
+  *
+  * @post dataObject will contain the data from the database.
+  *
+  * @exception Boundary
+  * None
+  *
+  * @param[in] ____ is boolean value that is being tested against and is set when some data has been loaded.
+  *
+  * @param[Out] None
+  *
+  * @return None
+  */
+  // This function actually gets the data from the URI accessing the database.
   async getData()
   {
     // TODO: Create a confi setting for this
