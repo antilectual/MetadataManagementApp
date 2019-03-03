@@ -40,10 +40,10 @@
 
       <!-- Prints view and edit buttons under details -->
       <br><font size = "-1">Details:</font>
-      <button ion-item>
+      <button ion-item (click)="editCharacteristics('read')">
         View
       </button>
-      <button ion-item (click)="editCharacteristics()">
+      <button ion-item (click)="editCharacteristics('edit')">
         Edit
       </button>
       </ng-container>

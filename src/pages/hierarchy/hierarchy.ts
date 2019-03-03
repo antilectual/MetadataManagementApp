@@ -10,6 +10,7 @@ import { Observable } from 'rxjs/Observable';
 import { GlobalvarsProvider } from '../../providers/globalvars/globalvars';
 import { ReadPage } from './read/read';
 import { HomePage } from '../home/home';
+import { EditPage } from './edit/edit';
 import { File } from '@ionic-native/file';
 
 
@@ -140,19 +141,8 @@ export class HierarchyPage
 * @post
 */
 // Goes to the edit page
-  editCharacteristics()
+  editCharacteristics(page)
   {
-
-    // EXPERIMENTAL
-    // Depth was increment +1 so revert it, and -1 more to go to item above it
-    let dataDepth = this.hierarchyDepth-2;
-    let hierarchyTop: any;
-    // Out of bounds checking
-    if(dataDepth >= 0)
-    {
-      // recheck this
-          hierarchyTop = this.hierarchyTiers[dataDepth];
-    }
     let filteredObject: any;
     let i = 0;
     for(i = 0; i < this.dataObject[this.hierarchyDepth - 1].length; i++)
@@ -166,7 +156,15 @@ export class HierarchyPage
 
     console.log(filteredObject);
     //TODO: filter by unique Identifier
-    this.navCtrl.push(ReadPage,[this.hierarchyTiers[this.hierarchyDepth - 1], filteredObject]);
+      if(page == 'edit')
+      {
+        this.navCtrl.push(EditPage,[this.hierarchyTiers[this.hierarchyDepth - 1], filteredObject]);
+      }
+      else
+      {
+        this.navCtrl.push(ReadPage,[this.hierarchyTiers[this.hierarchyDepth - 1], filteredObject]);
+      }
+
   }
 
   /**
@@ -181,12 +179,14 @@ export class HierarchyPage
      else
        return n;
    }
+
    /**
    * @brief Converts a date in UTC time to Local time
    * @param date The date to be converted, in UTC
    * @pre
    * @post
    */
+
    convertUTCtoLocal(date){
      var tzOffset = -480;
      //get actual tzOffset
@@ -198,4 +198,6 @@ export class HierarchyPage
 
      return newTime;
    }
+
+
 }
