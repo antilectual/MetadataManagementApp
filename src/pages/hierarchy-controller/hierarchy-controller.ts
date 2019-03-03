@@ -34,7 +34,7 @@ isOntologyDoneLoading = false;
 // boolean that stores whether the data is done loading
 isDataDoneLoading = false;
 // All locations in the Ontology
-public items: any;
+public hierarchyTiers: any;
 // URL for getting the specific data
 public subURI: string;
 // The data associated with the current hierarchy item (currently ALL data)
@@ -68,9 +68,6 @@ previousPathIDName: any;
     await this.loadDataWaiting().then(() => {
       this.goHierachyPage();
     });
-    // this.goHierachyPage();
-    // Error if data loading fails. Otherwise go to the hierarchy page.
-    // if(this.isOntologyLoaded && this.isDataLoaded){this.goHierachyPage();}
   }
 
   /**
@@ -92,14 +89,17 @@ previousPathIDName: any;
   */
   goHierachyPage(){
 
+      /* Hierarchy requires the following values:
+      * hierarchydepth - HierchyDepth describes the initial tier index of the ontology/hierarchy. It is also the initial index of the location of data in dataObject
+      * name - Name is the name used as a label on the hierarchy (metadata management) page.
+      * pageData - This object is the full set of data pulled from the database which contains the actual metadata for all hierarchy tiers
+      * hierarchyData -  This object is the full set of hierarchyData tiers
+      * indentifier - This should be the unique identifier value for the previous page in the hierarchy.  null for the initial push.
+      * pathName - this string is the pluralization of the Name which will be used for finding the URI and show the name of the hierarchy level.
+      */
 
-      //TODO: create the variables needed to pass to the hierarchy page.
-      //this.navCtrl.push(HierarchyPage);
-      //let localValues = {0, name:item.Name, currentPageData:item, identifier:item["Unique Identifier"], pathName:this.hierarchyTop.Plural};
-      //Debug Logger
-      //console.log(item);
-      //console.log(this.previousPathIDName);
-      this.navCtrl.setRoot(HierarchyPage);
+      let localValues = {hierarchydepth:0, name:"NRDC", pageData:this.dataObject, hierarchyData:this.hierarchyTiers, identifier:null, pathName:this.hierarchyTiers[0].Plural};
+      this.navCtrl.setRoot(HierarchyPage,localValues);
   }
 
   /**
@@ -190,7 +190,7 @@ previousPathIDName: any;
   *
   * @pre None
   *
-  * @post items contains the (ontology = hierarchy = tier) data.
+  * @post hierarchyTiers contains the (ontology = hierarchy = tier) data.
   *
   * @exception Boundary
   * Failure to load, specifically Offline or Timeout shall throw an exception.
@@ -214,7 +214,7 @@ previousPathIDName: any;
       data.subscribe(result => {
         // Grab the json results from Ragnarok (hierarchy)
         // (i.e. Site-Networks, Sites, Systems, Deployments, Components
-        this.items = result;
+        this.hierarchyTiers = result;
         this.isOntologyDoneLoading = true;
       });
     }
@@ -331,11 +331,11 @@ previousPathIDName: any;
     // the fun synchronous asynchronous code block -----------
     // -----------
     let i = 0;
-    for (i; i < this.items.length; i++)
+    for (i; i < this.hierarchyTiers.length; i++)
     {
         // Proper viewing name of header
-        this.subURI = this.items[i].Plural;
-        // Create URL for the items from this header (removing spaces first)
+        this.subURI = this.hierarchyTiers[i].Plural;
+        // Create URL for the hierarchyTiers from this header (removing spaces first)
         this.subURI = this.subURI.replace(/ +/g, "");
         this.subURI = dataRemote + this.subURI + ".svc/Get";
 
@@ -349,16 +349,16 @@ previousPathIDName: any;
 
           if(this.dataObject == null)
           {
-            this.dataObject = result;
+            this.dataObject = [];
+            this.dataObject.push(result);
           }
           else
           {
             this.dataObject.push(result);
           }
 
-         if(i == this.items.length)
+         if(i == this.hierarchyTiers.length)
          {
-           console.log("DataDone");
            this.isDataDoneLoading = true;
          }
         });

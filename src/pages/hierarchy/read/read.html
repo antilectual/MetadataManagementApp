@@ -10,7 +10,6 @@
 <ion-content>
   <!-- <img [src]="image" width="200px" height="248px"> -->
   <p text-center><img src="{{image}}"></p>
-  <ng-container *ngIf='isDataPresent'>
   <ng-container *ngFor="let char of item.Characteristics">
       <!--div *ngIf='dataObject[char.Label]!==undefined;else isDefined' > undefined </div-->
       <!--ion-input type="text" placeholder={{char?.Label}}></ion-input-->
@@ -24,7 +23,6 @@
 
         <ion-input type="text" placeholder={{char?.Label}}></ion-input>
       </ion-item-->
-  </ng-container>
   </ng-container>
 
 
