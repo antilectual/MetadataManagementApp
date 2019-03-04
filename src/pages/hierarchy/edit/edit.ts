@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
+// import { Observable } from 'rxjs/Observable';
 
-import { Base64 } from '@ionic-native/base64/ngx';
+//import { Base64 } from '@ionic-native/base64/ngx';
 
 
 @IonicPage()
@@ -32,7 +32,8 @@ export class EditPage {
 //    The selected item's pluralization (Plural)
 //  [1] - The URI to retrieve the metadata from (dataURI)
 //  [2] - JSON Containing the info for the next level [TODO: this is wrong, fix it]
-  constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, private base64: Base64) {
+// private base64: Base64
+  constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams) {
 
       this.item = navParams.data[0];
       this.dataObject = navParams.data[1];
@@ -71,11 +72,11 @@ export class EditPage {
   */
   displayTime(characteristic, dataIndex)
   {
-    var referenceCalculationLabel;
-    if(characteristic["datatype"] == 'xsd:datetime')
-    {
-      referenceCalculationLabel = characteristic.TimezoneOffsetLabel;
-    }
+    // var referenceCalculationLabel;
+    // if(characteristic["datatype"] == 'xsd:datetime')
+    // {
+    //   referenceCalculationLabel = characteristic.TimezoneOffsetLabel;
+    // }
     // for(var i=0; i<MAX_CHARACTERISTICS ; i++)
     // {
     //   if(hierarchy[i].Label == referenceCalculationLabel)

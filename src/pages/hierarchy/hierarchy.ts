@@ -4,14 +4,14 @@
 * @brief  main file for dynamic hierarchical navigation
 */
 import { Component } from '@angular/core';
-import { NavController, NavParams, LoadingController } from 'ionic-angular';
+import { NavController, NavParams} from 'ionic-angular';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
+//import { Observable } from 'rxjs/Observable';
 import { GlobalvarsProvider } from '../../providers/globalvars/globalvars';
 import { ReadPage } from './read/read';
 import { HomePage } from '../home/home';
 import { EditPage } from './edit/edit';
-import { File } from '@ionic-native/file';
+//import { File } from '@ionic-native/file';
 
 
 // @IonicPage()
@@ -51,7 +51,8 @@ export class HierarchyPage
 * @pre
 * @post
 */
-  constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, public gvars: GlobalvarsProvider, private loadingCtrl: LoadingController)//, private file: File)
+//private loadingCtrl: LoadingController
+  constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, public gvars: GlobalvarsProvider)//, private file: File)
   {
     //test json copy
     // this.file.writeFile(this.file.assets.data, 'test.json', 'hello, world', {replace: true}).then(_ => console.log('Directory exists')).catch(err => console.log('Directory doesn\'t exist'));

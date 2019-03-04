@@ -10,7 +10,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { HomePage } from '../pages/home/home';
 import { LoginPage } from '../pages/login/login';
-import { HierarchyPage } from '../pages/hierarchy/hierarchy';
+// import { HierarchyPage } from '../pages/hierarchy/hierarchy';
 import { AboutPage } from '../pages/about/about';
 import { SettingsPage } from '../pages/settings/settings';
 import { HierarchyControllerPage } from '../pages/hierarchy-controller/hierarchy-controller';

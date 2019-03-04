@@ -10,7 +10,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { GlobalvarsProvider } from '../../providers/globalvars/globalvars';
 import { HomePage } from '../home/home';
-import { File } from '@ionic-native/file';
+// import { File } from '@ionic-native/file';
 import { HierarchyPage } from '../hierarchy/hierarchy';
 
 @IonicPage()
@@ -202,7 +202,7 @@ previousPathIDName: any;
     let online = this.gvars.getOnline();
     // TODO: Create a config setting for this
     // Local location containing the Ontology
-    let local = '../../assets/data/test.json';
+    // let local = '../../assets/data/test.json';
     // TODO: Create a config setting for this
     // Remote service containing the ontology
     //let remote = 'http://sensor.nevada.edu/GS/Services/Ragnarok/';
@@ -210,7 +210,7 @@ previousPathIDName: any;
     if(online)
     {
       let data: Observable<any> = this.http.get(remote);
-      let isOntologyDoneLoading = false;
+      this.isOntologyDoneLoading = false;
       data.subscribe(result => {
         // Grab the json results from Ragnarok (hierarchy)
         // (i.e. Site-Networks, Sites, Systems, Deployments, Components
@@ -341,7 +341,6 @@ previousPathIDName: any;
         //DEBUG
         //console.log(this.subURI);
         let data: Observable<any> = this.http.get(this.subURI);
-        let result = null;
 
         await data.subscribe(result => {
 

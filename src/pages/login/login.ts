@@ -9,7 +9,6 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { HomePage } from '../home/home';
 import { GlobalvarsProvider } from '../../providers/globalvars/globalvars';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
-import { UsernamePage } from '../../app/validators/username/username';
 
 @IonicPage()
 @Component({
