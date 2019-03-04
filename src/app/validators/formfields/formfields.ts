@@ -4,7 +4,7 @@
 * @brief  main file for form field validation
 */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { FormBuilder, FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 
