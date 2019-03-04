@@ -16,25 +16,34 @@
       <!-- Prints title given from top of JSON object, if NULL, prints NRDC -->
       <h6 *ngIf="currentDisplayPath != null" style="text-align:center;"><b>{{currentDisplayPath}}</b><br></h6>
       <h6 *ngIf="currentDisplayPath == null" style="text-align:center;"><b>{{title}}</b><br></h6>
-      <div *ngIf="hierarchyDepth <= maxIndex">{{hierarchyTop?.Plural}}:</div>
+      <div *ngIf="hierarchyDepth <= maxIndex">{{hierarchyTiers[hierarchyDepth]?.Plural}}:</div>
       <!-- button ion-item *ngIf=hierarchyTop?.Plural (click)="push()">
         <b>IGNOREME</b>
       </button-->
 
       <!-- Prints content buttons of JSON object -->
-      <ng-container *ngFor="let item of dataObject">
-      <button ion-item *ngIf="hierarchyDepth <= maxIndex" (click)="push(item)">
-        {{item?.Name}}
-      </button>
+      <ng-container *ngFor="let item of dataObject[hierarchyDepth]">
+        <!-- Check to make sure the application is only displaying items from the selection that was clicked -->
+        <ng-container *ngIf="item[previousPathIDName] == uniqueIdentifier">
+          <button ion-item *ngIf="hierarchyDepth <= maxIndex" (click)="push(item)">
+            {{item?.Name}}
+          </button>
+        </ng-container>
+        <!-- For first page, there is no previous reference, so exclude-->
+        <ng-container *ngIf="uniqueIdentifier == NULL">
+          <button ion-item *ngIf="hierarchyDepth <= maxIndex" (click)="push(item)">
+            {{item?.Name}}
+          </button>
+        </ng-container>
       </ng-container>
-      <ng-container *ngIf="hierarchyDepth - 1 > 0">
+      <ng-container *ngIf="hierarchyDepth > 0">
 
       <!-- Prints view and edit buttons under details -->
       <br><font size = "-1">Details:</font>
-      <button ion-item>
+      <button ion-item (click)="editCharacteristics('read')">
         View
       </button>
-      <button ion-item (click)="editCharacteristics()">
+      <button ion-item (click)="editCharacteristics('edit')">
         Edit
       </button>
       </ng-container>

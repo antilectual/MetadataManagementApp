@@ -1,0 +1,16 @@
+<ion-header>
+
+  <ion-navbar>
+        <ion-title><img width="200" height="50" src="../../assets/imgs/white_logo.png"></ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+  <p text-center><img src="{{image}}"></p>
+  <page-formfields
+    [hierarchy]='item["Characteristics"]'
+    [data]="dataObject">
+  </page-formfields>
+</ion-content>

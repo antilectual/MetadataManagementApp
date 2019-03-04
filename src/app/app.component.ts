@@ -10,9 +10,10 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { HomePage } from '../pages/home/home';
 import { LoginPage } from '../pages/login/login';
-import { HierarchyPage } from '../pages/hierarchy/hierarchy';
+// import { HierarchyPage } from '../pages/hierarchy/hierarchy';
 import { AboutPage } from '../pages/about/about';
 import { SettingsPage } from '../pages/settings/settings';
+import { HierarchyControllerPage } from '../pages/hierarchy-controller/hierarchy-controller';
 //import { ReadPage } from '../pages/hierarchy/read/read';
 // import { ExamplePage } from '../pages/example/example';
 
@@ -33,7 +34,7 @@ export class MyApp {
         { title: 'Home', component: HomePage },
         { title: 'About', component: AboutPage },
         // { title: 'Example', component: ExamplePage},
-        { title: 'Metadata Entry', component: HierarchyPage },
+        { title: 'Metadata Entry', component: HierarchyControllerPage },
         { title: 'Settings', component: SettingsPage },
         { title: 'Logout', component: LoginPage},
       ];

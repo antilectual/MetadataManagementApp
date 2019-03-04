@@ -1,12 +1,17 @@
-
+/**
+* @file  hierarchy.ts
+* @author  Brianna Blain-Castelli, Christopher Eichstedt, Matthew johnson, Nicholas Jordy
+* @brief  main file for dynamic hierarchical navigation
+*/
 import { Component } from '@angular/core';
-import { NavController, NavParams, LoadingController } from 'ionic-angular';
+import { NavController, NavParams} from 'ionic-angular';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
+//import { Observable } from 'rxjs/Observable';
 import { GlobalvarsProvider } from '../../providers/globalvars/globalvars';
 import { ReadPage } from './read/read';
 import { HomePage } from '../home/home';
-import { File } from '@ionic-native/file';
+import { EditPage } from './edit/edit';
+//import { File } from '@ionic-native/file';
 
 
 // @IonicPage()
@@ -17,7 +22,7 @@ import { File } from '@ionic-native/file';
 export class HierarchyPage
 {
   // All locations in the Ontology
-  public items: any;
+  public hierarchyTiers: any;
   // Current header from ontology
   public hierarchyTop: any;
   // URL for getting the specific data
@@ -28,6 +33,10 @@ export class HierarchyPage
   public currentDisplayPath: any;
   // Max depth of the hierarchy
   public maxIndex: any;
+  // The unique identifier field of the hierarchy item passed to this hierarchy page.
+  uniqueIdentifier: any;
+  // The key (label) for the unique identifier value.
+  previousPathIDName: any;
 
   // Title for Root of Hierarchy TODO: make this a configuration file value.
   title = "NRDC";
@@ -35,7 +44,15 @@ export class HierarchyPage
   hierarchyDepth = 0;
   //
   loading;
-  constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, public gvars: GlobalvarsProvider, private loadingCtrl: LoadingController)//, private file: File)
+
+  /**
+* @brief
+* @param
+* @pre
+* @post
+*/
+//private loadingCtrl: LoadingController
+  constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, public gvars: GlobalvarsProvider)//, private file: File)
   {
     //test json copy
     // this.file.writeFile(this.file.assets.data, 'test.json', 'hello, world', {replace: true}).then(_ => console.log('Directory exists')).catch(err => console.log('Directory doesn\'t exist'));
@@ -48,8 +65,36 @@ export class HierarchyPage
     {
       this.hierarchyDepth = navParams.get('hierarchydepth');
     }
+
+    //Save current page data information if available (for edit and read page)
+    if(navParams.get('pageData') != null)
+    {
+      this.dataObject = navParams.get('pageData');
+    }
+
+    //Save current page data information if available (for edit and read page)
+    if(navParams.get('hierarchyData') != null)
+    {
+      this.hierarchyTiers = navParams.get('hierarchyData');
+    }
+
+    // uniqueIdentifier and previousPathIDName are used for filtering the values displayed in the hierarchy.
+    this.uniqueIdentifier = navParams.get('identifier');
     this.currentDisplayPath = navParams.get('name');
-    this.getHierarchyData(this.hierarchyDepth);
+
+    // Find max length of navigation (for bug catching)
+    this.maxIndex = this.hierarchyTiers.length - 1;
+    console.log(this.uniqueIdentifier);
+    if(this.hierarchyDepth <= this.maxIndex)
+    {
+      //Get the previous ID name
+      this.previousPathIDName = this.hierarchyTiers[this.hierarchyDepth].referentialCharacteristic + " ID";
+    }
+    else
+    {
+      this.previousPathIDName = this.hierarchyTiers[this.hierarchyDepth - 1].referentialCharacteristic + " ID";
+    }
+
   }
 
   // DEBUG:
@@ -57,137 +102,103 @@ export class HierarchyPage
   //   console.log('ionViewDidLoad HierarchyPage');
   // }
 
-// Doesn't actually get the data. It gets the hierarchy/ontology! (RAGNAROK)
-  getHierarchyData(depth)
-  {
-    // this.loading = this.loadingCtrl.create({
-    //   message: 'Loading...'
-    // });
-    // this.loading.present();
-    let online = this.gvars.getOnline();
-    // TODO: Create a confi setting for this
-    // Local location containing the Ontology
-    let local = '../../assets/data/test.json';
-    // TODO: Create a confi setting for this
-    // Remote service containing the ontology
-    //let remote = 'http://sensor.nevada.edu/GS/Services/Ragnarok/';
-    let remote = '../../assets/data/ontology.json';
-    // TODO: Create a confi setting for this
-    // Remote database service containing the metadata
-    let dataRemote = 'http://sensor.nevada.edu/Services/NRDC/Infrastructure/Services/';
-    if(online)
-    {
-      let data: Observable<any> = this.http.get(remote);
-      data.subscribe(result => {
-        // Grab the json results from Ragnarok (hierarchy)
-        // (i.e. Site-Networks, Sites, Systems, Deployments, Components
-
-        this.items = result;
-        // Get the current header item
-        this.hierarchyTop = result[depth];
-        // Find max length of navigation (for bug catching)
-        this.maxIndex = result.length;
-        // increases to next header item
-        this.hierarchyDepth = depth + 1;
-        // Proper viewing name of header
-        if( depth < this.maxIndex){
-          this.subURI = this.hierarchyTop.Plural;
-        // Create URL for the items from this header (removing spaces first)
-        this.subURI = this.subURI.replace(/ +/g, "");
-        this.subURI = dataRemote + this.subURI + ".svc/Get";
-        //DEBUG
-        //console.log("SubURI is:");
-        //console.log(this.subURI);
-
-        this.getNextData();
-        }
-
-      });
-    }
-    else
-    {
-      let data: Observable<any> = this.http.get(local);
-      data.subscribe(result => {
-        this.hierarchyTop = result[depth];
-        // Find max length of navigation (for bug catching)
-        this.maxIndex = result.length;
-        this.hierarchyDepth = depth + 1;
-        this.items = result;});
-    }
-    // this.loading.dismiss();
-  }
-
-// This function actually gets the data from the URI accessing the database.
-  getNextData()
-  {
-    //DEBUG
-    //console.log(this.subURI);
-    let data: Observable<any> = this.http.get(this.subURI);
-    data.subscribe(result => {
-      this.dataObject = result;
-      //DEBUG
-      //console.log(this.dataObject);
-    });
-  }
-
-  // push()
-  // {
-  //   let localValues = {hierarchydepth:this.hierarchyDepth};
-  //   this.navCtrl.push(HierarchyPage,localValues);
-  // }
-
+  /**
+* @brief
+* @param
+* @pre
+* @post
+*/
   push(item)
   {
-    if(this.hierarchyDepth <= this.maxIndex - 1)
-    {
-      let localValues = {hierarchydepth:this.hierarchyDepth, name:item.Name};
-      this.navCtrl.push(HierarchyPage,localValues);
-    }
-    else if(this.hierarchyDepth = this.maxIndex)
-    {
-      let localValues = {hierarchydepth:this.hierarchyDepth, name:item.Name};
-      this.navCtrl.push(HierarchyPage,localValues);
-    }
 
+    /* Hierarchy requires the following values:
+    * hierarchydepth - HierchyDepth describes the initial tier index of the ontology/hierarchy. It is also the initial index of the location of data in dataObject
+    * name - Name is the name used as a label on the hierarchy (metadata management) page.
+    * pageData - This object is the full set of data pulled from the database which contains the actual metadata for all hierarchy tiers
+    * hierarchyData -  This object is the full set of hierarchyData tiers
+    * indentifier - This should be the unique identifier value for the previous page in the hierarchy.  null for the initial push.
+    * pathName - this string is the pluralization of the Name which will be used for finding the URI and show the name of the hierarchy level.
+    */
+
+    let localValues = {hierarchydepth:this.hierarchyDepth +1, name:item.Name, pageData:this.dataObject, hierarchyData:this.hierarchyTiers, identifier:item["Unique Identifier"], pathName:this.hierarchyTiers[this.hierarchyDepth].Plural};
+    this.navCtrl.push(HierarchyPage,localValues);
   }
 
+  /**
+* @brief
+* @param
+* @pre
+* @post
+*/
   goHome()
   {
     this.navCtrl.setRoot(HomePage);
   }
 
+  /**
+* @brief
+* @param
+* @pre
+* @post
+*/
 // Goes to the edit page
-  editCharacteristics()
+  editCharacteristics(page)
   {
+    let filteredObject: any;
+    let i = 0;
+    for(i = 0; i < this.dataObject[this.hierarchyDepth - 1].length; i++)
+    {
+      if( this.dataObject[this.hierarchyDepth - 1][i]["Unique Identifier"] == this.uniqueIdentifier)
+      {
+        filteredObject = (this.dataObject[this.hierarchyDepth - 1][i]);
+      }
 
-    // EXPERIMENTAL
-    // Depth was increment +1 so revert it, and -1 more to go to item above it
-    let dataDepth = this.hierarchyDepth-2;
-    let hierarchyTop: any;
-    // Out of bounds checking
-    if(dataDepth >= 0)
-    {
-          hierarchyTop = this.items[dataDepth];
-    }
-    else
-    {
-        return;
     }
 
-    // TODO: Update from config file
-    // Remote database service containing the metadata
-    let dataRemote = 'http://sensor.nevada.edu/Services/NRDC/Infrastructure/Services/';
-    // Proper viewing name of header
-    let subURI = hierarchyTop.Plural;
-    // Create URL for the items from this header (removing spaces first)
-    subURI = subURI.replace(/ +/g, "");
-    subURI = dataRemote + subURI + ".svc/Get";
-    // END EXPERIMENTAL
+    console.log(filteredObject);
+    //TODO: filter by unique Identifier
+      if(page == 'edit')
+      {
+        this.navCtrl.push(EditPage,[this.hierarchyTiers[this.hierarchyDepth - 1], filteredObject]);
+      }
+      else
+      {
+        this.navCtrl.push(ReadPage,[this.hierarchyTiers[this.hierarchyDepth - 1], filteredObject, this.currentDisplayPath]);
+      }
 
-    let online = this.gvars.getOnline();
-    if(online)//console.log(ReadPage, this.hierarchyTop, this.subURI);
-    {
-      this.navCtrl.push(ReadPage,[hierarchyTop,{dataURI:subURI}, this.dataObject]);
-    }
   }
+
+  /**
+  * @brief adds a leading '0' to single digit number dates to make them 2-digit
+  * @param n the numerical digit to 'pad'
+  * @pre
+  * @post
+  */
+   pad(n){
+     if(n<10)
+       return '0' + n;
+     else
+       return n;
+   }
+
+   /**
+   * @brief Converts a date in UTC time to Local time
+   * @param date The date to be converted, in UTC
+   * @pre
+   * @post
+   */
+
+   convertUTCtoLocal(date){
+     var tzOffset = -480;
+     //get actual tzOffset
+     var newTime = new Date(date.getTime() + tzOffset * 60 * 1000);
+
+     var hourOffset = tzOffset/60;
+
+     newTime.setHours(date.getHours() - hourOffset);
+
+     return newTime;
+   }
+
+
 }

@@ -2,30 +2,27 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { HttpClient } from '@angular/common/http';
 // import { Observable } from 'rxjs/Observable';
-import { EditPage } from '../edit/edit';
 
-// import { Base64 } from '@ionic-native/base64/ngx';
+//import { Base64 } from '@ionic-native/base64/ngx';
 
 
 @IonicPage()
 @Component({
-  selector: 'page-read',
-  templateUrl: 'read.html',
+  selector: 'page-edit',
+  templateUrl: 'edit.html',
 })
-export class ReadPage {
+export class EditPage {
 
   item: any;
   dataObject: any;
   dataURI: any;
   isDataPresent: boolean;
-  // base64Data: any;
+  base64Data: any;
   image: any;
   //String for filtering in html
   uniqueIDCheck = "Unique Identifier";
 
   tzOffset: any;
-  currentDisplayPath: any;
-  // displayTime: any;
 
 // navParams.data contains the following:
 //  [0] - JSON containing:
@@ -35,22 +32,21 @@ export class ReadPage {
 //    The selected item's pluralization (Plural)
 //  [1] - The URI to retrieve the metadata from (dataURI)
 //  [2] - JSON Containing the info for the next level [TODO: this is wrong, fix it]
-  //private base64: Base64
+// private base64: Base64
   constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams) {
 
-          this.item = navParams.data[0];
-          this.dataObject = navParams.data[1];
-          this.currentDisplayPath = navParams.data[2];
-          // DEBUG:
-          //console.log(this.dataURI);
-          //If there is a photo, display image
-          if(navParams.data[1].Photo != null){
-            this.image = "data:image/png;base64,"+ navParams.data[1].Photo;
-          }
-          this.editDateFields();
-          //console.log(this.image);
-
+      this.item = navParams.data[0];
+      this.dataObject = navParams.data[1];
+      // DEBUG:
+      //console.log(this.dataURI);
+      //If there is a photo, display image
+      if(navParams.data[1].Photo != null){
+        this.image = "data:image/png;base64,"+ navParams.data[1].Photo;
+      }
+      this.editDateFields();
+      //console.log(this.image);
   }
+
 
   editDateFields()
   {
@@ -66,9 +62,7 @@ export class ReadPage {
           console.log(this.dataObject);
          this.dataObject[ this.item["Characteristics"][i]["Label"] ] = this.displayTime(this.item["Characteristics"][i], this.dataObject[ this.item["Characteristics"][i]["Label"] ]);
      }
-
     }
-
   }
 
   /**
@@ -132,13 +126,5 @@ export class ReadPage {
        return n;
    }
 
-   /**
-   * @brief adds a leading '0' to single digit number dates to make them 2-digit
-   * @pre
-   * @post
-   */
-   goToEdit()
-   {
-     this.navCtrl.push(EditPage,[this.item, this.dataObject]);
-   }
+
 }

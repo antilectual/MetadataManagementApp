@@ -19,4 +19,9 @@ page-login {
   .text-input::-webkit-input-placeholder {
     color: white;
   }
+
+  .invalid
+  {
+    border: 1px solid #ea6153;
+  }
 }
