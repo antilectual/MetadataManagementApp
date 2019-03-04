@@ -15,6 +15,8 @@ import { HierarchyPage } from '../pages/hierarchy/hierarchy';
 import { SettingsPage } from '../pages/settings/settings';
 import { ReadPage } from '../pages/hierarchy/read/read';
 import { EditPage } from '../pages/hierarchy/edit/edit';
+import { UsernamePage } from '../app/validators/username/username';
+import { FormfieldsPage } from '../app/validators/formfields/formfields';
 // import { ExamplePage } from '../pages/example/example';
 import { GlobalvarsProvider } from '../providers/globalvars/globalvars';
 
@@ -27,7 +29,9 @@ import { GlobalvarsProvider } from '../providers/globalvars/globalvars';
     AboutPage,
     SettingsPage,
     ReadPage,
-    EditPage
+    EditPage,
+    UsernamePage,
+    FormfieldsPage
     // ExamplePage
   ],
   imports: [
@@ -45,7 +49,9 @@ import { GlobalvarsProvider } from '../providers/globalvars/globalvars';
     AboutPage,
     SettingsPage,
     ReadPage,
-    EditPage
+    EditPage,
+    UsernamePage,
+    FormfieldsPage
     // ExamplePage
   ],
   providers: [
