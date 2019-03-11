@@ -140,9 +140,6 @@ export class EditPage {
      // console.log("UniqueID \n" + this.uniqueIdentifier);
      // if()
      this.dataHandler.updateDataObject(this.dataObject, this.hierarchyDepth, this.uniqueIdentifier);
-
-
-     console.log("Data Object \n" + JSON.stringify(this.dataHandler.getDataObjects()[this.hierarchyDepth][0]));
      if(this.gvars.getOnline())
      {
        this.pushSavedData();
@@ -163,22 +160,29 @@ export class EditPage {
      let remote = this.dataHandler.getSubUris();
      remote = remote[this.hierarchyDepth];
      // remote = remote + "POST/" + this.uniqueIdentifier;
-     remote = remote + "POST";
-      console.log("URL \n" + remote);
-      console.log("DataObject \n" + this.dataObject);
-      console.log("WhereToPost \n" + this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Name);
+     remote = remote + "Post";
+      // console.log("URL \n" + remote);
+      let i = 0;
+      // console.log("dataobjectlength = " + Object.keys(this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Characteristics).length);
+      // console.log("dataObjectLengh2 = " + Object.keys(this.dataObject).length);
+
+      // This loop removes any hexBinary (Photos) from the json object before submitting it because they make the json object too large to push to the server.
+      for(i = 0; i < Object.keys(this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Characteristics).length; i++)
+      {
+        // console.log("data type = \n" + JSON.stringify(this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Characteristics[i].datatype));
+        // console.log("hiearachyCharName = \n" + this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Characteristics[i].Label);
+        // console.log("dataObjectName = \n" + this.dataObject[this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Characteristics[i].Label]);
+          if(this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Characteristics[i].datatype == "xsd:hexBinary")
+          {
+            delete this.dataObject[this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Characteristics[i].Label];
+          }
+      }
+    // console.log("DataObject \n" + JSON.stringify(this.dataObject));
+      // console.log("WhereToPost \n" + this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Name);
      //return this.http.post(remote, this.dataObject);
-     let dataJSON =
-        {
-        	'Component':8,
-        	'Deployment_ID':"a4ef96d6-6a3c-4586-89df-7ce0bce42f8c",
-        	'Name':"A coffee cup",
-        	'Manufacturer':"Wall Matt",
-        	'Installation_Date':"2019-12-31T08:00:00Z"
-        };
      //return this.http.post(remote, this.dataHandler.getDataObjects()[this.hierarchyDepth]);
-      this.http.post(remote, dataJSON, {headers: {"Accept":'application/json', 'Content-Type':'application/json'}}).subscribe(data => {
-        console.log("data = \n " + data['_body']);
+      this.http.post(remote, this.dataObject, {headers: {"Accept":'application/json', 'Content-Type':'application/json'}}).subscribe(data => {
+        console.log("data = \n " + data);
        }, error => {
         console.log(error);
       });
