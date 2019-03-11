@@ -167,14 +167,15 @@ export class EditPage {
       // console.log("dataObjectLengh2 = " + Object.keys(this.dataObject).length);
 
       // This loop removes any hexBinary (Photos) from the json object before submitting it because they make the json object too large to push to the server.
-      for(i = 0; i < Object.keys(this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Characteristics).length; i++)
+      let characteristics = this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Characteristics;
+      for(i = 0; i < Object.keys(characteristics).length; i++)
       {
         // console.log("data type = \n" + JSON.stringify(this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Characteristics[i].datatype));
         // console.log("hiearachyCharName = \n" + this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Characteristics[i].Label);
         // console.log("dataObjectName = \n" + this.dataObject[this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Characteristics[i].Label]);
-          if(this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Characteristics[i].datatype == "xsd:hexBinary")
+          if(characteristics[i].datatype == "xsd:hexBinary")
           {
-            delete this.dataObject[this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Characteristics[i].Label];
+            delete this.dataObject[characteristics[i].Label];
           }
       }
     // console.log("DataObject \n" + JSON.stringify(this.dataObject));
