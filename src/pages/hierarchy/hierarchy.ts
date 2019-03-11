@@ -12,6 +12,7 @@ import { ReadPage } from './read/read';
 import { HomePage } from '../home/home';
 import { EditPage } from './edit/edit';
 //import { File } from '@ionic-native/file';
+import { GlobalDataHandlerProvider } from '../../providers/global-data-handler/global-data-handler';
 
 
 // @IonicPage()
@@ -52,7 +53,7 @@ export class HierarchyPage
 * @post
 */
 //private loadingCtrl: LoadingController
-  constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, public gvars: GlobalvarsProvider)//, private file: File)
+  constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, public gvars: GlobalvarsProvider, public dataHandler: GlobalDataHandlerProvider)//, private file: File)
   {
     //test json copy
     // this.file.writeFile(this.file.assets.data, 'test.json', 'hello, world', {replace: true}).then(_ => console.log('Directory exists')).catch(err => console.log('Directory doesn\'t exist'));
@@ -67,15 +68,17 @@ export class HierarchyPage
     }
 
     //Save current page data information if available (for edit and read page)
-    if(navParams.get('pageData') != null)
+    if(this.dataHandler.getDataObjects() != null)
     {
-      this.dataObject = navParams.get('pageData');
+      // this.dataObject = navParams.get('pageData');
+      this.dataObject = this.dataHandler.getDataObjects();
     }
 
     //Save current page data information if available (for edit and read page)
-    if(navParams.get('hierarchyData') != null)
+    if(this.dataHandler.getHierarchyTiers() != null)
     {
-      this.hierarchyTiers = navParams.get('hierarchyData');
+      // this.hierarchyTiers = navParams.get('hierarchyData');
+      this.hierarchyTiers = this.dataHandler.getHierarchyTiers();
     }
 
     // uniqueIdentifier and previousPathIDName are used for filtering the values displayed in the hierarchy.
@@ -84,7 +87,7 @@ export class HierarchyPage
 
     // Find max length of navigation (for bug catching)
     this.maxIndex = this.hierarchyTiers.length - 1;
-    console.log(this.uniqueIdentifier);
+    // console.log(this.uniqueIdentifier);
     if(this.hierarchyDepth <= this.maxIndex)
     {
       //Get the previous ID name
@@ -120,7 +123,8 @@ export class HierarchyPage
     * pathName - this string is the pluralization of the Name which will be used for finding the URI and show the name of the hierarchy level.
     */
 
-    let localValues = {hierarchydepth:this.hierarchyDepth +1, name:item.Name, pageData:this.dataObject, hierarchyData:this.hierarchyTiers, identifier:item["Unique Identifier"], pathName:this.hierarchyTiers[this.hierarchyDepth].Plural};
+    // let localValues = {hierarchydepth:this.hierarchyDepth +1, name:item.Name, pageData:this.dataObject, hierarchyData:this.hierarchyTiers, identifier:item["Unique Identifier"], pathName:this.hierarchyTiers[this.hierarchyDepth].Plural};
+    let localValues = {hierarchydepth:this.hierarchyDepth +1, name:item.Name, identifier:item["Unique Identifier"], pathName:this.hierarchyTiers[this.hierarchyDepth].Plural};
     this.navCtrl.push(HierarchyPage,localValues);
   }
 
@@ -155,15 +159,18 @@ export class HierarchyPage
 
     }
 
-    console.log(filteredObject);
+    // console.log(filteredObject);
     //TODO: filter by unique Identifier
       if(page == 'edit')
       {
-        this.navCtrl.push(EditPage,[this.hierarchyTiers[this.hierarchyDepth - 1], filteredObject]);
+        console.log("uniqueID \n" + this.uniqueIdentifier);
+        // this.navCtrl.push(EditPage,[this.hierarchyTiers[this.hierarchyDepth - 1], filteredObject]);
+        this.navCtrl.push(EditPage,[(this.dataHandler.getHierarchyTiers())[this.hierarchyDepth - 1], filteredObject, this.hierarchyDepth - 1, this.uniqueIdentifier]);
       }
       else
       {
-        this.navCtrl.push(ReadPage,[this.hierarchyTiers[this.hierarchyDepth - 1], filteredObject, this.currentDisplayPath]);
+        // this.navCtrl.push(ReadPage,[this.hierarchyTiers[this.hierarchyDepth - 1], filteredObject, this.currentDisplayPath]);
+        this.navCtrl.push(ReadPage,[(this.dataHandler.getHierarchyTiers())[this.hierarchyDepth - 1], filteredObject, this.hierarchyDepth - 1, this.currentDisplayPath]);
       }
 
   }

@@ -19,6 +19,8 @@ import { HierarchyControllerPage } from '../pages/hierarchy-controller/hierarchy
 import { FormfieldsPage } from '../app/validators/formfields/formfields';
 // import { ExamplePage } from '../pages/example/example';
 import { GlobalvarsProvider } from '../providers/globalvars/globalvars';
+import { GlobalDataHandlerProvider } from '../providers/global-data-handler/global-data-handler';
+import { HierarchyControllerProvider } from '../providers/hierarchy-controller/hierarchy-controller';
 
 @NgModule({
   declarations: [
@@ -59,7 +61,10 @@ import { GlobalvarsProvider } from '../providers/globalvars/globalvars';
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     GlobalvarsProvider,
-    Base64
+    Base64,
+    GlobalDataHandlerProvider,
+    HierarchyControllerProvider,
+    HierarchyControllerProvider
   ]
 })
 export class AppModule {}

@@ -12,6 +12,8 @@ import { GlobalvarsProvider } from '../../providers/globalvars/globalvars';
 import { HomePage } from '../home/home';
 // import { File } from '@ionic-native/file';
 import { HierarchyPage } from '../hierarchy/hierarchy';
+import { GlobalDataHandlerProvider } from '../../providers/global-data-handler/global-data-handler';
+import { HierarchyControllerProvider } from '../../providers/hierarchy-controller/hierarchy-controller';
 
 @IonicPage()
 @Component({
@@ -54,7 +56,8 @@ previousPathIDName: any;
 * @pre
 * @post
 */
-  constructor(public http: HttpClient, public navCtrl: NavController, public navParams: NavParams, public loadingController: LoadingController, public gvars: GlobalvarsProvider) {
+  constructor(public http: HttpClient, public navCtrl: NavController, public navParams: NavParams, public loadingController: LoadingController,
+    public gvars: GlobalvarsProvider, public dataHandler: GlobalDataHandlerProvider, public hierarchyGlobals: HierarchyControllerProvider) {
       this.loadAll();
   }
 
@@ -98,7 +101,10 @@ previousPathIDName: any;
       * pathName - this string is the pluralization of the Name which will be used for finding the URI and show the name of the hierarchy level.
       */
 
-      let localValues = {hierarchydepth:0, name:"NRDC", pageData:this.dataObject, hierarchyData:this.hierarchyTiers, identifier:null, pathName:this.hierarchyTiers[0].Plural};
+      //let localValues = {hierarchydepth:0, name:"NRDC", pageData:this.dataObject, hierarchyData:this.hierarchyTiers, identifier:null, pathName:this.hierarchyTiers[0].Plural};
+      // DEBUG
+      console.log(this.dataHandler.getDataObjects());
+      let localValues = {hierarchydepth:0, name:"NRDC", identifier:null, pathName:this.dataHandler.getHierarchyTiers()[0].Plural};
       this.navCtrl.setRoot(HierarchyPage,localValues);
   }
 
@@ -137,13 +143,14 @@ previousPathIDName: any;
   */
 
   async getOntology(){
-    if(!this.isOntologySynced){
-      if(!this.isOntologyLoaded){
+    if(!this.hierarchyGlobals.getOntologySynced()){
+      if(!this.hierarchyGlobals.getOntologyLoaded()){
         // BEWARE: possibly volatile and could not save actual data
         // If getting hierarchy returns true then it is synced and loaded.
         // Otherwise return failure
         this.getHierarchyData();
-        this.isOntologySynced = this.isOntologyLoaded = true;
+        this.hierarchyGlobals.setOntologyLoaded(true);
+        this.hierarchyGlobals.setOntologySynced(true);
       }
     }
   }
@@ -171,10 +178,11 @@ previousPathIDName: any;
   * @return none
   */
   async getAllData(){
-    if(!this.isDataSynced){
-      if(!this.isDataLoaded){
+    if(!this.hierarchyGlobals.getDataSynced()){
+      if(!this.hierarchyGlobals.getDataLoaded()){
         this.getData();
-        this.isDataSynced = this.isDataLoaded = true;
+        this.hierarchyGlobals.setDataSynced(true);
+        this.hierarchyGlobals.setDataLoaded(true);
       }
       else{
         // ask user to confirm sync
@@ -210,12 +218,16 @@ previousPathIDName: any;
     if(online)
     {
       let data: Observable<any> = this.http.get(remote);
-      this.isOntologyDoneLoading = false;
+      this.hierarchyGlobals.setOntologyDoneLoading(false);
+      // this.isOntologyDoneLoading = false;
       data.subscribe(result => {
         // Grab the json results from Ragnarok (hierarchy)
         // (i.e. Site-Networks, Sites, Systems, Deployments, Components
         this.hierarchyTiers = result;
-        this.isOntologyDoneLoading = true;
+        // LABEL: GLOBAL DATA
+        this.dataHandler.setHierarchyTiers(this.hierarchyTiers);
+        this.hierarchyGlobals.setOntologyDoneLoading(true);
+        // this.isOntologyDoneLoading = true;
       });
     }
     else
@@ -268,7 +280,7 @@ previousPathIDName: any;
           cssClass: 'custom-class custom-loading'
         });
         loading.present();
-        while(!this.isOntologyDoneLoading){await this.delay(1);}
+        while(!this.hierarchyGlobals.getOntologyDoneLoading()){await this.delay(10);}
         loading.dismiss();
         // -----------
     }
@@ -297,7 +309,7 @@ previousPathIDName: any;
             cssClass: 'custom-class custom-loading'
           });
           loading.present();
-          while(!this.isDataDoneLoading){await this.delay(1);}
+          while(!this.hierarchyGlobals.getDataDoneLoading()){await this.delay(10);}
           loading.dismiss();
           // -----------
       }
@@ -335,6 +347,9 @@ previousPathIDName: any;
         this.subURI = this.hierarchyTiers[i].Plural;
         // Create URL for the hierarchyTiers from this header (removing spaces first)
         this.subURI = this.subURI.replace(/ +/g, "");
+        // LABEL: GLOBAL DATA
+        this.dataHandler.subURIPush(dataRemote + this.subURI + ".svc/" );
+        // console.log(  this.dataHandler.getSubUris());
         this.subURI = dataRemote + this.subURI + ".svc/Get";
 
         //TODO: Update to add data for each level of hierarchy.
@@ -344,19 +359,21 @@ previousPathIDName: any;
 
         await data.subscribe(result => {
 
-          if(this.dataObject == null)
-          {
-            this.dataObject = [];
-            this.dataObject.push(result);
-          }
-          else
-          {
-            this.dataObject.push(result);
-          }
+          // LABEL: GLOBAL DATA
+          this.dataHandler.dataObjectPush(result);
+          // if(this.dataObject == null)
+          // {
+          //   this.dataObject = [];
+          //   this.dataObject.push(result);
+          // }
+          // else
+          // {
+          //   this.dataObject.push(result);
+          // }
 
          if(i == this.hierarchyTiers.length)
          {
-           this.isDataDoneLoading = true;
+           this.hierarchyGlobals.setDataDoneLoading(true);
          }
         });
     }

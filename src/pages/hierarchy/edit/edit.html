@@ -1,7 +1,9 @@
 <ion-header>
 
   <ion-navbar>
+      <div text-center>
         <ion-title><img width="200" height="50" src="../../assets/imgs/white_logo.png"></ion-title>
+      </div>
   </ion-navbar>
 
 </ion-header>
@@ -13,4 +15,5 @@
     [hierarchy]='item["Characteristics"]'
     [data]="dataObject">
   </page-formfields>
+  <button ion-button full (click) = "saveEditedData()">Save</button>
 </ion-content>

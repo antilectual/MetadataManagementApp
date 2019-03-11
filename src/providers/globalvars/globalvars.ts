@@ -10,22 +10,39 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class GlobalvarsProvider {
 
+  //flag for online
   isOnline: boolean;
 
+  platform: string;
+
+
   constructor(public http: HttpClient) {
-    console.log('Hello GlobalvarsProvider Provider');
+    // console.log('Hello GlobalvarsProvider Provider');
     this.isOnline = false;
   }
 
+  //SET FUNCTIONS
   setOnline(val)
   {
     this.isOnline = val;
   }
 
+  setPlatform(val)
+  {
+      this.platform = val;
+  }
+
+
+
+  //GET FUNCTIONS
   getOnline()
   {
     return this.isOnline;
   }
 
+  getPlatform()
+  {
+    return this.platform;
+  }
 
 }
