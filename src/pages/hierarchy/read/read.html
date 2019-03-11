@@ -1,7 +1,9 @@
 <ion-header>
 
   <ion-navbar>
-        <ion-title><img width="200" height="50" src="../../assets/imgs/white_logo.png"></ion-title>
+    <div text-center>
+      <ion-title><img width="200" height="50" src="../../assets/imgs/white_logo.png"></ion-title>
+    </div>
   </ion-navbar>
 
 </ion-header>
@@ -23,7 +25,7 @@
     <!-- <p>{{dataObject[char.Label]}}_</p> -->
       <ion-item *ngIf='char.Label != uniqueIDCheck'>
         <ion-label color="primary" stacked>{{char.Label}}</ion-label>
-        <ion-label color="dark" stacked>{{dataObject[char.Label]}}</ion-label>
+        <ion-label class="textcolor" stacked>{{dataObject[char.Label]}}</ion-label>
       </ion-item>
       <!-- {{dataObject[char.Label]}}! -->
       <!--<ion-item *ngFor="let dataItem of dataObject.Characteristics">

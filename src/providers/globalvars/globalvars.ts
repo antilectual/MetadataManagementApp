@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs/Rx';
 
 /*
   Generated class for the GlobalvarsProvider provider.
@@ -12,12 +13,14 @@ export class GlobalvarsProvider {
 
   //flag for online
   isOnline: boolean;
+  private theme: BehaviorSubject<String>;
 
   platform: string;
 
 
   constructor(public http: HttpClient) {
-    // console.log('Hello GlobalvarsProvider Provider');
+    this.theme = new BehaviorSubject('light-theme');
+    //console.log('Hello GlobalvarsProvider Provider');
     this.isOnline = false;
   }
 
@@ -44,5 +47,16 @@ export class GlobalvarsProvider {
   {
     return this.platform;
   }
+  
+  setTheme(val)
+  {
+    this.theme.next(val);
+  }
+
+  getTheme()
+  {
+    return this.theme.asObservable();
+  }
+
 
 }

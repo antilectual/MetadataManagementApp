@@ -1,7 +1,7 @@
 
 <ion-content padding>
   <br><br><br><br><br>
-  <ion-title><img src="../../assets/imgs/white_logo.png"></ion-title>
+    <ion-title><img src="../../assets/imgs/white_logo.png"></ion-title>
   <br><br><br>
 
   <form [formGroup]="slideOneForm">
@@ -17,8 +17,9 @@
     </ion-item>
     <br>
 
-    <button ion-button full (click) = "save()">Login</button>
-
+    <div text-center>
+      <button ion-button (click) = "save()">Login</button>
+    </div>
   </form>
 
 </ion-content>
