@@ -1,3 +1,7 @@
 .toolbar-background {
-background-color: #949eaa;
+background-color: #1E8449;
+}
+
+ion-header ion-icon.back-button-icon.icon {
+    color: map-get($colors, dark);
 }

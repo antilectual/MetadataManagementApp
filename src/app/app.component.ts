@@ -14,6 +14,7 @@ import { LoginPage } from '../pages/login/login';
 import { AboutPage } from '../pages/about/about';
 import { SettingsPage } from '../pages/settings/settings';
 import { HierarchyControllerPage } from '../pages/hierarchy-controller/hierarchy-controller';
+import { GlobalvarsProvider } from '../providers/globalvars/globalvars';
 //import { ReadPage } from '../pages/hierarchy/read/read';
 // import { ExamplePage } from '../pages/example/example';
 
@@ -25,10 +26,14 @@ export class MyApp {
   @ViewChild(Nav) nav: Nav;
   rootPage:any = LoginPage;
 
+  //Light/Dark themes
+  selectedTheme: String;
+
     pages: Array<{title: string, component: any}>;
 
-    constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen) {
+    constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public gvars: GlobalvarsProvider) {
       this.initializeApp();
+      this.gvars.getTheme().subscribe(val => this.selectedTheme = val);
 
       this.pages = [
         { title: 'Home', component: HomePage },
