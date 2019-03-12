@@ -71,7 +71,7 @@ export class GlobalDataHandlerProvider {
   }
 
   // *********** PUSH FUNCTIONS ************************
-  dataObjectPush(val)
+  dataObjectPush(val,i)
   {
     if(this.dataObject == null)
     {
@@ -80,7 +80,7 @@ export class GlobalDataHandlerProvider {
     }
     else
     {
-      this.dataObject.push(val);
+      this.dataObject[i] = val;
     }
   }
 

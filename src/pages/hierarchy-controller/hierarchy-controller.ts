@@ -67,7 +67,9 @@ previousPathIDName: any;
     // TODO: Add try catch blocks for each function. Throw errors for offline and timeouts.
     this.getOntology();
     await this.loadOntologyWaiting();
+    console.log(this.dataHandler.getHierarchyTiers());
     this.getAllData();
+    console.log(this.dataHandler.getDataObjects());
     await this.loadDataWaiting().then(() => {
       this.goHierachyPage();
     });
@@ -343,6 +345,9 @@ previousPathIDName: any;
     let i = 0;
     for (i; i < this.hierarchyTiers.length; i++)
     {
+        // required to index appropriately
+        //TODO: add this fix to ontology call
+        let ii = i;
         // Proper viewing name of header
         this.subURI = this.hierarchyTiers[i].Plural;
         // Create URL for the hierarchyTiers from this header (removing spaces first)
@@ -358,9 +363,8 @@ previousPathIDName: any;
         let data: Observable<any> = this.http.get(this.subURI);
 
         await data.subscribe(result => {
-
           // LABEL: GLOBAL DATA
-          this.dataHandler.dataObjectPush(result);
+          this.dataHandler.dataObjectPush(result, ii);
           // if(this.dataObject == null)
           // {
           //   this.dataObject = [];
@@ -375,7 +379,8 @@ previousPathIDName: any;
          {
            this.hierarchyGlobals.setDataDoneLoading(true);
          }
-        });
+         }
+      );
     }
   }
 }
