@@ -57,22 +57,30 @@ export class HierarchyControllerPage {
   */
   async loadAll()
   {
-    // TODO: Add try catch blocks for each function. Throw errors for offline and timeouts.
-    this.loadOntologyWaiting();
-    try { await this.getOntology();}
-    catch (err) {return;}
-    await this.loadDataWaiting();
-    try { await this.getAllData();}
-    catch (err) {return;}
-    while(!this.hierarchyGlobals.getOntologyDoneLoading() && !this.isError){await this.delay(100);}
-    await this.loadingScreens[this.loadingScreens.length - 2].dismiss();
-    while(!this.hierarchyGlobals.getDataDoneLoading() && !this.isError){await this.delay(100);}
-    await this.loadingScreens[this.loadingScreens.length - 1].dismiss();
-    this.loadingScreens.pop();
-    this.loadingScreens.pop();
-    if(!this.isError)
+    if(this.gvars.getOnline())
     {
-      this.goHierachyPage();
+      // TODO: Add try catch blocks for each function. Throw errors for offline and timeouts.
+      this.loadOntologyWaiting();
+      try { await this.getOntology();}
+      catch (err) {return;}
+      await this.loadDataWaiting();
+      try { await this.getAllData();}
+      catch (err) {return;}
+      while(!this.hierarchyGlobals.getOntologyDoneLoading() && !this.isError){await this.delay(100);}
+      await this.loadingScreens[this.loadingScreens.length - 2].dismiss();
+      while(!this.hierarchyGlobals.getDataDoneLoading() && !this.isError){await this.delay(100);}
+      await this.loadingScreens[this.loadingScreens.length - 1].dismiss();
+      this.loadingScreens.pop();
+      this.loadingScreens.pop();
+      if(!this.isError)
+      {
+        this.goHierachyPage();
+      }
+    }
+    else
+    {
+      let error = 'Device is offline'
+      await this.showError({status: 'Offline'}, 'Connection');
     }
   }
 
@@ -157,11 +165,11 @@ export class HierarchyControllerPage {
         this.hierarchyGlobals.setDataDoneLoading(false);
       }
       // the fun synchronous asynchronous code block -----------
-      console.log('Error retrieving data for ' + loadPage + '. Status code: ' + error.status);
+      console.log('Error retrieving data for ' + loadPage + '.\n Status: ' + error.status);
       let loading =  this.loadingController.create({
             spinner: null,
             duration: 2500,
-            content: 'Error retrieving data for ' + loadPage + '. Status code: ' + error.status,
+            content: 'Error retrieving data for ' + loadPage + '.<p> Status: ' + error.status,
             cssClass: 'custom-class custom-loading'
           });
       this.loadingScreens.push(loading);
@@ -351,34 +359,25 @@ export class HierarchyControllerPage {
     // Remote service containing the ontology
     //let remote = 'http://sensor.nevada.edu/GS/Services/Ragnarok/';
     let remote = '../../assets/data/ontology.json';
-    if(online)
-    {
-      let data: Observable<any> = this.http.get(remote);
-      this.hierarchyGlobals.setOntologyDoneLoading(false);
-      // this.isOntologyDoneLoading = false;
-      data.subscribe(result =>
-        {
-          // Grab the json results from Ragnarok (hierarchy)
-          // (i.e. Site-Networks, Sites, Systems, Deployments, Components
-          let hierarchyTiers = result;
-          // LABEL: GLOBAL DATA
-          this.dataHandler.setHierarchyTiers(hierarchyTiers);
-          this.hierarchyGlobals.setOntologyDoneLoading(true);
-          // this.isOntologyDoneLoading = true;
-        },
-        error =>
-        {
-          this.showError(error, 'hierarchy');
-          throw error;
-        }
-      );
-    }
-    else
-    {
-      let error = 'Device is offline'
-      this.showError(error, 'Connection');
-      throw error;
-    }
+    let data: Observable<any> = this.http.get(remote);
+    this.hierarchyGlobals.setOntologyDoneLoading(false);
+    // this.isOntologyDoneLoading = false;
+    data.subscribe(result =>
+      {
+        // Grab the json results from Ragnarok (hierarchy)
+        // (i.e. Site-Networks, Sites, Systems, Deployments, Components
+        let hierarchyTiers = result;
+        // LABEL: GLOBAL DATA
+        this.dataHandler.setHierarchyTiers(hierarchyTiers);
+        this.hierarchyGlobals.setOntologyDoneLoading(true);
+        // this.isOntologyDoneLoading = true;
+      },
+      error =>
+      {
+        this.showError(error, 'hierarchy');
+        throw error;
+      }
+    );
     return true;
   }
 
