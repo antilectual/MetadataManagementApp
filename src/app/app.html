@@ -1,36 +1,36 @@
 
 
 
-<ion-menu [class]="selectedTheme" [content]="content">
-
+<ion-menu id="authenticated" [class]="selectedTheme" [content]="content">
   <ion-header>
-
     <ion-toolbar>
-
       <ion-title>Menu</ion-title>
-
     </ion-toolbar>
-
   </ion-header>
 
+  <ion-content>
+    <ion-list>
+      <button class="navPath" menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">
+        {{p.title}}
+      </button>
+    </ion-list>
+  </ion-content>
+</ion-menu>
 
+<ion-menu id="unauthenticated" [class]="selectedTheme" [content]="content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Menu</ion-title>
+    </ion-toolbar>
+  </ion-header>
 
   <ion-content>
-
     <ion-list>
-
-      <button class="navPath" menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">
-
-        {{p.title}}
-
+      <button class="navPath" menuClose ion-item>
+        Permissions missing.
       </button>
-
     </ion-list>
-
   </ion-content>
-
-
-
 </ion-menu>
 
 <ion-nav #content [root]="rootPage" [class]="selectedTheme"></ion-nav>

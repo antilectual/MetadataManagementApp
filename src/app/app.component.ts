@@ -4,7 +4,7 @@
 //import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 
 import { Component, ViewChild } from '@angular/core';
-import { Platform, Nav } from 'ionic-angular';
+import { Platform, Nav, MenuController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
@@ -31,10 +31,14 @@ export class MyApp {
 
     pages: Array<{title: string, component: any}>;
 
-    constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public gvars: GlobalvarsProvider) {
+    constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public gvars: GlobalvarsProvider, public menuCtrl: MenuController) {
       this.initializeApp();
       // TODO: Make this acquired from the device
       this.gvars.setPlatform('android');
+      // jTODO: Get online status from device
+      this.gvars.setOnline(true);
+      // Menu AUthorization after login
+      console.log(this.menuCtrl.getMenus());
       this.gvars.getTheme().subscribe(val => this.selectedTheme = val);
 
       this.pages = [

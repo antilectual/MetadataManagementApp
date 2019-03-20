@@ -5,7 +5,7 @@
 */
 
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, MenuController } from 'ionic-angular';
 import { HomePage } from '../home/home';
 import { GlobalvarsProvider } from '../../providers/globalvars/globalvars';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
@@ -24,8 +24,11 @@ export class LoginPage {
   isIOS: boolean = false;
   isAndroid: boolean = false;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public gvars: GlobalvarsProvider, public formBuilder: FormBuilder)
+  constructor(public navCtrl: NavController, public navParams: NavParams, public gvars: GlobalvarsProvider, public formBuilder: FormBuilder, public menuCtrl: MenuController)
   {
+    // Disable the menu on the login page
+    this.menuCtrl.enable(false, 'unauthenticated');
+    this.menuCtrl.enable(false, 'authenticated');
     let platform = this.gvars.getPlatform();
     switch(platform)
     {
@@ -64,7 +67,6 @@ export class LoginPage {
 */
   goToHome()
   {
-      this.gvars.setOnline(true);
       this.navCtrl.setRoot(HomePage);
   }
 
@@ -74,7 +76,7 @@ export class LoginPage {
 * @pre
 * @post
 */
-  save()
+  attemptLogin()
   {
       if(!this.slideOneForm.valid)
       {
@@ -84,6 +86,8 @@ export class LoginPage {
 
       else
       {
+        // TODO: Menu enable based on login authenticated
+        this.menuCtrl.enable(true, 'authenticated');
         this.submitAttempt = false;
         this.goToHome();
       }
