@@ -423,7 +423,7 @@ export class HierarchyControllerPage {
       this.dataHandler.subURIPush(dataRemote + this.subURI + ".svc/", ii);
       // Add Get portion
       // (e.g. http://sensor.nevada.edu/Services/NRDC/Infrastructure/Services/Sites.svc/Get)
-      this.subURI = dataRemote + this.subURI + ".svca/Get";
+      this.subURI = dataRemote + this.subURI + ".svc/Get";
 
       let data: Observable<any> = this.http.get(this.subURI);
 
