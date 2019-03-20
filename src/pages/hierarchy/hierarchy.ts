@@ -159,19 +159,19 @@ export class HierarchyPage
 
     }
 
+    // DEBUG
     // console.log(filteredObject);
-    //TODO: filter by unique Identifier
-      if(page == 'edit')
-      {
-        console.log("uniqueID \n" + this.uniqueIdentifier);
-        // this.navCtrl.push(EditPage,[this.hierarchyTiers[this.hierarchyDepth - 1], filteredObject]);
-        this.navCtrl.push(EditPage,[(this.dataHandler.getHierarchyTiers())[this.hierarchyDepth - 1], filteredObject, this.hierarchyDepth - 1, this.uniqueIdentifier]);
-      }
-      else
-      {
-        // this.navCtrl.push(ReadPage,[this.hierarchyTiers[this.hierarchyDepth - 1], filteredObject, this.currentDisplayPath]);
-        this.navCtrl.push(ReadPage,[(this.dataHandler.getHierarchyTiers())[this.hierarchyDepth - 1], filteredObject, this.hierarchyDepth - 1, this.currentDisplayPath]);
-      }
+    if(page == 'edit')
+    {
+      console.log("uniqueID \n" + this.uniqueIdentifier);
+      // this.navCtrl.push(EditPage,[this.hierarchyTiers[this.hierarchyDepth - 1], filteredObject]);
+      this.navCtrl.push(EditPage,[(this.dataHandler.getHierarchyTiers())[this.hierarchyDepth - 1], filteredObject, this.hierarchyDepth - 1, this.uniqueIdentifier]);
+    }
+    else
+    {
+      // this.navCtrl.push(ReadPage,[this.hierarchyTiers[this.hierarchyDepth - 1], filteredObject, this.currentDisplayPath]);
+      this.navCtrl.push(ReadPage,[(this.dataHandler.getHierarchyTiers())[this.hierarchyDepth - 1], filteredObject, this.hierarchyDepth - 1, this.currentDisplayPath]);
+    }
 
   }
 

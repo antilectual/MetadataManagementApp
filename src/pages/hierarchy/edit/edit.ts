@@ -44,9 +44,9 @@ export class EditPage {
       this.item = navParams.data[0];
       this.dataObject = navParams.data[1];
       this.hierarchyDepth = navParams.data[2];
-      console.log("nav Params \n" + navParams.data[3]);
       this.uniqueIdentifier = navParams.data[3];
       // DEBUG:
+      //console.log("nav Params \n" + navParams.data[3]);
       //console.log(this.dataURI);
       //If there is a photo, display image
       if(navParams.data[1].Photo != null){
@@ -137,8 +137,8 @@ export class EditPage {
 
    saveEditedData()
    {
+     // DEBUG
      // console.log("UniqueID \n" + this.uniqueIdentifier);
-     // if()
      this.dataHandler.updateDataObject(this.dataObject, this.hierarchyDepth, this.uniqueIdentifier);
      if(this.gvars.getOnline())
      {
@@ -146,46 +146,42 @@ export class EditPage {
      }
    }
 
-   // addHero (hero: Hero): Observable<Hero> {
-   //   return this.http.post<Hero>(this.heroesUrl, hero, httpOptions)
-   //     .pipe(
-   //       catchError(this.handleError('addHero', hero))
-   //     );
-   // }
-
    pushSavedData()
    {
 
+    // DEBUG
     // console.log("URL(S) \n" + this.dataHandler.getSubUris());
-     let remote = this.dataHandler.getSubUris();
-     remote = remote[this.hierarchyDepth];
-     // remote = remote + "POST/" + this.uniqueIdentifier;
-     remote = remote + "Post";
-      // console.log("URL \n" + remote);
-      let i = 0;
-      // console.log("dataobjectlength = " + Object.keys(this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Characteristics).length);
-      // console.log("dataObjectLengh2 = " + Object.keys(this.dataObject).length);
+    let remote = this.dataHandler.getSubUris();
+    remote = remote[this.hierarchyDepth];
+        // remote = remote + "POST/" + this.uniqueIdentifier; // Doesn't exist
+    remote = remote + "Post";
+    let i = 0;
+    // DEBUG
+    // console.log("URL \n" + remote);
+    // console.log("dataobjectlength = " + Object.keys(this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Characteristics).length);
+    // console.log("dataObjectLengh2 = " + Object.keys(this.dataObject).length);
 
-      // This loop removes any hexBinary (Photos) from the json object before submitting it because they make the json object too large to push to the server.
-      let characteristics = this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Characteristics;
-      for(i = 0; i < Object.keys(characteristics).length; i++)
-      {
-        // console.log("data type = \n" + JSON.stringify(this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Characteristics[i].datatype));
-        // console.log("hiearachyCharName = \n" + this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Characteristics[i].Label);
-        // console.log("dataObjectName = \n" + this.dataObject[this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Characteristics[i].Label]);
-          if(characteristics[i].datatype == "xsd:hexBinary")
-          {
-            delete this.dataObject[characteristics[i].Label];
-          }
-      }
+    // This loop removes any hexBinary (Photos) from the json object before submitting it because they make the json object too large to push to the server.
+    let characteristics = this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Characteristics;
+    for(i = 0; i < Object.keys(characteristics).length; i++)
+    {
+      // DEBUG
+      // console.log("data type = \n" + JSON.stringify(this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Characteristics[i].datatype));
+      // console.log("hiearachyCharName = \n" + this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Characteristics[i].Label);
+      // console.log("dataObjectName = \n" + this.dataObject[this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Characteristics[i].Label]);
+        if(characteristics[i].datatype == "xsd:hexBinary")
+        {
+          delete this.dataObject[characteristics[i].Label];
+        }
+    }
+    // DEBUG
     // console.log("DataObject \n" + JSON.stringify(this.dataObject));
-      // console.log("WhereToPost \n" + this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Name);
-     //return this.http.post(remote, this.dataObject);
-     //return this.http.post(remote, this.dataHandler.getDataObjects()[this.hierarchyDepth]);
-      this.http.post(remote, this.dataObject, {headers: {"Accept":'application/json', 'Content-Type':'application/json'}}).subscribe(data => {
+    // console.log("WhereToPost \n" + this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Name);
+    this.http.post(remote, this.dataObject, {headers: {"Accept":'application/json', 'Content-Type':'application/json'}}).subscribe(data => {
+        // DEBUG
         console.log("data = \n " + data);
-       }, error => {
+     }, error => {
         console.log(error);
-      });
+    });
   }
 }

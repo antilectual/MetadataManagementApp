@@ -76,7 +76,7 @@ export class GlobalDataHandlerProvider {
     if(this.dataObject == null)
     {
       this.dataObject = [];
-      this.dataObject.push(val);
+      this.dataObject[i] = val;
     }
     else
     {
@@ -84,17 +84,17 @@ export class GlobalDataHandlerProvider {
     }
   }
 
-  subURIPush(val)
+  subURIPush(val, i)
   {
 
     if(this.subURIs == null)
     {
       this.subURIs = [];
-      this.subURIs.push(val);
+      this.subURIs[i] = val;
     }
     else
     {
-      this.subURIs.push(val);
+      this.subURIs[i] = val;
     }
   }
 }
