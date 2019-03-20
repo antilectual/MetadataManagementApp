@@ -36,7 +36,7 @@ export class ReadPage {
 //    The selected items children (ParentOf)
 //    The selected item's pluralization (Plural)
 //  [1] - The URI to retrieve the metadata from (dataURI)
-//  [2] - JSON Containing the info for the next level [TODO: this is wrong, fix it]
+//  [2] - JSON Containing the info for the next level
   //private base64: Base64
   constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, public dataHandler: GlobalDataHandlerProvider) {
 
@@ -140,6 +140,7 @@ export class ReadPage {
    * @pre
    * @post
    */
+   // TODO: Fix this link to the read page to pass the correct data
    goToEdit()
    {
      this.navCtrl.push(EditPage,[this.item, this.dataObject]);

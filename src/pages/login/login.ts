@@ -20,9 +20,25 @@ export class LoginPage {
   slideOneForm: FormGroup;
   //
   submitAttempt: boolean = false;
+  isWeb: boolean = false;
+  isIOS: boolean = false;
+  isAndroid: boolean = false;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public gvars: GlobalvarsProvider, public formBuilder: FormBuilder)
   {
+    let platform = this.gvars.getPlatform();
+    switch(platform)
+    {
+      case 'IOS':
+          this.isIOS = true;
+          break;
+      case 'android':
+          this.isAndroid = true;
+          break;
+      default:
+          this.isWeb = true;
+    }
+
     this.slideOneForm = new FormGroup(
       {
       username: new FormControl('', [

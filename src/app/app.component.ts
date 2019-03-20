@@ -33,6 +33,8 @@ export class MyApp {
 
     constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public gvars: GlobalvarsProvider) {
       this.initializeApp();
+      // TODO: Make this acquired from the device
+      this.gvars.setPlatform('android');
       this.gvars.getTheme().subscribe(val => this.selectedTheme = val);
 
       this.pages = [

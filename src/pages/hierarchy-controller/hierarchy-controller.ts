@@ -59,7 +59,6 @@ export class HierarchyControllerPage {
   {
     if(this.gvars.getOnline())
     {
-      // TODO: Add try catch blocks for each function. Throw errors for offline and timeouts.
       this.loadOntologyWaiting();
       try { await this.getOntology();}
       catch (err) {return;}
@@ -287,7 +286,6 @@ export class HierarchyControllerPage {
   *
   * @return None
   */
-  // TODO: pass in variable for what value to test.
   async loadOntologyWaiting()
   {
       let loading = this.loadingController.create({
@@ -317,7 +315,6 @@ export class HierarchyControllerPage {
   *
   * @return None
   */
-  // TODO: pass in variable for what value to test.
   async loadDataWaiting()
   {
       let loading = this.loadingController.create({
@@ -354,7 +351,6 @@ export class HierarchyControllerPage {
     // TODO: Create a config setting for this
     // Local location containing the Ontology
     // let local = '../../assets/data/test.json';
-    // TODO: Create a config setting for this
     // Remote service containing the ontology
     //let remote = 'http://sensor.nevada.edu/GS/Services/Ragnarok/';
     let remote = '../../assets/data/ontology.json';
