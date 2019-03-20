@@ -35,10 +35,8 @@ export class MyApp {
       this.initializeApp();
       // TODO: Make this acquired from the device
       this.gvars.setPlatform('android');
-      // jTODO: Get online status from device
+      // TODO: Get online status from device
       this.gvars.setOnline(true);
-      // Menu AUthorization after login
-      console.log(this.menuCtrl.getMenus());
       this.gvars.getTheme().subscribe(val => this.selectedTheme = val);
 
       this.pages = [
