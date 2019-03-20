@@ -79,7 +79,6 @@ export class HierarchyControllerPage {
     }
     else
     {
-      let error = 'Device is offline'
       await this.showError({status: 'Offline'}, 'Connection');
     }
   }
@@ -409,8 +408,6 @@ export class HierarchyControllerPage {
     // -----------
     let i = 0;
     let hierarchyTiers = this.dataHandler.getHierarchyTiers();
-    let doneWaitingCount = 0;
-    let errorMsg:any;
     for (i; i < hierarchyTiers.length; i++)
     {
       // re-indexing. required to index appropriately due to JS scoping
