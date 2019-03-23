@@ -1,5 +1,5 @@
 import { Content } from 'ionic-angular';
-import { Directive, ElementRef, Input, Renderer2, SimpleChanges } from '@angular/core';
+import { Directive, Input, Renderer2 } from '@angular/core';
 
 /**
  * Generated class for the ScrollIndicatorDirective directive.
@@ -15,7 +15,7 @@ import { Directive, ElementRef, Input, Renderer2, SimpleChanges } from '@angular
 export class ScrollIndicatorDirective {
 
     @Input('scroll-content') scrollContent: Content;
-    @Input('scroll-indicator') scrollIndicator: Content;
+    @Input('scroll-indicator') scrollIndicator: any;
 
     prevScrollHeight: number = 0;
     contentHeight: number;
@@ -23,7 +23,7 @@ export class ScrollIndicatorDirective {
     lastScrollPosition: number;
     lastValue: number = 0;
 
-    constructor(private element: ElementRef, private renderer: Renderer2) {
+    constructor(private renderer: Renderer2) {
 
     }
 
@@ -48,7 +48,7 @@ export class ScrollIndicatorDirective {
 
     onContentScroll(event)
     {
-      let heightAdjust = (this.scrollContent.getScrollElement().scrollHeight - (this.scrollContent.getScrollElement().offsetHeight + this.scrollContent.scrollTop));
+      let heightAdjust = (this.scrollContent.getScrollElement().scrollHeight - (this.scrollContent.getScrollElement().offsetHeight + this.scrollContent.getScrollElement().scrollTop));
       if(heightAdjust < this.scrollIndicator.offsetHeight)
       {
         this.renderer.setStyle(this.scrollIndicator, "margin-bottom", "-" + (this.scrollIndicator.offsetHeight + 1) + "px");
