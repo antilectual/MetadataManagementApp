@@ -13,6 +13,7 @@ import { HomePage } from '../home/home';
 import { EditPage } from './edit/edit';
 //import { File } from '@ionic-native/file';
 import { GlobalDataHandlerProvider } from '../../providers/global-data-handler/global-data-handler';
+import { ScrollIndicatorDirective } from '../../../directives/scroll-indicator/scroll-indicator';
 
 
 // @IonicPage()

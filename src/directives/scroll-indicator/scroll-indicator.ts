@@ -14,7 +14,6 @@ import { Directive, ElementRef, Input, Renderer2, SimpleChanges } from '@angular
 })
 export class ScrollIndicatorDirective {
 
-    @Input('scroll-indicator-config') config: ScrollIndicatorConfig;
     @Input('scroll-content') scrollContent: Content;
     @Input('scroll-indicator') scrollIndicator: Content;
 
@@ -59,8 +58,4 @@ export class ScrollIndicatorDirective {
           this.renderer.setStyle(this.scrollIndicator, "margin-bottom", "0px");
       }
     }
-}
-export interface ScrollIndicatorConfig {
-    cssProperty: string;
-    maxValue: number;
 }

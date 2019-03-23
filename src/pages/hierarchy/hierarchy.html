@@ -9,7 +9,7 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content padding #pageContent [scroll-content]="pageContent" [scroll-indicator]="scrollFooter">
 
       <!--button ion-item *ngFor="let item of items" (click)="push()">
         {{item.Plural}}
@@ -58,3 +58,10 @@
       </ion-fab>
 
 </ion-content>
+
+<ion-footer  #scrollFooter>
+    <div class="edit-footer">
+      More
+      <div style="float: right; padding-top: 5px; padding-right: 10px"> <img width="15" height="15" src="../../assets/imgs/arrowdown.png">&nbsp;</div>
+    </div>
+</ion-footer>

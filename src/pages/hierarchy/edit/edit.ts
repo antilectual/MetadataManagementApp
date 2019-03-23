@@ -18,9 +18,7 @@ import { ScrollIndicatorDirective } from '../../../directives/scroll-indicator/s
 export class EditPage {
 
 
-  footerScrollConfig: ScrollHideConfig = { cssProperty: 'margin-bottom', maxValue: undefined };
-  headerScrollConfig: ScrollHideConfig = { cssProperty: 'margin-top', maxValue: 44 };
-  
+
   item: any;
   dataObject: any;
   dataURI: any;
