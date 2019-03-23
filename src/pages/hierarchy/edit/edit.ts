@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { HttpClient } from '@angular/common/http';
 import { GlobalDataHandlerProvider } from '../../../providers/global-data-handler/global-data-handler';
 import { GlobalvarsProvider } from '../../../providers/globalvars/globalvars';
+import { ScrollIndicatorDirective } from '../../../directives/scroll-indicator/scroll-indicator';
 
 // import { Observable } from 'rxjs/Observable';
 
@@ -16,6 +17,10 @@ import { GlobalvarsProvider } from '../../../providers/globalvars/globalvars';
 })
 export class EditPage {
 
+
+  footerScrollConfig: ScrollHideConfig = { cssProperty: 'margin-bottom', maxValue: undefined };
+  headerScrollConfig: ScrollHideConfig = { cssProperty: 'margin-top', maxValue: 44 };
+  
   item: any;
   dataObject: any;
   dataURI: any;

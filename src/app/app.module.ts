@@ -21,6 +21,7 @@ import { FormfieldsPage } from '../app/validators/formfields/formfields';
 import { GlobalvarsProvider } from '../providers/globalvars/globalvars';
 import { GlobalDataHandlerProvider } from '../providers/global-data-handler/global-data-handler';
 import { HierarchyControllerProvider } from '../providers/hierarchy-controller/hierarchy-controller';
+import { ScrollIndicatorDirective } from '../directives/scroll-indicator/scroll-indicator';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { HierarchyControllerProvider } from '../providers/hierarchy-controller/h
     ReadPage,
     EditPage,
     HierarchyControllerPage,
-    FormfieldsPage
+    FormfieldsPage,
+    ScrollIndicatorDirective
     // ExamplePage
   ],
   imports: [
