@@ -34,7 +34,7 @@ export class MyApp {
     constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public gvars: GlobalvarsProvider, public menuCtrl: MenuController) {
       this.initializeApp();
       // TODO: Make this acquired from the device
-      this.gvars.setPlatform('android');
+      this.gvars.setPlatform('web');
       // TODO: Get online status from device
       this.gvars.setOnline(true);
       this.gvars.getTheme().subscribe(val => this.selectedTheme = val);
