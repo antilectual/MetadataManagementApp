@@ -9,6 +9,9 @@ import { IonicPage, NavController, NavParams, MenuController } from 'ionic-angul
 import { HomePage } from '../home/home';
 import { GlobalvarsProvider } from '../../providers/globalvars/globalvars';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { Base64 } from '@ionic-native/base64/ngx';
+import CryptoJS from 'crypto-js';
 
 @IonicPage()
 @Component({
@@ -23,8 +26,12 @@ export class LoginPage {
   isWeb: boolean = false;
   isIOS: boolean = false;
   isAndroid: boolean = false;
+  username: string;
+  password: string;
+  loginCredentials = {};
+  // loginCredentials = [];
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public gvars: GlobalvarsProvider, public formBuilder: FormBuilder, public menuCtrl: MenuController)
+  constructor(public navCtrl: NavController, public navParams: NavParams, public gvars: GlobalvarsProvider, public formBuilder: FormBuilder, public menuCtrl: MenuController, public http: HttpClient, private base64: Base64)
   {
     // Disable the menu on the login page
     this.menuCtrl.enable(false, 'unauthenticated');
@@ -78,12 +85,12 @@ export class LoginPage {
 */
   attemptLogin()
   {
+
       if(!this.slideOneForm.valid)
       {
         //
         this.submitAttempt = true;
       }
-
       else
       {
         // TODO: Menu enable based on login authenticated
@@ -91,6 +98,23 @@ export class LoginPage {
         this.submitAttempt = false;
         this.goToHome();
       }
+      this.loginCredentials["User Name"] = this.username;
+      this.loginCredentials["Password"] = btoa(CryptoJS.SHA256(this.password).toString(CryptoJS.enc.Hex));
+
+      console.log("Credentials: ");
+      console.log(JSON.stringify(this.loginCredentials));
+      // console.log(btoa(this.loginCredentials["Password"]));
+      let remote = 'http://sensor.nevada.edu/Services/nrdc/infrastructure/Services/Login.svc/Authenticate';
+      this.http.post(remote, this.loginCredentials, {headers: {"Accept":'application/json', 'Content-Type':'application/json'}}).subscribe(data => {
+          // DEBUG
+          console.log("data = ");
+          console.log(data);
+       }, error => {
+          console.log(error);
+      });
+
+      this.password = "";
+
   }
 
 }

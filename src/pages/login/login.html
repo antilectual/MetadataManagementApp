@@ -7,22 +7,22 @@
   <form [formGroup]="slideOneForm">
 
     <ion-item *ngIf="isAndroid || isIOS" [ngClass]="['mobile']" [class.invalid]="!slideOneForm.controls.username.valid && submitAttempt">
-      <ion-input formControlName ="username" placeholder="Username">
+      <ion-input formControlName ="username" placeholder="Username" [(ngModel)]="username">
       </ion-input>
     </ion-item>
 
     <ion-item *ngIf="isWeb"  [ngClass]="['web']" [class.invalid]="!slideOneForm.controls.username.valid && submitAttempt">
-      <ion-input formControlName ="username" placeholder="username">
+      <ion-input formControlName ="username" placeholder="username" [(ngModel)]="username">
       </ion-input>
     </ion-item>
 
     <ion-item *ngIf="isAndroid || isIOS" [ngClass]="['mobile']">
-      <ion-input formControlName ="password" type="password" placeholder="Password">
+      <ion-input formControlName ="password" type="password" placeholder="Password" [(ngModel)]="password">
       </ion-input>
     </ion-item>
 
     <ion-item *ngIf="isWeb" [ngClass]="['web']">
-      <ion-input formControlName ="password" type="password" placeholder="Password">
+      <ion-input formControlName ="password" type="password" placeholder="Password" [(ngModel)]="password">
       </ion-input>
     </ion-item>
     <br>
