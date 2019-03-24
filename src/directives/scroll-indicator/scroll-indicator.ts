@@ -1,11 +1,18 @@
+/**
+* Future TODO: Smooth animation if possible.
+* @file  scroll-indicator.ts
+* @author  Matthew Johnson
+* @brief  Diretive to control the behavior of the indicator showing scrolling is possible on a page.
+*
+* Generated class for the ScrollIndicatorDirective directive.
+*
+*
+*/
+
 import { Content } from 'ionic-angular';
 import { Directive, Input, Renderer2 } from '@angular/core';
 
-/**
- * Generated class for the ScrollIndicatorDirective directive.
- *
- * Modified from: https://medium.com/@gregor.srdic/ionic3-hidding-header-on-footer-on-content-scroll-15ab95b05dc5
- */
+
 @Directive({
   selector: '[scroll-indicator]', // Attribute selector
   host: {
@@ -27,6 +34,14 @@ export class ScrollIndicatorDirective {
 
     }
 
+    /**
+    * @brief ngOnInit (Initialization)
+    *
+    * @details Sets default settings when a page with a scroll indicator is loaded
+    *          (Hidden initialially)
+    *
+    * @return None
+    */
     ngOnInit()
     {
       // Hide the indicator
@@ -35,6 +50,15 @@ export class ScrollIndicatorDirective {
       this.prevScrollHeight = this.scrollContent.getScrollElement().scrollHeight;
     }
 
+    /**
+    * @brief ngAfterContentChecked (Loaded)
+    *
+    * @details If the page changes between initialization and content being loaded, adjust default settings.
+    *          Shows the indicator if the page has scroll. Necessary because scroll height is not finished
+    *          updating before onInit completes.
+    *
+    * @return None
+    */
     ngAfterContentChecked()
     {
       // Check if the height of the page has changed since init
@@ -46,6 +70,15 @@ export class ScrollIndicatorDirective {
 
     }
 
+
+    /**
+    * @brief onContentScroll
+    *
+    * @details Hides and displays the scroll indication when needed.
+    8          (e.g. When at the bottomn of the page)
+    *
+    * @return None
+    */
     onContentScroll(event)
     {
       let heightAdjust = (this.scrollContent.getScrollElement().scrollHeight - (this.scrollContent.getScrollElement().offsetHeight + this.scrollContent.getScrollElement().scrollTop));
