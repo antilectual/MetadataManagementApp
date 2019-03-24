@@ -1,6 +1,6 @@
 /**
 * @file  hierarchy.ts
-* @author  Brianna Blain-Castelli, Christopher Eichstedt, Matthew johnson, Nicholas Jordy
+* @author  Brianna Blain-Castelli, Christopher Eichstedt, Matthew Johnson, Nicholas Jordy
 * @brief  controller file for hierarchichy
 */
 
