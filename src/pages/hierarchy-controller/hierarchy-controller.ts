@@ -347,7 +347,6 @@ export class HierarchyControllerPage {
   */
   async getHierarchyData()
   {
-    let online = this.gvars.getOnline();
     // TODO: Create a config setting for this
     // Local location containing the Ontology
     // let local = '../../assets/data/test.json';

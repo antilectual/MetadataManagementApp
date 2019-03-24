@@ -3,7 +3,6 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { HttpClient } from '@angular/common/http';
 import { GlobalDataHandlerProvider } from '../../../providers/global-data-handler/global-data-handler';
 import { GlobalvarsProvider } from '../../../providers/globalvars/globalvars';
-import { ScrollIndicatorDirective } from '../../../directives/scroll-indicator/scroll-indicator';
 
 // import { Observable } from 'rxjs/Observable';
 
