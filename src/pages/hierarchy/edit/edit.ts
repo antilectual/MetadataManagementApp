@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { HttpClient } from '@angular/common/http';
 import { GlobalDataHandlerProvider } from '../../../providers/global-data-handler/global-data-handler';
 import { GlobalvarsProvider } from '../../../providers/globalvars/globalvars';
+import { Storage } from '@ionic/storage';
 
 // import { Observable } from 'rxjs/Observable';
 
@@ -42,7 +43,6 @@ export class EditPage {
 //  [3] - The unique identifier of the specific object being edited
 // private base64: Base64
   constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, public dataHandler: GlobalDataHandlerProvider, public gvars: GlobalvarsProvider) {
-
       this.item = navParams.data[0];
       this.dataObject = navParams.data[1];
       this.hierarchyDepth = navParams.data[2];
@@ -144,7 +144,8 @@ export class EditPage {
      this.dataHandler.updateDataObject(this.dataObject, this.hierarchyDepth, this.uniqueIdentifier);
      if(this.gvars.getOnline())
      {
-       this.pushSavedData();
+       // TODO: Re-eneable data pushing
+       //this.pushSavedData();
      }
    }
 

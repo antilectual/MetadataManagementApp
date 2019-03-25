@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 // import { Observable } from 'rxjs/Observable';
 import { EditPage } from '../edit/edit';
 import { GlobalDataHandlerProvider } from '../../../providers/global-data-handler/global-data-handler';
+import { Storage } from '@ionic/storage';
 
 // import { Base64 } from '@ionic-native/base64/ngx';
 

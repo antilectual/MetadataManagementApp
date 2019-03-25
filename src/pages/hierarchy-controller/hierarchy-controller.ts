@@ -13,6 +13,7 @@ import { HomePage } from '../home/home';
 import { HierarchyPage } from '../hierarchy/hierarchy';
 import { GlobalDataHandlerProvider } from '../../providers/global-data-handler/global-data-handler';
 import { HierarchyControllerProvider } from '../../providers/hierarchy-controller/hierarchy-controller';
+import { Storage } from '@ionic/storage';
 
 @IonicPage()
 @Component({
@@ -27,6 +28,7 @@ export class HierarchyControllerPage {
   subURI: any;
   loadingScreens = [];
   isError = false;
+  isTest = false;
 
   /**
   * @brief Constructor for the hierarchy-controller
@@ -35,7 +37,7 @@ export class HierarchyControllerPage {
   * @post
   */
   constructor(public http: HttpClient, public navCtrl: NavController, public navParams: NavParams, public loadingController: LoadingController,
-    public gvars: GlobalvarsProvider, public dataHandler: GlobalDataHandlerProvider, public hierarchyGlobals: HierarchyControllerProvider) {
+    public gvars: GlobalvarsProvider, public dataHandler: GlobalDataHandlerProvider, public hierarchyGlobals: HierarchyControllerProvider, public storage: Storage) {
       this.loadAll();
   }
 
@@ -73,7 +75,14 @@ export class HierarchyControllerPage {
       this.loadingScreens.pop();
       if(!this.isError)
       {
-        this.goHierachyPage();
+        if(this.isTest)
+        {
+          this.goHierachyPageTest();
+        }
+        else
+        {
+          this.goHierachyPage();
+        }
       }
     }
     else
@@ -114,6 +123,24 @@ export class HierarchyControllerPage {
       // DEBUG
       // console.log(this.dataHandler.getDataObjects());
       let localValues = {hierarchydepth:0, name:"NRDC", identifier:null, pathName:this.dataHandler.getHierarchyTiers()[0].Plural};
+      this.navCtrl.setRoot(HierarchyPage,localValues);
+  }
+
+  goHierachyPageTest(){
+
+      /* Hierarchy requires the following values:
+      * hierarchydepth - HierchyDepth describes the initial tier index of the ontology/hierarchy. It is also the initial index of the location of data in dataObject
+      * name - Name is the name used as a label on the hierarchy (metadata management) page.
+      * pageData - This object is the full set of data pulled from the database which contains the actual metadata for all hierarchy tiers
+      * hierarchyData -  This object is the full set of hierarchyData tiers
+      * indentifier - This should be the unique identifier value for the previous page in the hierarchy.  null for the initial push.
+      * pathName - this string is the pluralization of the Name which will be used for finding the URI and show the name of the hierarchy level.
+      */
+
+      //let localValues = {hierarchydepth:0, name:"NRDC", pageData:this.dataObject, hierarchyData:this.hierarchyTiers, identifier:null, pathName:this.hierarchyTiers[0].Plural};
+      // DEBUG
+      // console.log(this.dataHandler.getDataObjects());
+      let localValues = {hierarchydepth:0, name:"TEST", identifier:null, pathName:this.dataHandler.getHierarchyTiers()[0].Plural};
       this.navCtrl.setRoot(HierarchyPage,localValues);
   }
 
@@ -246,8 +273,21 @@ export class HierarchyControllerPage {
         this.hierarchyGlobals.setDataLoaded(true);
       }
       else{
+        // internal
         // ask user to confirm sync
       }
+    }
+    else
+    {
+        this.storage.get('localDataObject').then( data =>
+        {
+          console.log(data);
+          let localData = data;
+          this.dataHandler.setDataObject(localData);
+          this.isTest = true;
+          this.hierarchyGlobals.setDataDoneLoading(true);
+          this.hierarchyGlobals.setDataLoaded(true);
+        });
     }
   }
 
@@ -418,6 +458,7 @@ export class HierarchyControllerPage {
       this.subURI = dataRemote + this.subURI + ".svc/Get";
 
       let data: Observable<any> = this.http.get(this.subURI);
+      // let data: Observable<any> = this.storage.get('localDataObject').then(result =>
 
       await data.subscribe(result =>
         {

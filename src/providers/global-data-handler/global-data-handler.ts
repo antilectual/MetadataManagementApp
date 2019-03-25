@@ -1,5 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Storage } from '@ionic/storage';
+import { HierarchyControllerProvider } from '../hierarchy-controller/hierarchy-controller';
 
 /*
   Generated class for the GlobalDataHandlerProvider provider.
@@ -17,7 +19,9 @@ export class GlobalDataHandlerProvider {
   // URL for getting the specific data
   subURIs: any;
 
-  constructor(public http: HttpClient) {
+  public testObject: any;
+
+  constructor(public http: HttpClient, public storage: Storage, private hierarchyGlobals: HierarchyControllerProvider) {
     // console.log('Hello GlobalDataHandlerProvider Provider');
   }
 
@@ -56,6 +60,7 @@ export class GlobalDataHandlerProvider {
   // *********** UPDATE FUNCTIONS ************************
   updateDataObject(object, hierachyDepth, uniqueID)
   {
+
     let i = 0;
     for(i = 0; i < this.dataObject[hierachyDepth].length; i++)
     {
@@ -68,6 +73,17 @@ export class GlobalDataHandlerProvider {
       }
     }
 
+    this.storage.set('localDataObject', this.dataObject).then( data => {
+      this.hierarchyGlobals.setDataSynced(true);
+      this.hierarchyGlobals.saveConfiguration();
+      this.storage.get('localDataObject').then( data => {this.testObject = data; console.log(this.testObject);});
+    });
+
+
+
+    // this.storage.set('localDataObject', this.dataObject);
+    // this.hierarchyGlobals.setDataSynced(true);
+    // this.hierarchyGlobals.saveConfiguration();
   }
 
   // *********** PUSH FUNCTIONS ************************
