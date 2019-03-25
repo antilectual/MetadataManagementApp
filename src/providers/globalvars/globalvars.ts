@@ -15,7 +15,7 @@ export class GlobalvarsProvider {
   isOnline: boolean;
   isLoggedIn: boolean;
   private theme: BehaviorSubject<String>;
-
+  userName: string = "User Name";
   platform: string;
 
 
@@ -46,6 +46,10 @@ export class GlobalvarsProvider {
     this.isLoggedIn = val;
   }
 
+  setUserName(val)
+  {
+    this.userName = val;
+  }
 
   //GET FUNCTIONS
   getOnline()
@@ -68,5 +72,9 @@ export class GlobalvarsProvider {
     return this.theme.asObservable();
   }
 
+  getUserName()
+  {
+    return this.userName;
+  }
 
 }

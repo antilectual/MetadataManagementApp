@@ -106,6 +106,7 @@ export class LoginPage {
           if(this.gvars.getLoggedIn())      //(!this.slideOneForm.valid)
           {
             // MenuCtrl is disabling the slide menu and re-enabling it once logged in.
+            this.gvars.setUserName(this.username);
             this.menuCtrl.enable(true, 'authenticated');
             this.submitAttempt = false;
             this.goToHome();
