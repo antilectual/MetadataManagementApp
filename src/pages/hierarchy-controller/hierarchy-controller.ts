@@ -279,15 +279,18 @@ export class HierarchyControllerPage {
     }
     else
     {
-        this.storage.get('localDataObject').then( data =>
-        {
-          console.log(data);
-          let localData = data;
-          this.dataHandler.setDataObject(localData);
-          this.isTest = true;
-          this.hierarchyGlobals.setDataDoneLoading(true);
-          this.hierarchyGlobals.setDataLoaded(true);
-        });
+      if(!this.hierarchyGlobals.getDataLoaded())
+      {       
+          this.storage.get('localDataObject').then( data =>
+          {
+            console.log(data);
+            let localData = data;
+            this.dataHandler.setDataObject(localData);
+            this.isTest = true;
+            this.hierarchyGlobals.setDataDoneLoading(true);
+            this.hierarchyGlobals.setDataLoaded(true);
+          });
+      }
     }
   }
 
