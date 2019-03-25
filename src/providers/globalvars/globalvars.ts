@@ -13,6 +13,7 @@ export class GlobalvarsProvider {
 
   //flag for online
   isOnline: boolean;
+  isLoggedIn: boolean;
   private theme: BehaviorSubject<String>;
 
   platform: string;
@@ -35,6 +36,15 @@ export class GlobalvarsProvider {
       this.platform = val;
   }
 
+  setTheme(val)
+  {
+    this.theme.next(val);
+  }
+
+  setLoggedIn(val)
+  {
+    this.isLoggedIn = val;
+  }
 
 
   //GET FUNCTIONS
@@ -47,10 +57,10 @@ export class GlobalvarsProvider {
   {
     return this.platform;
   }
-  
-  setTheme(val)
+
+  getLoggedIn()
   {
-    this.theme.next(val);
+    return this.isLoggedIn;
   }
 
   getTheme()

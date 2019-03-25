@@ -7,22 +7,22 @@
   <form [formGroup]="slideOneForm">
 
     <ion-item *ngIf="isAndroid || isIOS" [ngClass]="['mobile']" [class.invalid]="!slideOneForm.controls.username.valid && submitAttempt">
-      <ion-input formControlName ="username" placeholder="Username" [(ngModel)]="username" (keyup.enter)="attemptLogin()">
+      <ion-input formControlName ="username" placeholder="Username" value="Tech" [(ngModel)]="username" (keyup.enter)="attemptLogin()">
       </ion-input>
     </ion-item>
 
     <ion-item *ngIf="isWeb"  [ngClass]="['web']" [class.invalid]="!slideOneForm.controls.username.valid && submitAttempt">
-      <ion-input formControlName ="username" placeholder="username" [(ngModel)]="username" (keyup.enter)="attemptLogin()">
+      <ion-input formControlName ="username" placeholder="username" value="Tech" [(ngModel)]="username" (keyup.enter)="attemptLogin()">
       </ion-input>
     </ion-item>
 
     <ion-item *ngIf="isAndroid || isIOS" [ngClass]="['mobile']">
-      <ion-input formControlName ="password" type="password" placeholder="Password" [(ngModel)]="password" (keyup.enter)="attemptLogin()">
+      <ion-input formControlName ="password" type="password" placeholder="Password" value="Password" [(ngModel)]="password" (keyup.enter)="attemptLogin()">
       </ion-input>
     </ion-item>
 
     <ion-item *ngIf="isWeb" [ngClass]="['web']">
-      <ion-input formControlName ="password" type="password" placeholder="Password" [(ngModel)]="password" (keyup.enter)="attemptLogin()">
+      <ion-input formControlName ="password" type="password" placeholder="Password" value="Password" [(ngModel)]="password" (keyup.enter)="attemptLogin()">
       </ion-input>
     </ion-item>
     <br>

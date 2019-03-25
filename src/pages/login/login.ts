@@ -36,6 +36,7 @@ export class LoginPage {
     // Disable the menu on the login page
     this.menuCtrl.enable(false, 'unauthenticated');
     this.menuCtrl.enable(false, 'authenticated');
+    this.gvars.setLoggedIn(false); // (Loggout)
     let platform = this.gvars.getPlatform();
     switch(platform)
     {
@@ -62,7 +63,7 @@ export class LoginPage {
       },
     {
       //validator: UsernamePage.checkUsername,
-      updateOn: 'blur'
+      updateOn: 'change'
     });
   }
 
@@ -83,38 +84,38 @@ export class LoginPage {
 * @pre
 * @post
 */
+  // TODO: Add error handling and notify user of bad logins.
   attemptLogin()
   {
-
-      if(!this.slideOneForm.valid)
-      {
-        //
-        this.submitAttempt = true;
-      }
-      else
-      {
-        // TODO: Menu enable based on login authenticated
-        this.menuCtrl.enable(true, 'authenticated');
-        this.submitAttempt = false;
-        this.goToHome();
-      }
       this.loginCredentials["User Name"] = this.username;
-      this.loginCredentials["Password"] = btoa(CryptoJS.SHA256(this.password).toString(CryptoJS.enc.Hex));
+      this.loginCredentials["Password"] = CryptoJS.SHA256(this.password).toString(CryptoJS.enc.Hex);
 
-      console.log("Credentials: ");
-      console.log(JSON.stringify(this.loginCredentials));
+      // DEBUG
+      // console.log("Credentials: ");
+      // console.log(JSON.stringify(this.loginCredentials));
       // console.log(btoa(this.loginCredentials["Password"]));
       let remote = 'http://sensor.nevada.edu/Services/nrdc/infrastructure/Services/Login.svc/Authenticate';
       this.http.post(remote, this.loginCredentials, {headers: {"Accept":'application/json', 'Content-Type':'application/json'}}).subscribe(data => {
+          this.gvars.setLoggedIn(data['Access']);
           // DEBUG
-          console.log("data = ");
-          console.log(data);
+          // console.log("Web Response:");
+          // console.log(data);
+          // console.log("Login:");
+          // console.log(this.gvars.getLoggedIn());
+          this.password = "";
+          if(this.gvars.getLoggedIn())      //(!this.slideOneForm.valid)
+          {
+            // MenuCtrl is disabling the slide menu and re-enabling it once logged in.
+            this.menuCtrl.enable(true, 'authenticated');
+            this.submitAttempt = false;
+            this.goToHome();
+          }
+          else
+          {
+            this.submitAttempt = true;
+          }
        }, error => {
           console.log(error);
       });
-
-      this.password = "";
-
   }
-
 }
