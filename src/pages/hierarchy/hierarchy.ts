@@ -11,6 +11,7 @@ import { GlobalvarsProvider } from '../../providers/globalvars/globalvars';
 import { ReadPage } from './read/read';
 import { HomePage } from '../home/home';
 import { EditPage } from './edit/edit';
+import { Storage } from '@ionic/storage';
 //import { File } from '@ionic-native/file';
 import { GlobalDataHandlerProvider } from '../../providers/global-data-handler/global-data-handler';
 
@@ -45,6 +46,8 @@ export class HierarchyPage
   hierarchyDepth = 0;
   //
   loading;
+  testValue: any;
+  testObject: any;
 
   /**
 * @brief
@@ -55,6 +58,7 @@ export class HierarchyPage
 //private loadingCtrl: LoadingController
   constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, public gvars: GlobalvarsProvider, public dataHandler: GlobalDataHandlerProvider)//, private file: File)
   {
+
     //test json copy
     // this.file.writeFile(this.file.assets.data, 'test.json', 'hello, world', {replace: true}).then(_ => console.log('Directory exists')).catch(err => console.log('Directory doesn\'t exist'));
     //

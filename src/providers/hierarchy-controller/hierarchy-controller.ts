@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Storage } from '@ionic/storage';
 
 /*
   Generated class for the HierarchyControllerProvider provider.
@@ -23,10 +24,21 @@ export class HierarchyControllerProvider {
   // boolean that stores whether the data is done loading
   isDataDoneLoading = false;
 
-  constructor(public http: HttpClient) {
+  configuration = {};
+
+  constructor(public http: HttpClient, public storage: Storage) {
     // console.log('Hello HierarchyControllerProvider Provider');
   }
 
+  saveConfiguration()
+  {
+    // this.configuration['isOntologySynced'] = this.isOntologySynced;
+    this.configuration['isDataSynced'] = this.isDataSynced;
+    // previous Online/Offline statuses
+    // platform
+
+    this.storage.set('configuration', this.configuration);
+  }
   //SET FUNCTIONS
   setOntologySynced(val)
   {

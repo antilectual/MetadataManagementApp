@@ -15,6 +15,8 @@ import { AboutPage } from '../pages/about/about';
 import { SettingsPage } from '../pages/settings/settings';
 import { HierarchyControllerPage } from '../pages/hierarchy-controller/hierarchy-controller';
 import { GlobalvarsProvider } from '../providers/globalvars/globalvars';
+import { Storage } from '@ionic/storage';
+import { HierarchyControllerProvider } from '../providers/hierarchy-controller/hierarchy-controller';
 //import { ReadPage } from '../pages/hierarchy/read/read';
 // import { ExamplePage } from '../pages/example/example';
 
@@ -31,8 +33,19 @@ export class MyApp {
 
     pages: Array<{title: string, component: any}>;
 
-    constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public gvars: GlobalvarsProvider, public menuCtrl: MenuController) {
+    constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public gvars: GlobalvarsProvider, public menuCtrl: MenuController, private storage: Storage, public hierarchyGlobals: HierarchyControllerProvider,) {
       this.initializeApp();
+
+      this.storage.get('configuration').then( data =>
+      {
+        console.log("App Config Data = ");
+        console.log(data);
+        if(data != null)
+        {
+          console.log("made it to if");
+          this.hierarchyGlobals.setDataSynced(data['isDataSynced']);
+        }
+      });
       // TODO: Make this acquired from the device
       this.gvars.setPlatform('web');
       // TODO: Get online status from device
