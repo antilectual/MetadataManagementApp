@@ -47,7 +47,7 @@ export class MyApp {
         }
       });
       // TODO: Make this acquired from the device
-      this.gvars.setPlatform('web');
+      this.gvars.setPlatform('android');
       // TODO: Get online status from device
       this.gvars.setOnline(true);
       this.gvars.getTheme().subscribe(val => this.selectedTheme = val);
