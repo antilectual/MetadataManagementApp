@@ -23,7 +23,7 @@ export class HierarchyControllerProvider {
   isOntologyDoneLoading = false;
   // boolean that stores whether the data is done loading
   isDataDoneLoading = false;
-
+  //
   configuration = {};
 
   constructor(public http: HttpClient, public storage: Storage) {
@@ -32,7 +32,7 @@ export class HierarchyControllerProvider {
 
   saveConfiguration()
   {
-    // this.configuration['isOntologySynced'] = this.isOntologySynced;
+    //this.configuration['isOntologySynced'] = this.isOntologySynced;
     this.configuration['isDataSynced'] = this.isDataSynced;
     // previous Online/Offline statuses
     // platform

@@ -58,7 +58,12 @@ export class EditPage {
       //console.log(this.image);
   }
 
-
+  /**
+  * @brief
+  * @param
+  * @pre
+  * @post
+  */
   editDateFields()
   {
     //if item.Characteristics.datatype == 'xsd:datetime'
@@ -137,18 +142,35 @@ export class EditPage {
        return n;
    }
 
+   /**
+   * @brief
+   * @param
+   * @pre
+   * @post
+   */
    saveEditedData()
    {
-     // DEBUG
-     // console.log("UniqueID \n" + this.uniqueIdentifier);
      this.dataHandler.updateDataObject(this.dataObject, this.hierarchyDepth, this.uniqueIdentifier);
-     if(this.gvars.getOnline())
-     {
-       // TODO: Re-eneable data pushing
-       //this.pushSavedData();
-     }
    }
 
+   /**
+   * @brief
+   * @param
+   * @pre
+   * @post
+   */
+   uploadEditedData()
+   {
+     this.saveEditedData();
+     this.pushSavedData();
+   }
+
+   /**
+   * @brief
+   * @param
+   * @pre
+   * @post
+   */
    pushSavedData()
    {
 

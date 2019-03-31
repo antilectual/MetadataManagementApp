@@ -22,7 +22,9 @@
     [data]="dataObject">
   </page-formfields>
   <div text-right>
-    <button ion-button (click) = "saveEditedData()">Upload</button>
+    <br>
+    <button ion-button (click) = "saveEditedData()">Save</button>
+    <button [disabled] = "!gvars.getOnline()" ion-button (click) = "uploadEditedData()">Upload</button>
   </div>
 
 </ion-content>

@@ -280,7 +280,7 @@ export class HierarchyControllerPage {
     else
     {
       if(!this.hierarchyGlobals.getDataLoaded())
-      {       
+      {
           this.storage.get('localDataObject').then( data =>
           {
             console.log(data);
@@ -407,6 +407,7 @@ export class HierarchyControllerPage {
         // LABEL: GLOBAL DATA
         this.dataHandler.setHierarchyTiers(hierarchyTiers);
         this.hierarchyGlobals.setOntologyDoneLoading(true);
+        this.storage.set('ontology', this.dataHandler.getHierarchyTiers());
         // this.isOntologyDoneLoading = true;
       },
       error =>
