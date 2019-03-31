@@ -11,9 +11,11 @@ import { GlobalvarsProvider } from '../../providers/globalvars/globalvars';
 import { ReadPage } from './read/read';
 import { HomePage } from '../home/home';
 import { EditPage } from './edit/edit';
+import { AddPage } from './add/add';
 import { Storage } from '@ionic/storage';
 //import { File } from '@ionic-native/file';
 import { GlobalDataHandlerProvider } from '../../providers/global-data-handler/global-data-handler';
+import uuidv4 from 'uuid/v4';
 
 
 // @IonicPage()
@@ -100,6 +102,7 @@ export class HierarchyPage
     else
     {
       this.previousPathIDName = this.hierarchyTiers[this.hierarchyDepth - 1].referentialCharacteristic + " ID";
+      // this.currentPathIDName = this.hierarchyTiers[this.hierarchyDepth].referentialCharacteristic + " ID";
     }
 
   }
@@ -160,7 +163,6 @@ export class HierarchyPage
       {
         filteredObject = (this.dataObject[this.hierarchyDepth - 1][i]);
       }
-
     }
 
     // DEBUG
@@ -171,6 +173,11 @@ export class HierarchyPage
       // this.navCtrl.push(EditPage,[this.hierarchyTiers[this.hierarchyDepth - 1], filteredObject]);
       this.navCtrl.push(EditPage,[(this.dataHandler.getHierarchyTiers())[this.hierarchyDepth - 1], filteredObject, this.hierarchyDepth - 1, this.uniqueIdentifier]);
     }
+    // else if(page == 'add')
+    // {
+    //   this.navCtrl.push(AddPage,[(this.dataHandler.getHierarchyTiers())[this.hierarchyDepth - 1], filteredObject, this.hierarchyDepth - 1, this.uniqueIdentifier]);
+    //   // this.navCtrl.push(AddPage);
+    // }
     else
     {
       // this.navCtrl.push(ReadPage,[this.hierarchyTiers[this.hierarchyDepth - 1], filteredObject, this.currentDisplayPath]);
@@ -209,6 +216,31 @@ export class HierarchyPage
      newTime.setHours(date.getHours() - hourOffset);
 
      return newTime;
+   }
+
+   addItem()
+   {
+     //need depth,
+
+     let pushItem = {};
+
+     pushItem[this.previousPathIDName] = this.uniqueIdentifier;
+
+     console.log(pushItem);
+   }
+
+   createAddPage()
+   {
+     let filteredObject: any;
+     let i = 0;
+     for(i = 0; i < this.dataObject[this.hierarchyDepth - 1].length; i++)
+     {
+       if( this.dataObject[this.hierarchyDepth - 1][i]["Unique Identifier"] == this.uniqueIdentifier)
+       {
+         filteredObject = (this.dataObject[this.hierarchyDepth - 1][i]);
+       }
+     }
+     this.navCtrl.push(AddPage,[(this.dataHandler.getHierarchyTiers())[this.hierarchyDepth - 1], filteredObject, this.hierarchyDepth - 1, this.uniqueIdentifier]);
    }
 
 

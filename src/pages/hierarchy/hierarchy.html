@@ -53,8 +53,8 @@
 
       <!-- Button to add items to hierarchy level -->
       <ion-fab  *ngIf="hierarchyDepth <= maxIndex" bottom right #fab>
-        <button ion-fab>
-          <ion-icon name="ios-create-outline" ></ion-icon>
+        <button ion-fab (click)="createAddPage()">
+          <ion-icon name="ios-add-outline" ></ion-icon>
         </button>
       </ion-fab>
 
