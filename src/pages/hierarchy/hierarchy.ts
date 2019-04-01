@@ -233,15 +233,23 @@ export class HierarchyPage
    {
      let filteredObject: any;
      let i = 0;
-     for(i = 0; i < this.dataObject[this.hierarchyDepth - 1].length; i++)
+
+     if(this.hierarchyDepth - 1 < 0)
      {
-       if( this.dataObject[this.hierarchyDepth - 1][i]["Unique Identifier"] == this.uniqueIdentifier)
-       {
-         filteredObject = (this.dataObject[this.hierarchyDepth - 1][i]);
-       }
+       //do nothing
      }
-     this.navCtrl.push(AddPage,[(this.dataHandler.getHierarchyTiers())[this.hierarchyDepth - 1], filteredObject, this.hierarchyDepth - 1, this.uniqueIdentifier]);
-   }
+     else
+     {
+       for(i = 0; i < this.dataObject[this.hierarchyDepth - 1].length; i++)
+       {
+         if( this.dataObject[this.hierarchyDepth - 1][i]["Unique Identifier"] == this.uniqueIdentifier)
+         {
+           filteredObject = (this.dataObject[this.hierarchyDepth][i]);
+         }
+       }
+       this.navCtrl.push(AddPage,[(this.dataHandler.getHierarchyTiers())[this.hierarchyDepth], filteredObject, this.hierarchyDepth);
+      }
+    }
 
 
 }

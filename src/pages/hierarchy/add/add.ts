@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { GlobalDataHandlerProvider } from '../../../providers/global-data-handler/global-data-handler';
 import { GlobalvarsProvider } from '../../../providers/globalvars/globalvars';
 import { Storage } from '@ionic/storage';
+import uuidv4 from 'uuid/v4';
 
 // import { Observable } from 'rxjs/Observable';
 
@@ -46,7 +47,7 @@ export class AddPage {
       this.item = navParams.data[0];
       this.dataObject = navParams.data[1];
       this.hierarchyDepth = navParams.data[2];
-      this.uniqueIdentifier = navParams.data[3];
+      this.uniqueIdentifier = uuidv4();
       // DEBUG:
       //console.log("nav Params \n" + navParams.data[3]);
       //console.log(this.dataURI);
@@ -56,6 +57,8 @@ export class AddPage {
       }
       // this.editDateFields();
       //console.log(this.image);
+
+      console.log(this.uniqueIdentifier);
   }
 
 
