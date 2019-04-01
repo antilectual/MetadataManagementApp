@@ -151,6 +151,7 @@ export class EditPage {
    saveEditedData()
    {
      this.dataHandler.updateDataObject(this.dataObject, this.hierarchyDepth, this.uniqueIdentifier);
+     this.gvars.setHierarchyUpdateStatus(true, this.hierarchyDepth);
    }
 
    /**
@@ -208,5 +209,7 @@ export class EditPage {
      }, error => {
         console.log(error);
     });
+
+    this.gvars.setHierarchyUpdateStatus(false, this.hierarchyDepth);
   }
 }

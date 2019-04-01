@@ -17,6 +17,8 @@ export class GlobalvarsProvider {
   private theme: BehaviorSubject<String>;
   userName: string = "User Name";
   platform: string;
+  //an array for boolean values for the hierachy update status
+  updateStatusHierarhcy = [];
 
 
   constructor(public http: HttpClient) {
@@ -51,6 +53,11 @@ export class GlobalvarsProvider {
     this.userName = val;
   }
 
+  setHierarchyUpdateStatus(val, index)
+  {
+      this.updateStatusHierarhcy[index] = val;
+  }
+
   //GET FUNCTIONS
   getOnline()
   {
@@ -75,6 +82,11 @@ export class GlobalvarsProvider {
   getUserName()
   {
     return this.userName;
+  }
+
+  getHierarchyUpdateStatus()
+  {
+    return this.updateStatusHierarhcy;
   }
 
 }
