@@ -25,4 +25,6 @@
   </ion-item>
   </ion-list>
 
+  <button [disabled] = "!gvars.getOnline()" ion-button (click) = "dataHandler.pushSavedData()">Sync Hierarchy Data</button>
+
 </ion-content>

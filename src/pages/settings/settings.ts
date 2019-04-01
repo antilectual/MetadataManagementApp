@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController} from 'ionic-angular';
 import { GlobalvarsProvider } from '../../providers/globalvars/globalvars';
-
+import { GlobalDataHandlerProvider } from '../../providers/global-data-handler/global-data-handler';
 /**
  * Generated class for the SettingsPage page.
  *
@@ -22,7 +22,7 @@ export class SettingsPage {
   //Light dark themes
   public selectedTheme: String;
 
-  constructor(public navCtrl: NavController, public gvars: GlobalvarsProvider) {
+  constructor(public navCtrl: NavController, public gvars: GlobalvarsProvider, public dataHandler: GlobalDataHandlerProvider) {
     this.gvars.getTheme().subscribe(val => this.selectedTheme = val);
 
     if(this.gvars.getOnline())
