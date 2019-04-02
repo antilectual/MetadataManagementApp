@@ -1,0 +1,39 @@
+<!--Most information originally moved from edit.html-->
+<!--Edit.html must be updated to remove this information and call it using the specific formfield tag-->
+<!--Tag = page-formfields-->
+<!--dataObject and item.Characteristics must be passed to the .ts-->
+<!--Unsure if for loop should be here or edit. Review later-->
+<!--If for loop in edit: -->
+  <!--Edit.html also needs to have an ngif, so that datatime is displayed via edit and formfields is only used for others-->
+  <!--Else, ngif, should be in formfields-->
+
+
+<!--Creating form fields for the edit page-->
+<form [formGroup]="metaDataForm">
+  <ng-container [formArrayName]='"items"'>
+    <ng-container *ngFor="let char of hierarchy; let i = index">
+      <ng-container [formGroupName]="i">
+        <!-- <ng-container *ngIf='char.datatype != "xsd:datetime"'> -->
+          <!-- <ng-container *ngIf='char.datatype != "xsd:hexBinary"'> -->
+            <ion-item *ngIf='char.Label != uniqueIDCheck' [class.invalid]="!metaDataForm.controls.items.controls[i].controls[char.Label].valid">
+              <ion-label color="primary" stacked>{{char.Label}}</ion-label>
+              <ion-input type="text" formControlName={{char.Label}} [(ngModel)]="newDataObject[char.Label]"></ion-input>
+            </ion-item>
+          <!-- </ng-container> -->
+        <!-- </ng-container> -->
+        <!-- <ng-container *ngIf='char.datatype == "xsd:datetime"'>
+          <ion-label color="primary" stacked>{{char.Label}}</ion-label>
+          <ion-datetime display-format="MM/DD/YYYY h:mm A"></ion-datetime>
+        </ng-container> -->
+      </ng-container>
+    </ng-container>
+  </ng-container>
+</form>
+
+<!-- THE EDIT PAGE FUNCTIONAL SECTIONS  -->
+<!-- <ng-container *ngFor="let char of item.Characteristics"> -->
+    <!-- <ion-item *ngIf='char.Label != uniqueIDCheck'> -->
+      <!-- <ion-label color="primary" stacked>{{char.Label}}</ion-label> -->
+      <!-- <ion-input type="text" value={{dataObject[char.Label]}}></ion-input> -->
+    <!-- </ion-item> -->
+<!-- </ng-container> -->

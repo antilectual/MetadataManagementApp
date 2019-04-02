@@ -1,0 +1,38 @@
+<ion-header >
+
+  <ion-navbar>
+      <div text-center>
+        <ion-title><img width="200" height="50" src="../../assets/imgs/white_logo.png"></ion-title>
+      </div>
+  </ion-navbar>
+  <!-- <ion-navbar #scrollFooter>
+      <div text-center>
+        <ion-title>ExtraBars</ion-title>
+      </div>
+  </ion-navbar> -->
+</ion-header>
+
+
+
+
+<ion-content #pageContent [scroll-content]="pageContent" [scroll-indicator]="scrollFooter" >
+  <!-- <p text-center><img src="{{image}}"></p> -->
+
+  <!-- <div *ngIf="hierarchyDepth <= maxIndex">{{hierarchyTiers[hierarchyDepth]?.Plural}}</div> -->
+  <h6> Add New {{item['Name']}}</h6>
+  <page-formfields-add
+    [hierarchy]='item["Characteristics"]'
+    [data]="dataObject">
+  </page-formfields-add>
+  <div text-right>
+    <button ion-button (click) = "saveEditedData()">Add</button>
+  </div>
+
+</ion-content>
+
+<ion-footer  #scrollFooter>
+    <div class="edit-footer">
+      More
+      <div style="float: right; padding-top: 5px; padding-right: 10px"> <img width="15" height="15" src="../../assets/imgs/arrowdown.png">&nbsp;</div>
+    </div>
+</ion-footer>
