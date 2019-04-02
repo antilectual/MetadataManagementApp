@@ -479,6 +479,8 @@ export class HierarchyControllerPage {
           this.showError(error, '' + hierarchyTiers[ii].Plural);
         }
       );
+      // Pulled data from server so it is synced to server by default
+      this.hierarchyGlobals.setHierarchyUpdateStatus(false, ii);
     }
   }
 }

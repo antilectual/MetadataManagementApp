@@ -23,6 +23,8 @@ export class HierarchyControllerProvider {
   isOntologyDoneLoading = false;
   // boolean that stores whether the data is done loading
   isDataDoneLoading = false;
+  // Data sync status for each level of hierarchy.
+  updateStatusHierarhcy = [];
   //
   configuration = {};
 
@@ -70,6 +72,11 @@ export class HierarchyControllerProvider {
       this.isDataDoneLoading = val;
   }
 
+  setHierarchyUpdateStatus(val, index)
+  {
+      this.updateStatusHierarhcy[index] = val;
+  }
+
   //GET FUNCTIONS
   getOntologySynced()
   {
@@ -83,7 +90,15 @@ export class HierarchyControllerProvider {
 
   getDataSynced()
   {
+    if(this.updateStatusHierarhcy.length > 0)
+    {
+      return (this.isDataSynced || this.isDataSyncedToServer());
+    }
+    else
+    {
       return this.isDataSynced;
+    }
+
   }
 
   getDataLoaded()
@@ -99,6 +114,24 @@ export class HierarchyControllerProvider {
   getDataDoneLoading()
   {
       return this.isDataDoneLoading;
+  }
+
+  getHierarchyUpdateStatus()
+  {
+    return this.updateStatusHierarhcy;
+  }
+
+  // Returns if ALL hierarchy levels have been updated
+  isDataSyncedToServer()
+  {
+    let dataSynced = true;
+    let i = 0;
+    for(i = 0; i < this.updateStatusHierarhcy.length; i++)
+    {
+      let ii = i;
+      dataSynced = dataSynced && this.updateStatusHierarhcy[ii];
+    }
+    return dataSynced;
   }
 
 

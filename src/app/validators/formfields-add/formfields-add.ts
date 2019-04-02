@@ -20,11 +20,10 @@ export class FormfieldsAddPage implements OnInit{
  intValidator: string = '[+-]{0,1}[0-9]*';
  decValidator: string = '^[+-]{0,1}[0-9]+[.]{0,1}[0-9]*$';
 
- newDataObject = {};
-
 //Variables for storing and manipulating data based on characteristics
   @Input() data: any;
   @Input() hierarchy: any;
+  @Input() newData: any;
 //Create FormBuilder
    metaDataForm: FormGroup;
 //Create form FormArray

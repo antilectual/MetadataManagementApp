@@ -22,10 +22,11 @@
   <h6> Add New {{item['Name']}}</h6>
   <page-formfields-add
     [hierarchy]='item["Characteristics"]'
-    [data]="dataObject">
+    [data]="dataObject" [newData]="newDataObject">
   </page-formfields-add>
   <div text-right>
     <button ion-button (click) = "saveEditedData()">Add</button>
+    <button [disabled] = "!gvars.getOnline()" ion-button (click) = "uploadEditedData()">Upload</button>
   </div>
 
 </ion-content>

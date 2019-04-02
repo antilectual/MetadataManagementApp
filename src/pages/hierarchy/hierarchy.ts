@@ -247,7 +247,7 @@ export class HierarchyPage
            filteredObject = (this.dataObject[this.hierarchyDepth][i]);
          }
        }
-       this.navCtrl.push(AddPage,[(this.dataHandler.getHierarchyTiers())[this.hierarchyDepth], filteredObject, this.hierarchyDepth);
+       this.navCtrl.push(AddPage,[(this.dataHandler.getHierarchyTiers())[this.hierarchyDepth], filteredObject, this.hierarchyDepth, this.previousPathIDName);
       }
     }
 
