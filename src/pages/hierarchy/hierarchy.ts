@@ -12,10 +12,8 @@ import { ReadPage } from './read/read';
 import { HomePage } from '../home/home';
 import { EditPage } from './edit/edit';
 import { AddPage } from './add/add';
-import { Storage } from '@ionic/storage';
 //import { File } from '@ionic-native/file';
 import { GlobalDataHandlerProvider } from '../../providers/global-data-handler/global-data-handler';
-import uuidv4 from 'uuid/v4';
 
 
 // @IonicPage()
@@ -183,7 +181,6 @@ export class HierarchyPage
       // this.navCtrl.push(ReadPage,[this.hierarchyTiers[this.hierarchyDepth - 1], filteredObject, this.currentDisplayPath]);
       this.navCtrl.push(ReadPage,[(this.dataHandler.getHierarchyTiers())[this.hierarchyDepth - 1], filteredObject, this.hierarchyDepth - 1, this.currentDisplayPath]);
     }
-
   }
 
   /**
@@ -205,7 +202,6 @@ export class HierarchyPage
    * @pre
    * @post
    */
-
    convertUTCtoLocal(date){
      var tzOffset = -480;
      //get actual tzOffset
@@ -218,38 +214,22 @@ export class HierarchyPage
      return newTime;
    }
 
-   addItem()
-   {
-     //need depth,
-
-     let pushItem = {};
-
-     pushItem[this.previousPathIDName] = this.uniqueIdentifier;
-
-     console.log(pushItem);
-   }
-
-   createAddPage()
-   {
-     let filteredObject: any;
-     let i = 0;
-
+   /**
+   * @brief
+   * @param
+   * @pre
+   * @post
+   */
+   createAddPage(){
      if(this.hierarchyDepth - 1 < 0)
      {
        //do nothing
      }
      else
      {
-       for(i = 0; i < this.dataObject[this.hierarchyDepth - 1].length; i++)
-       {
-         if( this.dataObject[this.hierarchyDepth - 1][i]["Unique Identifier"] == this.uniqueIdentifier)
-         {
-           filteredObject = (this.dataObject[this.hierarchyDepth][i]);
-         }
-       }
-       this.navCtrl.push(AddPage,[(this.dataHandler.getHierarchyTiers())[this.hierarchyDepth], filteredObject, this.hierarchyDepth, this.previousPathIDName);
-      }
-    }
+       this.navCtrl.push(AddPage,[(this.dataHandler.getHierarchyTiers())[this.hierarchyDepth], this.hierarchyDepth, this.previousPathIDName, this.uniqueIdentifier]);
+     }
+   }
 
 
 }

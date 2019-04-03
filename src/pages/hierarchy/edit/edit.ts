@@ -4,7 +4,6 @@ import { HttpClient } from '@angular/common/http';
 import { GlobalDataHandlerProvider } from '../../../providers/global-data-handler/global-data-handler';
 import { GlobalvarsProvider } from '../../../providers/globalvars/globalvars';
 import { HierarchyControllerProvider } from '../../../providers/hierarchy-controller/hierarchy-controller';
-import { Storage } from '@ionic/storage';
 
 // import { Observable } from 'rxjs/Observable';
 

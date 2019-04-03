@@ -64,7 +64,7 @@ export class FormfieldsAddPage implements OnInit{
 
      if(char == "Longitude")
      {
-       console.log(this.characteristicCheck(characteristic));
+       // console.log(this.characteristicCheck(characteristic));
      }
       return this.formBuilder.group
       ({

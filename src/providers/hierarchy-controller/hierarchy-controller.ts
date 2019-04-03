@@ -35,7 +35,7 @@ export class HierarchyControllerProvider {
   saveConfiguration()
   {
     //this.configuration['isOntologySynced'] = this.isOntologySynced;
-    this.configuration['isDataSynced'] = this.isDataSynced;
+    this.configuration['isDataSynced'] = this.getDataSynced();
     // previous Online/Offline statuses
     // platform
 

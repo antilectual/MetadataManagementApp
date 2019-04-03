@@ -10,7 +10,7 @@ import { HomePage } from '../home/home';
 import { GlobalvarsProvider } from '../../providers/globalvars/globalvars';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { Base64 } from '@ionic-native/base64/ngx';
+// import { Base64 } from '@ionic-native/base64/ngx';
 import CryptoJS from 'crypto-js';
 
 @IonicPage()
@@ -31,7 +31,7 @@ export class LoginPage {
   loginCredentials = {};
   // loginCredentials = [];
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public gvars: GlobalvarsProvider, public formBuilder: FormBuilder, public menuCtrl: MenuController, public http: HttpClient, private base64: Base64)
+  constructor(public navCtrl: NavController, public navParams: NavParams, public gvars: GlobalvarsProvider, public formBuilder: FormBuilder, public menuCtrl: MenuController, public http: HttpClient)
   {
     // Disable the menu on the login page
     this.menuCtrl.enable(false, 'unauthenticated');

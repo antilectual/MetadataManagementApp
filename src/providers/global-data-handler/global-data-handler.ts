@@ -67,6 +67,7 @@ export class GlobalDataHandlerProvider {
     {
       if (this.dataObject[hierachyDepth][i] == uniqueID)
       {
+        // DEBUG
         // console.log("object \n" + object);
         // console.log("dataObject \n" + this.dataObject);
         // console.log("dataObject Item \n" + this.dataObject[hierachyDepth][i]);
@@ -76,24 +77,22 @@ export class GlobalDataHandlerProvider {
 
     this.storage.set('localDataObject', this.dataObject).then( data => {
       this.hierarchyGlobals.saveConfiguration();
-      this.storage.get('localDataObject').then( data => {this.testObject = data; console.log(this.testObject);});
+      // DEBUG
+      // this.storage.get('localDataObject').then( data => {this.testObject = data; console.log(this.testObject);});
     });
 
-    this.gvars.setHierarchyUpdateStatus(false, depth);
-
+    this.hierarchyGlobals.setHierarchyUpdateStatus(false, hierachyDepth);
+    // DEBUG
     // this.storage.set('localDataObject', this.dataObject);
     // this.hierarchyGlobals.setDataSynced(true);
     // this.hierarchyGlobals.saveConfiguration();
   }
 
-  addDataObject(object, hierachyDepth, uniqueID)
+  addDataObject(object, hierachyDepth)
   {
-    let newDataObjectLength = this.dataObject[hierachyDepth].length + 1;
-    this.dataObject[hierachyDepth][newDataObjectLength] = object;
-
+    this.dataObject[hierachyDepth].push(object);
     this.storage.set('localDataObject', this.dataObject).then( data => {
       this.hierarchyGlobals.saveConfiguration();
-      this.storage.get('localDataObject').then( data => {this.testObject = data; console.log(this.testObject);});
     });
   }
 
@@ -159,7 +158,7 @@ export class GlobalDataHandlerProvider {
    this.http.post(remote, this.dataObject[depth], {headers: {"Accept":'application/json', 'Content-Type':'application/json'}}).subscribe(data => {
        // DEBUG
        console.log("data = \n " + data);
-       this.gvars.setHierarchyUpdateStatus(false, depth);
+       this.hierarchyGlobals.setHierarchyUpdateStatus(false, depth);
     }, error => {
        console.log(error);
    });

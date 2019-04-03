@@ -11,7 +11,7 @@
 
 <ion-content  #pageContent [scroll-content]="pageContent" [scroll-indicator]="scrollFooter" >
   <h6 *ngIf="currentDisplayPath != null" style="text-align:center;"><b>{{currentDisplayPath}}</b><br></h6>
-  <ion-col class="icon icon-user" ><ion-icon name="create" (click)="goToEdit()"></ion-icon></ion-col>
+  <!-- <ion-col class="icon icon-user" ><ion-icon name="create" (click)="goToEdit()"></ion-icon></ion-col> -->
   <!-- <img [src]="image" width="200px" height="248px"> -->
   <p text-center><img src="{{image}}"></p>
   <ng-container *ngFor="let char of item.Characteristics">
