@@ -16,14 +16,16 @@
 
 
 <ion-content #pageContent [scroll-content]="pageContent" [scroll-indicator]="scrollFooter" >
-  <p text-center><img src="{{image}}"></p>
-  <page-formfields
+  <!-- <p text-center><img src="{{image}}"></p> -->
+
+  <!-- <div *ngIf="hierarchyDepth <= maxIndex">{{hierarchyTiers[hierarchyDepth]?.Plural}}</div> -->
+  <h6> Add New {{item['Name']}}</h6>
+  <page-formfields-add
     [hierarchy]='item["Characteristics"]'
-    [data]="dataObject">
-  </page-formfields>
+    [data]="dataObject" [newData]="newDataObject">
+  </page-formfields-add>
   <div text-right>
-    <br>
-    <button ion-button (click) = "saveEditedData()">Save</button>
+    <button ion-button (click) = "saveEditedData()">Add</button>
     <!-- <button [disabled] = "!gvars.getOnline()" ion-button (click) = "uploadEditedData()">Upload</button> -->
     <button [disabled] = "true" ion-button (click) = "uploadEditedData()">Upload</button>
   </div>

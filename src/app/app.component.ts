@@ -4,7 +4,7 @@
 //import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 
 import { Component, ViewChild } from '@angular/core';
-import { Platform, Nav } from 'ionic-angular';
+import { Platform, Nav, MenuController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
@@ -14,6 +14,9 @@ import { LoginPage } from '../pages/login/login';
 import { AboutPage } from '../pages/about/about';
 import { SettingsPage } from '../pages/settings/settings';
 import { HierarchyControllerPage } from '../pages/hierarchy-controller/hierarchy-controller';
+import { GlobalvarsProvider } from '../providers/globalvars/globalvars';
+import { Storage } from '@ionic/storage';
+import { HierarchyControllerProvider } from '../providers/hierarchy-controller/hierarchy-controller';
 //import { ReadPage } from '../pages/hierarchy/read/read';
 // import { ExamplePage } from '../pages/example/example';
 
@@ -25,10 +28,29 @@ export class MyApp {
   @ViewChild(Nav) nav: Nav;
   rootPage:any = LoginPage;
 
+  //Light/Dark themes
+  selectedTheme: String;
+
     pages: Array<{title: string, component: any}>;
 
-    constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen) {
+    constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public gvars: GlobalvarsProvider, public menuCtrl: MenuController, private storage: Storage, public hierarchyGlobals: HierarchyControllerProvider,) {
       this.initializeApp();
+
+      this.storage.get('configuration').then( data =>
+      {
+        console.log("App Config Data = ");
+        console.log(data);
+        if(data != null)
+        {
+          console.log("made it to if");
+          this.hierarchyGlobals.setDataSynced(data['isDataSynced']);
+        }
+      });
+      // TODO: Make this acquired from the device
+      this.gvars.setPlatform('android');
+      // TODO: Get online status from device
+      this.gvars.setOnline(true);
+      this.gvars.getTheme().subscribe(val => this.selectedTheme = val);
 
       this.pages = [
         { title: 'Home', component: HomePage },

@@ -1,13 +1,26 @@
 page-login {
   ion-content{
-    background-image: url("../../assets/imgs/bg.png");
+    background-image: url("../../assets/imgs/bg.jpg");
     background-repeat: no-repeat;
     background-size: cover;
   }
-  .item.item-input {
-    background-color: rgba(255, 255, 255, 0.15);
-    color: white;
-  }
+
+    // .item.item-input {
+    //   background-color: rgba(255, 255, 255, 0.15);
+    //   color: white;
+    //   margin-left: auto;
+    //   margin-right: auto;
+    //   width: 30%;
+    // }
+
+    .item.item-container.item-container-input {
+      background-color: rgba(255, 255, 255, 0.15);
+      color: white;
+      margin-left: auto;
+      margin-right: auto;
+      width: 30%;
+    }
+
   .text-input::-moz-placeholder {
     color: white;
   }
@@ -24,4 +37,20 @@ page-login {
   {
     border: 1px solid #ea6153;
   }
+}
+
+.mobile {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: white;
+  margin-left: auto;
+  margin-right: auto;
+  width: 90%;
+}
+
+.web {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: white;
+  margin-left: auto;
+  margin-right: auto;
+  width: 30%;
 }

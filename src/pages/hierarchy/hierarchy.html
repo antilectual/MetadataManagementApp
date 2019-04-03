@@ -3,11 +3,14 @@
     <button ion-button menuToggle start>
       <ion-icon color = "light" name="menu"></ion-icon>
     </button>
-    <ion-title ><img width="200" height="50" (click)="goHome()" src="../../assets/imgs/white_logo.png"></ion-title>
+    <div text-center>
+      <ion-title><img width="200" height="50" (click)="goHome()" src="../../assets/imgs/white_logo.png"></ion-title>
+    </div>
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content padding #pageContent [scroll-content]="pageContent" [scroll-indicator]="scrollFooter">
+
 
       <!--button ion-item *ngFor="let item of items" (click)="push()">
         {{item.Plural}}
@@ -25,13 +28,13 @@
       <ng-container *ngFor="let item of dataObject[hierarchyDepth]">
         <!-- Check to make sure the application is only displaying items from the selection that was clicked -->
         <ng-container *ngIf="item[previousPathIDName] == uniqueIdentifier">
-          <button ion-item *ngIf="hierarchyDepth <= maxIndex" (click)="push(item)">
+          <button ion-item class="navPath" *ngIf="hierarchyDepth <= maxIndex" (click)="push(item)">
             {{item?.Name}}
           </button>
         </ng-container>
         <!-- For first page, there is no previous reference, so exclude-->
         <ng-container *ngIf="uniqueIdentifier == NULL">
-          <button ion-item *ngIf="hierarchyDepth <= maxIndex" (click)="push(item)">
+          <button ion-item class="navPath" *ngIf="hierarchyDepth <= maxIndex" (click)="push(item)">
             {{item?.Name}}
           </button>
         </ng-container>
@@ -40,12 +43,26 @@
 
       <!-- Prints view and edit buttons under details -->
       <br><font size = "-1">Details:</font>
-      <button ion-item (click)="editCharacteristics('read')">
+      <button ion-item class="navPath" (click)="editCharacteristics('read')">
         View
       </button>
-      <button ion-item (click)="editCharacteristics('edit')">
+      <button ion-item class="navPath" (click)="editCharacteristics('edit')">
         Edit
       </button>
       </ng-container>
 
+      <!-- Button to add items to hierarchy level -->
+      <ion-fab  *ngIf="hierarchyDepth <= maxIndex" bottom right #fab>
+        <button ion-fab (click)="createAddPage()">
+          <ion-icon name="ios-add-outline" ></ion-icon>
+        </button>
+      </ion-fab>
+
 </ion-content>
+
+<ion-footer  #scrollFooter>
+    <div class="edit-footer">
+      More
+      <div style="float: right; padding-top: 5px; padding-right: 10px"> <img width="15" height="15" src="../../assets/imgs/arrowdown.png">&nbsp;</div>
+    </div>
+</ion-footer>

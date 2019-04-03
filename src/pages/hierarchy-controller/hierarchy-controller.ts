@@ -1,6 +1,6 @@
 /**
 * @file  hierarchy.ts
-* @author  Brianna Blain-Castelli, Christopher Eichstedt, Matthew johnson, Nicholas Jordy
+* @author  Brianna Blain-Castelli, Christopher Eichstedt, Matthew Johnson, Nicholas Jordy
 * @brief  controller file for hierarchichy
 */
 
@@ -10,8 +10,10 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { GlobalvarsProvider } from '../../providers/globalvars/globalvars';
 import { HomePage } from '../home/home';
-// import { File } from '@ionic-native/file';
 import { HierarchyPage } from '../hierarchy/hierarchy';
+import { GlobalDataHandlerProvider } from '../../providers/global-data-handler/global-data-handler';
+import { HierarchyControllerProvider } from '../../providers/hierarchy-controller/hierarchy-controller';
+import { Storage } from '@ionic/storage';
 
 @IonicPage()
 @Component({
@@ -21,53 +23,72 @@ import { HierarchyPage } from '../hierarchy/hierarchy';
 
 export class HierarchyControllerPage {
 
-// boolean that stores whether ontology is synced
-isOntologySynced: any;
-// boolean that stores whether ontology is ontology laded
-isOntologyLoaded: any;
-// boolean that stores whether data is synced
-isDataSynced: any;
-// boolean that stores whether data is loaded
-isDataLoaded: any;
-// boolean that stores whether the ontology is done loading
-isOntologyDoneLoading = false;
-// boolean that stores whether the data is done loading
-isDataDoneLoading = false;
-// All locations in the Ontology
-public hierarchyTiers: any;
-// URL for getting the specific data
-public subURI: string;
-// The data associated with the current hierarchy item (currently ALL data)
-public dataObject: any;
-// Shows the name of the current location in the hierarchy
-public currentDisplayPath: any;
-// Data on the current display page
-public currentData: any;
-// The unique identifier field of the hierarchy item passed to this hierarchy page.
-uniqueIdentifier: any;
-// The key (label) for the unique identifier value.
-previousPathIDName: any;
+  // URL for getting the specific data only. Not Public URI list.
+  // (Use dataHandler.getSubUris() for public)
+  subURI: any;
+  loadingScreens = [];
+  isError = false;
+  isTest = false;
 
   /**
-* @brief Constructor for the hierarchy-controller
-* @param
-* @pre
-* @post
-*/
-  constructor(public http: HttpClient, public navCtrl: NavController, public navParams: NavParams, public loadingController: LoadingController, public gvars: GlobalvarsProvider) {
+  * @brief Constructor for the hierarchy-controller
+  * @param
+  * @pre
+  * @post
+  */
+  constructor(public http: HttpClient, public navCtrl: NavController, public navParams: NavParams, public loadingController: LoadingController,
+    public gvars: GlobalvarsProvider, public dataHandler: GlobalDataHandlerProvider, public hierarchyGlobals: HierarchyControllerProvider, public storage: Storage) {
       this.loadAll();
   }
 
+  /**
+  * @brief loadAll
+  *
+  * @details Calls all loading screen and data loading functions
+  *
+  * @par Algorithm
+  * 1. Show a loading screen before trying to retrieve data. (load screens stored in array)
+  * 2. Attempts to retrieve data.
+  * 3. Waits for each data item to be finished loading.
+  * 4. Once loaded, remove the loading screen for that data item.
+  * 5. Removes the created load screens from the array.
+  * - Assumptions: No other function is adding load screens.
+  *                Error handling screens are added independntly.
+  *
+  * @return none
+  */
   async loadAll()
   {
-    //put a pin in it
-    // TODO: Add try catch blocks for each function. Throw errors for offline and timeouts.
-    this.getOntology();
-    await this.loadOntologyWaiting();
-    this.getAllData();
-    await this.loadDataWaiting().then(() => {
-      this.goHierachyPage();
-    });
+    if(this.gvars.getOnline())
+    {
+      this.loadOntologyWaiting();
+      try { await this.getOntology();}
+      catch (err) {return;}
+      await this.loadDataWaiting();
+      try { await this.getAllData();}
+      catch (err) {return;}
+      while(!this.hierarchyGlobals.getOntologyDoneLoading() && !this.isError){await this.delay(100);}
+      await this.loadingScreens[this.loadingScreens.length - 2].dismiss();
+      while(!this.hierarchyGlobals.getDataDoneLoading() && !this.isError){await this.delay(100);}
+      await this.loadingScreens[this.loadingScreens.length - 1].dismiss();
+      this.loadingScreens.pop();
+      this.loadingScreens.pop();
+      if(!this.isError)
+      {
+        if(this.isTest)
+        {
+          this.goHierachyPageTest();
+        }
+        else
+        {
+          this.goHierachyPage();
+        }
+      }
+    }
+    else
+    {
+      await this.showError({status: 'Offline'}, 'Connection');
+    }
   }
 
   /**
@@ -98,19 +119,88 @@ previousPathIDName: any;
       * pathName - this string is the pluralization of the Name which will be used for finding the URI and show the name of the hierarchy level.
       */
 
-      let localValues = {hierarchydepth:0, name:"NRDC", pageData:this.dataObject, hierarchyData:this.hierarchyTiers, identifier:null, pathName:this.hierarchyTiers[0].Plural};
+      //let localValues = {hierarchydepth:0, name:"NRDC", pageData:this.dataObject, hierarchyData:this.hierarchyTiers, identifier:null, pathName:this.hierarchyTiers[0].Plural};
+      // DEBUG
+      // console.log(this.dataHandler.getDataObjects());
+      let localValues = {hierarchydepth:0, name:"NRDC", identifier:null, pathName:this.dataHandler.getHierarchyTiers()[0].Plural};
       this.navCtrl.setRoot(HierarchyPage,localValues);
   }
 
-  /**
-* @brief
-* @param
-* @pre
-* @post
-*/
-  goHome()
+  goHierachyPageTest(){
+
+      /* Hierarchy requires the following values:
+      * hierarchydepth - HierchyDepth describes the initial tier index of the ontology/hierarchy. It is also the initial index of the location of data in dataObject
+      * name - Name is the name used as a label on the hierarchy (metadata management) page.
+      * pageData - This object is the full set of data pulled from the database which contains the actual metadata for all hierarchy tiers
+      * hierarchyData -  This object is the full set of hierarchyData tiers
+      * indentifier - This should be the unique identifier value for the previous page in the hierarchy.  null for the initial push.
+      * pathName - this string is the pluralization of the Name which will be used for finding the URI and show the name of the hierarchy level.
+      */
+
+      //let localValues = {hierarchydepth:0, name:"NRDC", pageData:this.dataObject, hierarchyData:this.hierarchyTiers, identifier:null, pathName:this.hierarchyTiers[0].Plural};
+      // DEBUG
+      // console.log(this.dataHandler.getDataObjects());
+      let localValues = {hierarchydepth:0, name:"TEST", identifier:null, pathName:this.dataHandler.getHierarchyTiers()[0].Plural};
+      this.navCtrl.setRoot(HierarchyPage,localValues);
+  }
+
+    /**
+  * @brief goHome
+  * @post User will be at the home page.
+  */
+  async goHome()
   {
     this.navCtrl.setRoot(HomePage);
+  }
+
+  /**
+  * @brief showError
+  *
+  * @details Shows a loading symbol and displays an error briefly when
+  * a connection error has occurred.
+  *
+  * @exception Boundary
+  * None
+  *
+  * @param[in]
+  * error is the error code status value
+  * loadPage is the specific data item trying to be downloaded
+  *
+  * @param[Out] None
+  *
+  * @return None
+  */
+  async showError(error, loadPage)
+  {
+      this.isError = true;
+      // Failed to load: set statuses accordingly
+      if(loadPage == 'hierarchy')
+      {
+        this.hierarchyGlobals.setOntologySynced(false);
+        this.hierarchyGlobals.setOntologyLoaded(false)
+        this.hierarchyGlobals.setOntologyDoneLoading(false);
+        this.hierarchyGlobals.setDataSynced(false);
+        this.hierarchyGlobals.setDataLoaded(false);
+        this.hierarchyGlobals.setDataDoneLoading(false);
+      }
+      else // error in data
+      {
+        this.hierarchyGlobals.setDataSynced(false);
+        this.hierarchyGlobals.setDataLoaded(false);
+        this.hierarchyGlobals.setDataDoneLoading(false);
+      }
+      // the fun synchronous asynchronous code block -----------
+      console.log('Error retrieving data for ' + loadPage + '.\n Status: ' + error.status);
+      let loading =  this.loadingController.create({
+            spinner: null,
+            duration: 2500,
+            content: 'Error retrieving data for ' + loadPage + '.<p> Status: ' + error.status,
+            cssClass: 'custom-class custom-loading'
+          });
+      this.loadingScreens.push(loading);
+      this.loadingScreens[this.loadingScreens.length - 1].present();
+      this.loadingScreens.pop();
+      this.goHome();
   }
 
   /**
@@ -137,13 +227,16 @@ previousPathIDName: any;
   */
 
   async getOntology(){
-    if(!this.isOntologySynced){
-      if(!this.isOntologyLoaded){
+    // Sync for ontology is rare event
+    if(!this.hierarchyGlobals.getOntologySynced()){
+      if(!this.hierarchyGlobals.getOntologyLoaded()){
         // BEWARE: possibly volatile and could not save actual data
         // If getting hierarchy returns true then it is synced and loaded.
         // Otherwise return failure
-        this.getHierarchyData();
-        this.isOntologySynced = this.isOntologyLoaded = true;
+        try {this.getHierarchyData();}
+        catch(error) {throw error;}
+        this.hierarchyGlobals.setOntologyLoaded(true);
+        this.hierarchyGlobals.setOntologySynced(true);
       }
     }
   }
@@ -171,58 +264,36 @@ previousPathIDName: any;
   * @return none
   */
   async getAllData(){
-    if(!this.isDataSynced){
-      if(!this.isDataLoaded){
-        this.getData();
-        this.isDataSynced = this.isDataLoaded = true;
+    // Sync for data is a potentially common event
+    if(!this.hierarchyGlobals.getDataSynced()){
+      if(!this.hierarchyGlobals.getDataLoaded()){
+        try {this.getData();}
+        catch(error) {console.log('error = ' + error); throw error;}
+        this.hierarchyGlobals.setDataSynced(true);
+        this.hierarchyGlobals.setDataLoaded(true);
       }
       else{
+        // internal
         // ask user to confirm sync
+      }
+    }
+    else
+    {
+      if(!this.hierarchyGlobals.getDataLoaded())
+      {
+          this.storage.get('localDataObject').then( data =>
+          {
+            console.log(data);
+            let localData = data;
+            this.dataHandler.setDataObject(localData);
+            this.isTest = true;
+            this.hierarchyGlobals.setDataDoneLoading(true);
+            this.hierarchyGlobals.setDataLoaded(true);
+          });
       }
     }
   }
 
-  /**
-  * @brief Hierarchy retrieval function
-  *
-  * @details Gets and stores the tiers/categories to be used in the app via a remote server.
-  * This hierarchicy should be desribed in a JSON file created by the Ontology parsing back-end service.
-  *
-  * @pre None
-  *
-  * @post hierarchyTiers contains the (ontology = hierarchy = tier) data.
-  *
-  * @exception Boundary
-  * Failure to load, specifically Offline or Timeout shall throw an exception.
-  *
-  * @return None
-  */
-  async getHierarchyData()
-  {
-    let online = this.gvars.getOnline();
-    // TODO: Create a config setting for this
-    // Local location containing the Ontology
-    // let local = '../../assets/data/test.json';
-    // TODO: Create a config setting for this
-    // Remote service containing the ontology
-    //let remote = 'http://sensor.nevada.edu/GS/Services/Ragnarok/';
-    let remote = '../../assets/data/ontology.json';
-    if(online)
-    {
-      let data: Observable<any> = this.http.get(remote);
-      this.isOntologyDoneLoading = false;
-      data.subscribe(result => {
-        // Grab the json results from Ragnarok (hierarchy)
-        // (i.e. Site-Networks, Sites, Systems, Deployments, Components
-        this.hierarchyTiers = result;
-        this.isOntologyDoneLoading = true;
-      });
-    }
-    else
-    {
-      // THROW AN EXCEPTION ERROR
-    }
-  }
 
   /**
   * @brief Timer delay function
@@ -258,49 +329,95 @@ previousPathIDName: any;
   *
   * @return None
   */
-  // TODO: pass in variable for what value to test.
   async loadOntologyWaiting()
-    {
-        // the fun synchronous asynchronous code block -----------
-        let loading = this.loadingController.create({
+  {
+      let loading = this.loadingController.create({
+        spinner: null,
+        content: 'Downloading hierarchy...',
+        cssClass: 'custom-class custom-loading'
+      });
+      this.loadingScreens.push(loading);
+
+      if(!this.hierarchyGlobals.getOntologyDoneLoading())
+      {
+        await this.loadingScreens[this.loadingScreens.length - 1].present();
+      }
+  }
+
+  /**
+  * @brief Data loading test.
+  *
+  * @details Shows a loading symbol while waiting for data being loaded.
+  *
+  * @exception Boundary
+  * None
+  *
+  * @param[in] ____ is boolean value that is being tested against and is set when some data has been loaded.
+  *
+  * @param[Out] None
+  *
+  * @return None
+  */
+  async loadDataWaiting()
+  {
+      let loading = this.loadingController.create({
           spinner: null,
-          content: 'Downloading hierarchy...',
+          content: 'Downloading data...',
           cssClass: 'custom-class custom-loading'
         });
-        loading.present();
-        while(!this.isOntologyDoneLoading){await this.delay(1);}
-        loading.dismiss();
-        // -----------
-    }
-
-    /**
-    * @brief Data loading test.
-    *
-    * @details Shows a loading symbol while waiting for data being loaded.
-    *
-    * @exception Boundary
-    * None
-    *
-    * @param[in] ____ is boolean value that is being tested against and is set when some data has been loaded.
-    *
-    * @param[Out] None
-    *
-    * @return None
-    */
-    // TODO: pass in variable for what value to test.
-    async loadDataWaiting()
+      this.loadingScreens.push(loading);
+      // Only show loading screen if loading is required
+      if(!this.hierarchyGlobals.getDataDoneLoading())
       {
-          // the fun synchronous asynchronous code block -----------
-          let loading = this.loadingController.create({
-            spinner: null,
-            content: 'Downloading data...',
-            cssClass: 'custom-class custom-loading'
-          });
-          loading.present();
-          while(!this.isDataDoneLoading){await this.delay(1);}
-          loading.dismiss();
-          // -----------
+        await this.loadingScreens[this.loadingScreens.length - 1].present();
       }
+  }
+
+  /**
+  * @brief Hierarchy retrieval function
+  *
+  * @details Gets and stores the tiers/categories to be used in the app via a remote server.
+  * This hierarchicy should be desribed in a JSON file created by the Ontology parsing back-end service.
+  *
+  * @pre None
+  *
+  * @post hierarchyTiers contains the (ontology = hierarchy = tier) data.
+  *
+  * @exception Boundary
+  * Failure to load, specifically Offline or Timeout shall throw an exception.
+  *
+  * @return None
+  */
+  async getHierarchyData()
+  {
+    // TODO: Create a config setting for this
+    // Local location containing the Ontology
+    // let local = '../../assets/data/test.json';
+    // Remote service containing the ontology
+    //let remote = 'http://sensor.nevada.edu/GS/Services/Ragnarok/';
+    let remote = '../../assets/data/ontology.json';
+    let data: Observable<any> = this.http.get(remote);
+    this.hierarchyGlobals.setOntologyDoneLoading(false);
+    // this.isOntologyDoneLoading = false;
+    data.subscribe(result =>
+      {
+        // Grab the json results from Ragnarok (hierarchy)
+        // (i.e. Site-Networks, Sites, Systems, Deployments, Components
+        let hierarchyTiers = result;
+        // LABEL: GLOBAL DATA
+        this.dataHandler.setHierarchyTiers(hierarchyTiers);
+        this.hierarchyGlobals.setOntologyDoneLoading(true);
+        this.storage.set('ontology', this.dataHandler.getHierarchyTiers());
+        // this.isOntologyDoneLoading = true;
+      },
+      error =>
+      {
+        this.showError(error, 'hierarchy');
+        throw error;
+      }
+    );
+    return true;
+  }
 
   /**
   * @brief Database data retrieval.
@@ -309,7 +426,7 @@ previousPathIDName: any;
   *
   * @pre None
   *
-  * @post dataObject will contain the data from the database.
+  * @post dataObject will contain the data from the database. subURI will contain remote paths to data.
   *
   * @exception Boundary
   * None
@@ -329,36 +446,41 @@ previousPathIDName: any;
     // the fun synchronous asynchronous code block -----------
     // -----------
     let i = 0;
-    for (i; i < this.hierarchyTiers.length; i++)
+    let hierarchyTiers = this.dataHandler.getHierarchyTiers();
+    for (i; i < hierarchyTiers.length; i++)
     {
-        // Proper viewing name of header
-        this.subURI = this.hierarchyTiers[i].Plural;
-        // Create URL for the hierarchyTiers from this header (removing spaces first)
-        this.subURI = this.subURI.replace(/ +/g, "");
-        this.subURI = dataRemote + this.subURI + ".svc/Get";
+      // re-indexing. required to index appropriately due to JS scoping
+      let ii = i;
+      // Proper viewing name of header
+      this.subURI = hierarchyTiers[ii].Plural;
+      // Create URL for the hierarchyTiers from this header (removing spaces first)
+      this.subURI = this.subURI.replace(/ +/g, "");
+      // e.g. http://sensor.nevada.edu/Services/NRDC/Infrastructure/Services/Sites.svc/
+      this.dataHandler.subURIPush(dataRemote + this.subURI + ".svc/", ii);
+      // Add Get portion
+      // (e.g. http://sensor.nevada.edu/Services/NRDC/Infrastructure/Services/Sites.svc/Get)
+      this.subURI = dataRemote + this.subURI + ".svc/Get";
 
-        //TODO: Update to add data for each level of hierarchy.
-        //DEBUG
-        //console.log(this.subURI);
-        let data: Observable<any> = this.http.get(this.subURI);
+      let data: Observable<any> = this.http.get(this.subURI);
+      // let data: Observable<any> = this.storage.get('localDataObject').then(result =>
 
-        await data.subscribe(result => {
+      await data.subscribe(result =>
+        {
+        // LABEL: GLOBAL DATA
+        this.dataHandler.dataObjectPush(result, ii);
 
-          if(this.dataObject == null)
-          {
-            this.dataObject = [];
-            this.dataObject.push(result);
-          }
-          else
-          {
-            this.dataObject.push(result);
-          }
-
-         if(i == this.hierarchyTiers.length)
+         if(i == hierarchyTiers.length)
          {
-           this.isDataDoneLoading = true;
+           this.hierarchyGlobals.setDataDoneLoading(true);
          }
-        });
+        },
+        error =>
+        {
+          this.showError(error, '' + hierarchyTiers[ii].Plural);
+        }
+      );
+      // Pulled data from server so it is synced to server by default
+      this.hierarchyGlobals.setHierarchyUpdateStatus(false, ii);
     }
   }
 }

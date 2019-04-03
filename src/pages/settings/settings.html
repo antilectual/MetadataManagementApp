@@ -3,7 +3,9 @@
     <button ion-button menuToggle start>
       <ion-icon color = "light" name="menu"></ion-icon>
     </button>
-    <ion-title><img width="200" height="50" src="../../assets/imgs/white_logo.png"></ion-title>
+    <div text-center>
+      <ion-title><img width="200" height="50" src="../../assets/imgs/white_logo.png"></ion-title>
+    </div>
   </ion-navbar>
 </ion-header>
 
@@ -13,8 +15,8 @@
 
   <ion-list>
   <ion-item>
-    <ion-label>Light/Dark Theme</ion-label>
-    <ion-toggle [(ngModel)]="theme" disabled="true"></ion-toggle>
+    <ion-label>Enable Dark Theme</ion-label>
+    <ion-toggle [(ngModel)]="darkTheme" (ionChange)="toggleTheme()"></ion-toggle>
   </ion-item>
 
   <ion-item>
@@ -22,5 +24,7 @@
     <ion-toggle [(ngModel)]="status" (ionChange)="toggleOnline()"></ion-toggle>
   </ion-item>
   </ion-list>
+
+  <button [disabled] = "!gvars.getOnline()" ion-button (click) = "dataHandler.pushSavedData()">Sync Hierarchy Data</button>
 
 </ion-content>

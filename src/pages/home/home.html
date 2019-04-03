@@ -3,18 +3,28 @@
     <button ion-button menuToggle start>
       <ion-icon color = "light" name="menu"></ion-icon>
     </button>
-    <ion-title><img width="200" height="50" src="../../assets/imgs/white_logo.png"></ion-title>
+    <div text-center>
+      <ion-title><img width="200" height="50" src="../../assets/imgs/white_logo.png"></ion-title>
+    </div>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding text-center>
 
-  <h1><img src="../../assets/imgs/black_welcome.png"></h1>
-  <ion-col class="icon icon-user"><ion-icon name="contact"></ion-icon></ion-col>
-  <h3>User Name</h3>
+  <ng-container *ngIf = 'darkTheme != true'>
+    <h1><img src="../../assets/imgs/black_welcome.png"></h1>
+  </ng-container>
 
-  <button ion-button block>Favorites</button>
-  <button ion-button block>Last Activity</button>
+  <ng-container *ngIf = 'darkTheme == true'>
+    <h1><img src="../../assets/imgs/white_welcome.png"></h1>
+  </ng-container>
+
+  <ion-col class="icon icon-user"><ion-icon name="contact"></ion-icon></ion-col>
+  <h3>{{gvars.getUserName()}}</h3>
+
+
+  <button ion-button>Favorites</button>
+  <button ion-button>Last Activity</button>
 
   <!-- <ion-col class="icon icon-online" *ngIf="status == 'y'" ><ion-icon name="cloud"></ion-icon></ion-col>
   <ion-col class ="icon icon-offline" *ngIf="status == 'n'" ><ion-icon name="close-circle"></ion-icon></ion-col> -->

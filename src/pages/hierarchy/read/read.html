@@ -1,15 +1,17 @@
 <ion-header>
 
   <ion-navbar>
-        <ion-title><img width="200" height="50" src="../../assets/imgs/white_logo.png"></ion-title>
+    <div text-center>
+      <ion-title><img width="200" height="50" src="../../assets/imgs/white_logo.png"></ion-title>
+    </div>
   </ion-navbar>
 
 </ion-header>
 
 
-<ion-content>
+<ion-content  #pageContent [scroll-content]="pageContent" [scroll-indicator]="scrollFooter" >
   <h6 *ngIf="currentDisplayPath != null" style="text-align:center;"><b>{{currentDisplayPath}}</b><br></h6>
-  <ion-col class="icon icon-user" ><ion-icon name="create" (click)="goToEdit()"></ion-icon></ion-col>
+  <!-- <ion-col class="icon icon-user" ><ion-icon name="create" (click)="goToEdit()"></ion-icon></ion-col> -->
   <!-- <img [src]="image" width="200px" height="248px"> -->
   <p text-center><img src="{{image}}"></p>
   <ng-container *ngFor="let char of item.Characteristics">
@@ -23,7 +25,7 @@
     <!-- <p>{{dataObject[char.Label]}}_</p> -->
       <ion-item *ngIf='char.Label != uniqueIDCheck'>
         <ion-label color="primary" stacked>{{char.Label}}</ion-label>
-        <ion-label color="dark" stacked>{{dataObject[char.Label]}}</ion-label>
+        <ion-label class="textcolor" stacked>{{dataObject[char.Label]}}</ion-label>
       </ion-item>
       <!-- {{dataObject[char.Label]}}! -->
       <!--<ion-item *ngFor="let dataItem of dataObject.Characteristics">
@@ -38,3 +40,10 @@
 
 
 </ion-content>
+
+<ion-footer  #scrollFooter>
+    <div class="edit-footer">
+      More
+      <div style="float: right; padding-top: 5px; padding-right: 10px"> <img width="15" height="15" src="../../assets/imgs/arrowdown.png">&nbsp;</div>
+    </div>
+</ion-footer>

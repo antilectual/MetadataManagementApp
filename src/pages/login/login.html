@@ -1,24 +1,35 @@
 
 <ion-content padding>
   <br><br><br><br><br>
-  <ion-title><img src="../../assets/imgs/white_logo.png"></ion-title>
+    <ion-title><img src="../../assets/imgs/white_logo.png"></ion-title>
   <br><br><br>
 
   <form [formGroup]="slideOneForm">
 
-    <ion-item [class.invalid]="!slideOneForm.controls.username.valid && submitAttempt">
-      <ion-input formControlName ="username" placeholder="Username">
+    <ion-item *ngIf="isAndroid || isIOS" [ngClass]="['mobile']" [class.invalid]="submitAttempt">
+      <ion-input formControlName ="username" placeholder="Username" value="Tech" [(ngModel)]="username" (keyup.enter)="attemptLogin()">
       </ion-input>
     </ion-item>
 
-    <ion-item>
-      <ion-input formControlName ="password" type="password" placeholder="Password">
+    <ion-item *ngIf="isWeb"  [ngClass]="['web']" [class.invalid]="submitAttempt">
+      <ion-input formControlName ="username" placeholder="username" value="Tech" [(ngModel)]="username" (keyup.enter)="attemptLogin()">
+      </ion-input>
+    </ion-item>
+
+    <ion-item *ngIf="isAndroid || isIOS" [ngClass]="['mobile']" [class.invalid]="submitAttempt">
+      <ion-input formControlName ="password" type="password" placeholder="Password" value="Password" [(ngModel)]="password" (keyup.enter)="attemptLogin()">
+      </ion-input>
+    </ion-item>
+
+    <ion-item *ngIf="isWeb" [ngClass]="['web']" [class.invalid]="submitAttempt">
+      <ion-input formControlName ="password" type="password" placeholder="Password" value="Password" [(ngModel)]="password" (keyup.enter)="attemptLogin()">
       </ion-input>
     </ion-item>
     <br>
 
-    <button ion-button full (click) = "save()">Login</button>
-
+    <div text-center>
+      <button ion-button (click) = "attemptLogin()">Login</button>
+    </div>
   </form>
 
 </ion-content>

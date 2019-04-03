@@ -15,10 +15,15 @@ import { HierarchyPage } from '../pages/hierarchy/hierarchy';
 import { SettingsPage } from '../pages/settings/settings';
 import { ReadPage } from '../pages/hierarchy/read/read';
 import { EditPage } from '../pages/hierarchy/edit/edit';
+import { AddPage } from '../pages/hierarchy/add/add';
 import { HierarchyControllerPage } from '../pages/hierarchy-controller/hierarchy-controller';
 import { FormfieldsPage } from '../app/validators/formfields/formfields';
+import { FormfieldsAddPage } from '../app/validators/formfields-add/formfields-add';
 // import { ExamplePage } from '../pages/example/example';
 import { GlobalvarsProvider } from '../providers/globalvars/globalvars';
+import { GlobalDataHandlerProvider } from '../providers/global-data-handler/global-data-handler';
+import { HierarchyControllerProvider } from '../providers/hierarchy-controller/hierarchy-controller';
+import { ScrollIndicatorDirective } from '../directives/scroll-indicator/scroll-indicator';
 
 @NgModule({
   declarations: [
@@ -30,8 +35,11 @@ import { GlobalvarsProvider } from '../providers/globalvars/globalvars';
     SettingsPage,
     ReadPage,
     EditPage,
+    AddPage,
     HierarchyControllerPage,
-    FormfieldsPage
+    FormfieldsPage,
+    FormfieldsAddPage,
+    ScrollIndicatorDirective
     // ExamplePage
   ],
   imports: [
@@ -49,9 +57,11 @@ import { GlobalvarsProvider } from '../providers/globalvars/globalvars';
     AboutPage,
     SettingsPage,
     ReadPage,
+    AddPage,
     HierarchyControllerPage,
     EditPage,
-    FormfieldsPage
+    FormfieldsPage,
+    FormfieldsAddPage
     // ExamplePage
   ],
   providers: [
@@ -59,7 +69,9 @@ import { GlobalvarsProvider } from '../providers/globalvars/globalvars';
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     GlobalvarsProvider,
-    Base64
+    Base64,
+    GlobalDataHandlerProvider,
+    HierarchyControllerProvider
   ]
 })
 export class AppModule {}

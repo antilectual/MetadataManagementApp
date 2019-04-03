@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController} from 'ionic-angular';
 import { GlobalvarsProvider } from '../../providers/globalvars/globalvars';
-
+import { GlobalDataHandlerProvider } from '../../providers/global-data-handler/global-data-handler';
 /**
  * Generated class for the SettingsPage page.
  *
@@ -17,7 +17,14 @@ import { GlobalvarsProvider } from '../../providers/globalvars/globalvars';
 export class SettingsPage {
 
   status: boolean;
-  constructor(public navCtrl: NavController, public gvars: GlobalvarsProvider) {
+  darkTheme: boolean;
+
+  //Light dark themes
+  public selectedTheme: String;
+
+  constructor(public navCtrl: NavController, public gvars: GlobalvarsProvider, public dataHandler: GlobalDataHandlerProvider) {
+    this.gvars.getTheme().subscribe(val => this.selectedTheme = val);
+
     if(this.gvars.getOnline())
     {
       this.status = true;
@@ -26,6 +33,11 @@ export class SettingsPage {
     {
       this.status = false;
     }
+
+    if(this.selectedTheme == 'dark-theme')
+      this.darkTheme = true;
+    else
+      this.darkTheme = false;
   }
 
   ionViewDidLoad() {
@@ -44,6 +56,19 @@ export class SettingsPage {
     }
     // DEBUG:
     // console.log(this.gvars.getOnline());
+  }
+
+  toggleTheme()
+  {
+    if( this.selectedTheme === 'dark-theme'){
+      this.gvars.setTheme('light-theme');
+      this.darkTheme = false;
+
+    }
+    else{
+      this.gvars.setTheme('dark-theme');
+      this.darkTheme = true;
+    }
   }
 
 }

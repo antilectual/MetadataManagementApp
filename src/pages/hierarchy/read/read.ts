@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { HttpClient } from '@angular/common/http';
 // import { Observable } from 'rxjs/Observable';
 import { EditPage } from '../edit/edit';
+import { GlobalDataHandlerProvider } from '../../../providers/global-data-handler/global-data-handler';
 
 // import { Base64 } from '@ionic-native/base64/ngx';
 
@@ -23,6 +24,7 @@ export class ReadPage {
   //String for filtering in html
   uniqueIDCheck = "Unique Identifier";
 
+  hierarchyDepth: any;
   tzOffset: any;
   currentDisplayPath: any;
   // displayTime: any;
@@ -34,13 +36,14 @@ export class ReadPage {
 //    The selected items children (ParentOf)
 //    The selected item's pluralization (Plural)
 //  [1] - The URI to retrieve the metadata from (dataURI)
-//  [2] - JSON Containing the info for the next level [TODO: this is wrong, fix it]
+//  [2] - JSON Containing the info for the next level
   //private base64: Base64
-  constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, public dataHandler: GlobalDataHandlerProvider) {
 
           this.item = navParams.data[0];
           this.dataObject = navParams.data[1];
-          this.currentDisplayPath = navParams.data[2];
+          this.hierarchyDepth = navParams.data[2];
+          this.currentDisplayPath = navParams.data[3];
           // DEBUG:
           //console.log(this.dataURI);
           //If there is a photo, display image
@@ -63,7 +66,7 @@ export class ReadPage {
      if(this.item["Characteristics"][i]["datatype"] == 'xsd:datetime')
      {
           //Debug logs
-          console.log(this.dataObject);
+          // console.log(this.dataObject);
          this.dataObject[ this.item["Characteristics"][i]["Label"] ] = this.displayTime(this.item["Characteristics"][i], this.dataObject[ this.item["Characteristics"][i]["Label"] ]);
      }
 
@@ -102,7 +105,7 @@ export class ReadPage {
      var hourOffset = this.tzOffset/60;
      displayTime.setHours(displayDate.getHours() - hourOffset);
      //Debug Log
-     console.log(displayDate.getMonth());
+     // console.log(displayDate.getMonth());
      var display = this.pad(displayDate.getMonth() + 1)
                     + '/'
                     + this.pad(displayDate.getDate())
@@ -137,6 +140,7 @@ export class ReadPage {
    * @pre
    * @post
    */
+   // TODO: Fix this link to the read page to pass the correct data
    goToEdit()
    {
      this.navCtrl.push(EditPage,[this.item, this.dataObject]);
