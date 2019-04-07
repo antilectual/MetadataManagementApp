@@ -45,6 +45,7 @@ export class EditPage {
   constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, public dataHandler: GlobalDataHandlerProvider, public gvars: GlobalvarsProvider, public hierarchyGlobals: HierarchyControllerProvider) {
       this.item = navParams.data[0];
       this.dataObject = Object.assign({}, navParams.data[1]);
+      // this.dataObject = navParams.data[1];
       this.hierarchyDepth = navParams.data[2];
       this.uniqueIdentifier = navParams.data[3];
       // DEBUG:

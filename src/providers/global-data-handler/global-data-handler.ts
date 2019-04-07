@@ -83,19 +83,24 @@ export class GlobalDataHandlerProvider {
   }
 
   // *********** UPDATE FUNCTIONS ************************
-  updateDataObject(object, hierachyDepth, uniqueID)
+  updateDataObject(object, hierarchyDepth, uniqueID)
   {
-
+    // DEBUG
+    // console.log("update HierarchyDepth = " + hierarchyDepth);
+    // console.log("Data Object");
+    // console.log(object);
     let i = 0;
-    for(i = 0; i < this.dataObject[hierachyDepth].length; i++)
+    for(i = 0; i < this.dataObject[hierarchyDepth].length; i++)
     {
-      if (this.dataObject[hierachyDepth][i] == uniqueID)
+
+      console.log(this.dataObject[hierarchyDepth][i]);
+      if (this.dataObject[hierarchyDepth][i][this.uniqueIDLabel] == uniqueID)
       {
         // DEBUG
         // console.log("object \n" + object);
         // console.log("dataObject \n" + this.dataObject);
         // console.log("dataObject Item \n" + this.dataObject[hierachyDepth][i]);
-        this.dataObject[hierachyDepth][i] = object;
+        this.dataObject[hierarchyDepth][i] = object;
       }
     }
 
@@ -103,8 +108,8 @@ export class GlobalDataHandlerProvider {
       this.hierarchyGlobals.saveConfiguration();
     });
 
-    this.hierarchyGlobals.setHierarchyIsUpdatedStatus(false, hierachyDepth);
-    this.setUpdateUniqueIdentifier(hierachyDepth, uniqueID);
+    this.hierarchyGlobals.setHierarchyIsUpdatedStatus(false, hierarchyDepth);
+    this.setUpdateUniqueIdentifier(hierarchyDepth, uniqueID);
     // DEBUG
     // this.storage.set('localDataObject', this.dataObject);
     // this.hierarchyGlobals.setDataSynced(true);
