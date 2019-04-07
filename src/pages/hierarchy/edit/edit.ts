@@ -56,7 +56,7 @@ export class EditPage {
       }
       this.editDateFields();
       //DEBUG
-      this.dataObject["Name"] = "It's all WHACK!";
+      // this.dataObject["Name"] = "It's all WHACK!";
       //console.log(this.image);
   }
 
