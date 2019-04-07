@@ -151,11 +151,11 @@ export class EditPage {
    saveEditedData()
    {
      this.dataHandler.updateDataObject(this.dataObject, this.hierarchyDepth, this.uniqueIdentifier);
-     this.hierarchyGlobals.setHierarchyUpdateStatus(true, this.hierarchyDepth);
+     this.hierarchyGlobals.setHierarchyIsUpdatedStatus(false, this.hierarchyDepth);
    }
 
    /**
-   * @brief
+   * @brief Unused - use global-data-handler for uploading data.
    * @param
    * @pre
    * @post
@@ -163,7 +163,7 @@ export class EditPage {
    uploadEditedData()
    {
      this.saveEditedData();
-     this.dataHandler.pushSavedData(this.hierarchyDepth);
+     // this.dataHandler.pushSavedData(this.hierarchyDepth);
    }
 
 }

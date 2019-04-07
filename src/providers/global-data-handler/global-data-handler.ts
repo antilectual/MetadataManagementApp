@@ -19,8 +19,10 @@ export class GlobalDataHandlerProvider {
   dataObject: any;
   // URL for getting the specific data
   subURIs: any;
-
-  public testObject: any;
+  // list of hierarchy levels, each with a list which unique identifier that need to be pushed to remote server'
+  uniqueIdentifierUpdateList = [];
+  // String that identifies the label for Unique Identifier.
+  uniqueIDLabel = "Unique Identifier";
 
   constructor(public http: HttpClient, public storage: Storage, private hierarchyGlobals: HierarchyControllerProvider, public gvars: GlobalvarsProvider) {
     // console.log('Hello GlobalDataHandlerProvider Provider');
@@ -42,6 +44,16 @@ export class GlobalDataHandlerProvider {
     this.subURIs = val;
   }
 
+  setUpdateUniqueIdentifier(depth, uniqueID)
+  {
+    if(this.uniqueIdentifierUpdateList[depth] == null)
+    {
+      this.uniqueIdentifierUpdateList[depth] = [];
+    }
+    this.uniqueIdentifierUpdateList[depth].push(uniqueID);
+    this.hierarchyGlobals.setHierarchyIsUpdatedStatus(false, depth);
+  }
+
   // *********** GET FUNCTIONS ************************
   getHierarchyTiers()
   {
@@ -56,6 +68,18 @@ export class GlobalDataHandlerProvider {
   getSubUris()
   {
     return this.subURIs;
+  }
+
+  getDataObjectFromUniqueID(depth, uniqueID)
+  {
+    for(var dataObject in this.dataObject[depth])
+    {
+      let d = dataObject;
+      if(d[this.uniqueIDLabel] == uniqueID)
+      {
+        return d;
+      }
+    }
   }
 
   // *********** UPDATE FUNCTIONS ************************
@@ -77,23 +101,42 @@ export class GlobalDataHandlerProvider {
 
     this.storage.set('localDataObject', this.dataObject).then( data => {
       this.hierarchyGlobals.saveConfiguration();
-      // DEBUG
-      // this.storage.get('localDataObject').then( data => {this.testObject = data; console.log(this.testObject);});
     });
 
-    this.hierarchyGlobals.setHierarchyUpdateStatus(false, hierachyDepth);
+    this.hierarchyGlobals.setHierarchyIsUpdatedStatus(false, hierachyDepth);
+    this.setUpdateUniqueIdentifier(hierachyDepth, uniqueID);
     // DEBUG
     // this.storage.set('localDataObject', this.dataObject);
     // this.hierarchyGlobals.setDataSynced(true);
     // this.hierarchyGlobals.saveConfiguration();
   }
 
+  // *********** ADD FUNCTIONS *************************
   addDataObject(object, hierachyDepth)
   {
     this.dataObject[hierachyDepth].push(object);
     this.storage.set('localDataObject', this.dataObject).then( data => {
       this.hierarchyGlobals.saveConfiguration();
     });
+    this.hierarchyGlobals.setHierarchyIsUpdatedStatus(false, hierachyDepth);
+    this.setUpdateUniqueIdentifier(hierachyDepth, object[this.uniqueIDLabel]);
+  }
+
+    // *********** REMOVE FUNCTIONS ********************
+  removeUniqueIDFromUpdater(depth, uniqueID)
+  {
+    for(var key in this.uniqueIdentifierUpdateList[depth])
+    {
+      let k = key;
+      if(this.uniqueIdentifierUpdateList[depth][k] == uniqueID)
+      {
+        delete this.uniqueIdentifierUpdateList[depth][k];
+        if(this.uniqueIdentifierUpdateList[depth].length == 0)
+        {
+            this.hierarchyGlobals.setHierarchyIsUpdatedStatus(true, depth);
+        }
+      }
+    }
   }
 
   // *********** PUSH FUNCTIONS ************************
@@ -123,8 +166,9 @@ export class GlobalDataHandlerProvider {
       this.subURIs[i] = val;
     }
   }
-
-  pushSavedData(depth)
+  // ******************** REMOTE PUSH FUNCTIONS *************************
+  // These Push Functions involve sending data directly to the server for remote storage
+  pushSavedData(depth, dataObject)
   {
 
    // DEBUG
@@ -149,16 +193,18 @@ export class GlobalDataHandlerProvider {
      // console.log("dataObjectName = \n" + this.dataObject[this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Characteristics[i].Label]);
        if(characteristics[i].datatype == "xsd:hexBinary")
        {
-         delete this.dataObject[characteristics[i].Label];
+         delete dataObject[characteristics[i].Label];
        }
    }
    // DEBUG
    // console.log("DataObject \n" + JSON.stringify(this.dataObject));
    // console.log("WhereToPost \n" + this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Name);
-   this.http.post(remote, this.dataObject[depth], {headers: {"Accept":'application/json', 'Content-Type':'application/json'}}).subscribe(data => {
+   this.http.post(remote, dataObject, {headers: {"Accept":'application/json', 'Content-Type':'application/json'}}).subscribe(data => {
        // DEBUG
        console.log("data = \n " + data);
-       this.hierarchyGlobals.setHierarchyUpdateStatus(false, depth);
+       this.hierarchyGlobals.setHierarchyIsUpdatedStatus(false, depth);
+       this.removeUniqueIDFromUpdater(depth, dataObject[this.uniqueIDLabel]);
+       // add update success to udpate message
     }, error => {
        console.log(error);
    });
@@ -167,11 +213,35 @@ export class GlobalDataHandlerProvider {
  pushAllData()
  {
    let i = 0;
+   // Must be 0 to length. Starts at top of hierarchy and goes down
    for(i = 0; i < this.hierarchyTiers.length; i++ )
    {
-     let ii = i;
-     this.pushSavedData(ii);
+     let depth = i;
+     this.pushDataTier(depth);
    }
    this.hierarchyGlobals.setDataSynced(true);
  }
+
+ pushDataTier(depth)
+ {
+
+   console.log("Pushing Tier: " + depth + ", Index: " + index);
+   // check each identifier against the list of identifiers needing syncronizing
+   var dataObjectToPush: any;
+   for(var index in this.uniqueIdentifierUpdateList[depth])
+   {
+     let i = index;
+     console.log("Pushing Tier: " + depth + ", Index: " + i);
+     dataObjectToPush = this.getDataObjectFromUniqueID(depth, this.uniqueIdentifierUpdateList[depth][i]);
+
+    // <DEBUG>
+     console.log(dataObjectToPush);
+     // this.removeUniqueIDFromUpdater(depth, dataObject[this.uniqueIDLabel]);
+    // <?DEBUG>
+
+     // pushSavedData(depth, dataObjectToPush);
+   }
+ }
+
+
 }

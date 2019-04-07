@@ -24,6 +24,7 @@ export class HierarchyControllerProvider {
   // boolean that stores whether the data is done loading
   isDataDoneLoading = false;
   // Data sync status for each level of hierarchy.
+  // True means is updated
   updateStatusHierarhcy = [];
   //
   configuration = {};
@@ -72,7 +73,7 @@ export class HierarchyControllerProvider {
       this.isDataDoneLoading = val;
   }
 
-  setHierarchyUpdateStatus(val, index)
+  setHierarchyIsUpdatedStatus(val, index)
   {
       this.updateStatusHierarhcy[index] = val;
   }

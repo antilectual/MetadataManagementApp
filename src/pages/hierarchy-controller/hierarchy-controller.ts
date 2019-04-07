@@ -480,7 +480,7 @@ export class HierarchyControllerPage {
         }
       );
       // Pulled data from server so it is synced to server by default
-      this.hierarchyGlobals.setHierarchyUpdateStatus(false, ii);
+      this.hierarchyGlobals.setHierarchyIsUpdatedStatus(true, ii);
     }
   }
 }

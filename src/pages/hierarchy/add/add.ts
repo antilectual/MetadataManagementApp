@@ -66,7 +66,7 @@ export class AddPage {
      // console.log("UniqueID \n" + this.uniqueIdentifier);
      // console.log(this.newDataObject);
      this.dataHandler.addDataObject(this.newDataObject, this.hierarchyDepth);
-     this.hierarchyGlobals.setHierarchyUpdateStatus(true, this.hierarchyDepth);
+     this.hierarchyGlobals.setHierarchyIsUpdatedStatus(false, this.hierarchyDepth);
    }
 
    /**
@@ -78,6 +78,7 @@ export class AddPage {
    uploadEditedData()
    {
      this.saveEditedData();
-     this.dataHandler.pushSavedData(this.hierarchyDepth);
+     // Don't use this function - use data handler instead!
+     // this.dataHandler.pushSavedData(this.hierarchyDepth);
    }
 }
