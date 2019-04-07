@@ -20,7 +20,7 @@ export class GlobalDataHandlerProvider {
   // URL for getting the specific data
   subURIs: any;
   // list of hierarchy levels, each with a list which unique identifier that need to be pushed to remote server'
-  uniqueIdentifierUpdateList = [];
+  uniqueIdentifierUpdateList = {};
   // String that identifies the label for Unique Identifier.
   uniqueIDLabel = "Unique Identifier";
 

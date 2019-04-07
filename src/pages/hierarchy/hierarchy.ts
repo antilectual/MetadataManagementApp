@@ -89,6 +89,9 @@ export class HierarchyPage
     this.uniqueIdentifier = navParams.get('identifier');
     this.currentDisplayPath = navParams.get('name');
 
+    // TODO: Fix this to be updated always
+    // this.currentDisplayPath = (this.dataHandler.getDataObjectFromUniqueID(this.hierarchyDepth, this.uniqueIdentifier)).Name;
+
     // Find max length of navigation (for bug catching)
     this.maxIndex = this.hierarchyTiers.length - 1;
     // console.log(this.uniqueIdentifier);
