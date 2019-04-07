@@ -233,13 +233,16 @@ export class GlobalDataHandlerProvider {
      let i = index;
      console.log("Pushing Tier: " + depth + ", Index: " + i);
      dataObjectToPush = this.getDataObjectFromUniqueID(depth, this.uniqueIdentifierUpdateList[depth][i]);
-
-    // <DEBUG>
-     console.log(dataObjectToPush);
+     // <DEBUG>
      // this.removeUniqueIDFromUpdater(depth, dataObject[this.uniqueIDLabel]);
-    // <?DEBUG>
+     // <?DEBUG>
+     if(dataObjectToPush != null)
+     {
+       console.log("pushDataObject");
+       console.log(dataObjectToPush);
+      // pushSavedData(depth, dataObjectToPush);
+     }
 
-     // pushSavedData(depth, dataObjectToPush);
    }
  }
 

@@ -44,7 +44,7 @@ export class EditPage {
 // private base64: Base64
   constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, public dataHandler: GlobalDataHandlerProvider, public gvars: GlobalvarsProvider, public hierarchyGlobals: HierarchyControllerProvider) {
       this.item = navParams.data[0];
-      this.dataObject = navParams.data[1];
+      this.dataObject = Object.assign({}, navParams.data[1]);
       this.hierarchyDepth = navParams.data[2];
       this.uniqueIdentifier = navParams.data[3];
       // DEBUG:
@@ -55,6 +55,8 @@ export class EditPage {
         this.image = "data:image/png;base64,"+ navParams.data[1].Photo;
       }
       this.editDateFields();
+      //DEBUG
+      this.dataObject["Name"] = "It's all WHACK!";
       //console.log(this.image);
   }
 
