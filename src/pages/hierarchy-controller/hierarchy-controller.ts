@@ -64,35 +64,28 @@ export class HierarchyControllerPage {
   */
   async loadAll()
   {
-    if(this.gvars.getOnline())
+    this.loadOntologyWaiting();
+    try { await this.getOntology();}
+    catch (err) {return;}
+    await this.loadDataWaiting();
+    try { await this.getAllData();}
+    catch (err) {return;}
+    while(!this.hierarchyGlobals.getOntologyDoneLoading() && !this.isError){await this.delay(100);}
+    await this.loadingScreens[this.loadingScreens.length - 2].dismiss();
+    while(!this.hierarchyGlobals.getDataDoneLoading() && !this.isError){await this.delay(100);}
+    await this.loadingScreens[this.loadingScreens.length - 1].dismiss();
+    this.loadingScreens.pop();
+    this.loadingScreens.pop();
+    if(!this.isError)
     {
-      this.loadOntologyWaiting();
-      try { await this.getOntology();}
-      catch (err) {return;}
-      await this.loadDataWaiting();
-      try { await this.getAllData();}
-      catch (err) {return;}
-      while(!this.hierarchyGlobals.getOntologyDoneLoading() && !this.isError){await this.delay(100);}
-      await this.loadingScreens[this.loadingScreens.length - 2].dismiss();
-      while(!this.hierarchyGlobals.getDataDoneLoading() && !this.isError){await this.delay(100);}
-      await this.loadingScreens[this.loadingScreens.length - 1].dismiss();
-      this.loadingScreens.pop();
-      this.loadingScreens.pop();
-      if(!this.isError)
+      if(this.isTest)
       {
-        if(this.isTest)
-        {
-          this.goHierachyPageTest();
-        }
-        else
-        {
-          this.goHierachyPage();
-        }
+        this.goHierachyPageTest();
       }
-    }
-    else
-    {
-      await this.showError({status: 'Offline'}, 'Connection');
+      else
+      {
+        this.goHierachyPage();
+      }
     }
   }
 
@@ -269,34 +262,55 @@ export class HierarchyControllerPage {
   * @return none
   */
   async getAllData(){
-    // Sync for data is a potentially common event
-    if(!this.hierarchyGlobals.getDataSynced()){
-      if(!this.hierarchyGlobals.getDataLoaded()){
-        try {this.getData();}
-        catch(error) {console.log('error = ' + error); throw error;}
-        this.hierarchyGlobals.setDataSynced(true);
-        this.hierarchyGlobals.setDataLoaded(true);
+
+    if(this.gvars.getOnline())
+    {
+      // Sync for data is a potentially common event
+      if(!this.hierarchyGlobals.getDataSynced()){   // Have not retrieved data from server
+        if(!this.hierarchyGlobals.getDataLoaded()){
+          try {this.getData();}
+          catch(error) {console.log('error = ' + error); throw error;}
+          this.hierarchyGlobals.setDataSynced(true);
+          this.hierarchyGlobals.setDataLoaded(true);
+        }
+        else{
+          // internal
+          // ask user to confirm sync
+          // perform sync
+          let confirmSync = true; // TODO: Set by user
+          if(confirmSync)
+          {
+            // Upload changed data (with conflict checks)
+            // Download all data over
+          }
+          else
+          {
+              this.getDataFromStorage('Online, !Synced, !Loaded');
+          }
+        }
       }
-      else{
-        // internal
-        // ask user to confirm sync
+      else
+      {
+        if(!this.hierarchyGlobals.getDataLoaded())
+        {
+            this.getDataFromStorage('Online, Synced');
+            return;
+        }
       }
+      // waiting for data to be loaded before saving it locally
+      while(!this.hierarchyGlobals.getDataDoneLoading()){await this.delay(100);}
+      this.storage.set('localDataObject', this.dataHandler.getDataObjects()).then( data => {
+        console.log("Saving data locally:");
+        console.log(this.dataHandler.getDataObjects());
+        this.hierarchyGlobals.saveConfiguration();
+      });  
     }
     else
     {
-      if(!this.hierarchyGlobals.getDataLoaded())
-      {
-          this.storage.get('localDataObject').then( data =>
-          {
-            console.log(data);
-            let localData = data;
-            this.dataHandler.setDataObject(localData);
-            this.isTest = true;
-            this.hierarchyGlobals.setDataDoneLoading(true);
-            this.hierarchyGlobals.setDataLoaded(true);
-          });
-      }
+        this.getDataFromStorage('!Online');
     }
+
+
   }
 
 
@@ -513,13 +527,13 @@ export class HierarchyControllerPage {
                   let blob = b64toBlob(b64Data, contentType);
                   let blobUrl = URL.createObjectURL(blob);
 
-                  console.log('Old Blob');
-                  console.log(blob);
-                  // result[itemitem][label] = 
+              // console.log('Old Blob');
+              // console.log(blob);
+                  // result[itemitem][label] =
                   // imageCompression(blob, this.imageOptions); // compression code
-                  console.log("New File Size");
-                  console.log(blob);
-                  console.log(result[itemitem][label]);
+              // console.log("New File Size");
+              // console.log(blob);
+              // console.log(result[itemitem][label]);
                   //
                   // var reader = new FileReader();
                   // reader.readAsDataURL(blob);
@@ -557,8 +571,27 @@ export class HierarchyControllerPage {
           this.showError(error, '' + hierarchyTiers[ii].Plural);
         }
       );
+
       // Pulled data from server so it is synced to server by default
       this.hierarchyGlobals.setHierarchyIsUpdatedStatus(true, ii);
     }
+  }
+
+  async getDataFromStorage(msg)
+  {
+    this.storage.get('localDataObject').then( data =>
+    {
+      console.log(data);
+      let localData = data;
+      if(localData == null)  // No data saved, nothing to load!
+      {
+          this.showError({status: 'No Local Data: ' + msg}, 'Storage');
+          return;
+      }
+      this.dataHandler.setDataObject(localData);
+      this.isTest = true;
+      this.hierarchyGlobals.setDataDoneLoading(true);
+      this.hierarchyGlobals.setDataLoaded(true);
+    });
   }
 }

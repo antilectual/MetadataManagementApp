@@ -230,21 +230,21 @@ export class GlobalDataHandlerProvider {
  pushDataTier(depth)
  {
 
-   console.log("Pushing Tier: " + depth + ", Index: " + index);
+   // console.log("Pushing Tier: " + depth + ", Index: " + index);
    // check each identifier against the list of identifiers needing syncronizing
    var dataObjectToPush: any;
    for(var index in this.uniqueIdentifierUpdateList[depth])
    {
      let i = index;
-     console.log("Pushing Tier: " + depth + ", Index: " + i);
+     // console.log("Pushing Tier: " + depth + ", Index: " + i);
      dataObjectToPush = this.getDataObjectFromUniqueID(depth, this.uniqueIdentifierUpdateList[depth][i]);
      // <DEBUG>
      // this.removeUniqueIDFromUpdater(depth, dataObject[this.uniqueIDLabel]);
      // <?DEBUG>
      if(dataObjectToPush != null)
      {
-       console.log("pushDataObject");
-       console.log(dataObjectToPush);
+       // console.log("pushDataObject");
+       // console.log(dataObjectToPush);
       // pushSavedData(depth, dataObjectToPush);
      }
 

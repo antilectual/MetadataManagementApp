@@ -42,7 +42,7 @@ export class MyApp {
         console.log(data);
         if(data != null)
         {
-          console.log("made it to if");
+          console.log("data != null");
           this.hierarchyGlobals.setDataSynced(data['isDataSynced']);
         }
       });

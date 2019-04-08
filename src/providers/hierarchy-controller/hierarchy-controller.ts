@@ -17,9 +17,9 @@ export class HierarchyControllerProvider {
   isOntologyLoaded: any;
   // boolean that stores whether data is synced
   isDataSynced: any;
-  // boolean that stores whether data is loaded
+  // boolean that stores whether data is loaded (so we don't keep reloading it unnecessarily)
   isDataLoaded: any;
-  // boolean that stores whether the ontology is done loading
+  // boolean that stores whether the ontology is done loading (so we don't keep reloading it unnecessarily)
   isOntologyDoneLoading = false;
   // boolean that stores whether the data is done loading
   isDataDoneLoading = false;
@@ -36,7 +36,7 @@ export class HierarchyControllerProvider {
   saveConfiguration()
   {
     //this.configuration['isOntologySynced'] = this.isOntologySynced;
-    this.configuration['isDataSynced'] = this.getDataSynced();
+    // this.configuration['isDataSynced'] = this.getDataSynced();
     // previous Online/Offline statuses
     // platform
 
