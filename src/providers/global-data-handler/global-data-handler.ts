@@ -198,7 +198,7 @@ export class GlobalDataHandlerProvider {
      // console.log("dataObjectName = \n" + this.dataObject[this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Characteristics[i].Label]);
        if(characteristics[i].datatype == "xsd:hexBinary")
        {
-         delete dataObject[characteristics[i].Label];
+         // delete dataObject[characteristics[i].Label];
        }
    }
    // DEBUG

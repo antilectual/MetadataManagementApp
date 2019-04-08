@@ -3,7 +3,8 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { HttpClient } from '@angular/common/http';
 import { GlobalDataHandlerProvider } from '../../../providers/global-data-handler/global-data-handler';
 import { GlobalvarsProvider } from '../../../providers/globalvars/globalvars';
-import { HierarchyControllerProvider } from '../../../providers/hierarchy-controller/hierarchy-controller';
+import { HierarchyControllerProvider } from '../../../providers/hierarchy-controller/hierarchy-controller';4
+import imageCompression from 'browser-image-compression';
 
 // import { Observable } from 'rxjs/Observable';
 

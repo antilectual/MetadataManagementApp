@@ -19,11 +19,23 @@
       <!-- Prints title given from top of JSON object, if NULL, prints NRDC -->
       <h6 *ngIf="currentDisplayPath != null" style="text-align:center;"><b>{{currentDisplayPath}}</b><br></h6>
       <h6 *ngIf="currentDisplayPath == null" style="text-align:center;"><b>{{title}}</b><br></h6>
+
+      <ng-container *ngIf="hierarchyDepth > 0">
+        <!-- Prints view and edit buttons under details -->
+        <font size = "-1">Details:</font>
+        <button ion-item class="navPath" (click)="editCharacteristics('read')">
+          View
+        </button>
+        <button ion-item class="navPath" (click)="editCharacteristics('edit')">
+          Edit
+        </button>
+      </ng-container>
+
+      <br>
       <div *ngIf="hierarchyDepth <= maxIndex">{{hierarchyTiers[hierarchyDepth]?.Plural}}:</div>
       <!-- button ion-item *ngIf=hierarchyTop?.Plural (click)="push()">
         <b>IGNOREME</b>
       </button-->
-
       <!-- Prints content buttons of JSON object -->
       <ng-container *ngFor="let item of dataObject[hierarchyDepth]">
         <!-- Check to make sure the application is only displaying items from the selection that was clicked -->
@@ -39,17 +51,7 @@
           </button>
         </ng-container>
       </ng-container>
-      <ng-container *ngIf="hierarchyDepth > 0">
 
-      <!-- Prints view and edit buttons under details -->
-      <br><font size = "-1">Details:</font>
-      <button ion-item class="navPath" (click)="editCharacteristics('read')">
-        View
-      </button>
-      <button ion-item class="navPath" (click)="editCharacteristics('edit')">
-        Edit
-      </button>
-      </ng-container>
 
       <!-- Button to add items to hierarchy level -->
       <ion-fab  *ngIf="hierarchyDepth <= maxIndex" bottom right #fab>

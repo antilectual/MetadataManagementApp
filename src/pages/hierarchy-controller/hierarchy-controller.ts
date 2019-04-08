@@ -14,6 +14,8 @@ import { HierarchyPage } from '../hierarchy/hierarchy';
 import { GlobalDataHandlerProvider } from '../../providers/global-data-handler/global-data-handler';
 import { HierarchyControllerProvider } from '../../providers/hierarchy-controller/hierarchy-controller';
 import { Storage } from '@ionic/storage';
+import imageCompression from 'browser-image-compression';
+import b64toBlob from 'b64-to-blob';
 
 @IonicPage()
 @Component({
@@ -29,6 +31,9 @@ export class HierarchyControllerPage {
   loadingScreens = [];
   isError = false;
   isTest = false;
+  imageOptions = {
+    maxSizeMB: 2.85          // (default: Number.POSITIVE_INFINITY
+  }
 
   /**
   * @brief Constructor for the hierarchy-controller
@@ -466,6 +471,79 @@ export class HierarchyControllerPage {
 
       await data.subscribe(result =>
         {
+
+          let hierarchyTier =  this.dataHandler.getHierarchyTiers()[ii];
+          //console.log(this.item["Characteristics"].length);
+         for( var l = 0 ; l < hierarchyTier["Characteristics"].length ; l++ )
+         {
+           let ll = l;
+            //console.log(this.item["Characteristics"][i]["datatype"]);
+           if(hierarchyTier["Characteristics"][ll]["datatype"] == 'xsd:hexBinary')
+           {
+             let label = hierarchyTier["Characteristics"][ll]["Label"];
+             // console.log("result:");
+             // console.log(result);
+             for(var item in result)
+             {
+               let itemitem = item;
+               //if( ddatasize > 3mb)
+
+
+               // console.log(subItem);
+               // console.log(result[itemitem][label]);
+               // result[itemitem][label] = await imageCompression(result[itemitem][label], this.imageOptions); // compression code
+               // item[label] = await imageCompression(item[label], options); // compression code
+               if(result[itemitem][label] != null)
+               {
+
+                 if(result[itemitem][label].length / 1024 / 1024 >= 2.9)
+                 {
+                   // let byteCharacters = atob(result[itemitem][label]);
+                   // let byteNumbers = new Array(byteCharacters.length);
+                   // for (let i = 0; i < byteCharacters.length; i++) {
+                   //    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                   // }
+                   // let byteArray = new Uint8Array(byteNumbers);
+                   // let blob = new Blob([byteArray], {type: 'image/png'});
+
+
+
+                  let contentType = 'image/png';
+                  let b64Data = result[itemitem][label];
+                  let blob = b64toBlob(b64Data, contentType);
+                  let blobUrl = URL.createObjectURL(blob);
+
+                  console.log('Old Blob');
+                  console.log(blob);
+                  // result[itemitem][label] = 
+                  // imageCompression(blob, this.imageOptions); // compression code
+                  console.log("New File Size");
+                  console.log(blob);
+                  console.log(result[itemitem][label]);
+                  //
+                  // var reader = new FileReader();
+                  // reader.readAsDataURL(blob);
+                  // reader.onloadend = function() {
+                  //     base64data = reader.result;
+                  //     console.log(base64data);
+                  // }
+                   // .length / 1024 / 1024);
+                 }
+                 //
+                 // console.log("Photo size:");
+                 // console.log('originalFile size ' + result[itemitem][label].length / 1024 / 1024 + ' MB');
+                 // if(result[itemitem]["Name"] == "Dinah's Pen" )
+                 // {
+                 //   console.log(result[itemitem][label]);
+                 // }
+                 // console.log(result[itemitem]["Name"]);
+               }
+
+             }
+           }
+         }
+
+
         // LABEL: GLOBAL DATA
         this.dataHandler.dataObjectPush(result, ii);
 
