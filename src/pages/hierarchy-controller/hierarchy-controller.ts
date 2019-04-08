@@ -32,7 +32,10 @@ export class HierarchyControllerPage {
   isError = false;
   isTest = false;
   imageOptions = {
-    maxSizeMB: 2.85          // (default: Number.POSITIVE_INFINITY
+    maxSizeMB: 2.85,          // (default: Number.POSITIVE_INFINITY)
+     maxWidthOrHeight: 1000,   // compressedFile will scale down by ratio to a point that width or height is smaller than maxWidthOrHeight (default: undefined)
+     useWebWorker: true,      // optional, use multi-thread web worker, fallback to run in main-thread (default: true)
+     maxIteration: 10        // optional, max number of iteration to compress the image (default: 10)
   }
 
   /**
@@ -303,7 +306,7 @@ export class HierarchyControllerPage {
         console.log("Saving data locally:");
         console.log(this.dataHandler.getDataObjects());
         this.hierarchyGlobals.saveConfiguration();
-      });  
+      });
     }
     else
     {
@@ -512,40 +515,32 @@ export class HierarchyControllerPage {
 
                  if(result[itemitem][label].length / 1024 / 1024 >= 2.9)
                  {
-                   // let byteCharacters = atob(result[itemitem][label]);
-                   // let byteNumbers = new Array(byteCharacters.length);
-                   // for (let i = 0; i < byteCharacters.length; i++) {
-                   //    byteNumbers[i] = byteCharacters.charCodeAt(i);
-                   // }
-                   // let byteArray = new Uint8Array(byteNumbers);
-                   // let blob = new Blob([byteArray], {type: 'image/png'});
-
-
-
                   let contentType = 'image/png';
                   let b64Data = result[itemitem][label];
                   let blob = b64toBlob(b64Data, contentType);
-                  let blobUrl = URL.createObjectURL(blob);
 
-              // console.log('Old Blob');
-              // console.log(blob);
+                  console.log('Old Blob');
+                  console.log(blob);
                   // result[itemitem][label] =
-                  // imageCompression(blob, this.imageOptions); // compression code
-              // console.log("New File Size");
-              // console.log(blob);
-              // console.log(result[itemitem][label]);
-                  //
-                  // var reader = new FileReader();
-                  // reader.readAsDataURL(blob);
-                  // reader.onloadend = function() {
-                  //     base64data = reader.result;
-                  //     console.log(base64data);
-                  // }
-                   // .length / 1024 / 1024);
+                  let compressedImage = imageCompression(blob, this.imageOptions).then(data => {
+                    console.log("DataURL")
+                    console.log(imageCompression.getDataUrlFromFile(blob));
+                    console.log(imageCompression.getDataUrlFromFile(data));
+
+                    let base64data: any;
+                    var reader = new FileReader();
+                    reader.readAsDataURL(data);
+                    reader.onloadend = function() {
+                        base64data = reader.result;
+                        console.log("base64");
+                        console.log(base64data);
+                    }
+                  }); // compression code
                  }
                  //
-                 // console.log("Photo size:");
-                 // console.log('originalFile size ' + result[itemitem][label].length / 1024 / 1024 + ' MB');
+                 console.log("Original Photo Name");
+                 console.log(result[itemitem]["Name"]);
+                 console.log('Original Photo size ' + result[itemitem][label].length / 1024 / 1024 + ' MB');
                  // if(result[itemitem]["Name"] == "Dinah's Pen" )
                  // {
                  //   console.log(result[itemitem][label]);
