@@ -29,6 +29,8 @@ export class HierarchyControllerProvider {
   //
   configuration = {};
 
+  public appDefaultName = "NRDC";
+
   constructor(public http: HttpClient, public storage: Storage) {
     // console.log('Hello HierarchyControllerProvider Provider');
   }

@@ -30,7 +30,8 @@ export class HierarchyControllerPage {
   subURI: any;
   loadingScreens = [];
   isError = false;
-  isTest = false;
+  appDefaultName: string;
+  // isTest = false;
   imageOptions = {
     maxSizeMB: 2.85,          // (default: Number.POSITIVE_INFINITY)
      maxWidthOrHeight: 1000,   // compressedFile will scale down by ratio to a point that width or height is smaller than maxWidthOrHeight (default: undefined)
@@ -46,6 +47,8 @@ export class HierarchyControllerPage {
   */
   constructor(public http: HttpClient, public navCtrl: NavController, public navParams: NavParams, public loadingController: LoadingController,
     public gvars: GlobalvarsProvider, public dataHandler: GlobalDataHandlerProvider, public hierarchyGlobals: HierarchyControllerProvider, public storage: Storage) {
+      // DEBUG:
+      this.appDefaultName = this.hierarchyGlobals.appDefaultName;
       this.loadAll();
   }
 
@@ -81,14 +84,16 @@ export class HierarchyControllerPage {
     this.loadingScreens.pop();
     if(!this.isError)
     {
-      if(this.isTest)
-      {
-        this.goHierachyPageTest();
-      }
-      else
-      {
-        this.goHierachyPage();
-      }
+
+      this.goHierachyPage();
+      // if(this.isTest)
+      // {
+      //   this.goHierachyPageTest();
+      // }
+      // else
+      // {
+      //   this.goHierachyPage();
+      // }
     }
   }
 
@@ -123,7 +128,7 @@ export class HierarchyControllerPage {
       //let localValues = {hierarchydepth:0, name:"NRDC", pageData:this.dataObject, hierarchyData:this.hierarchyTiers, identifier:null, pathName:this.hierarchyTiers[0].Plural};
       // DEBUG
       // console.log(this.dataHandler.getDataObjects());
-      let localValues = {hierarchydepth:0, name:"NRDC", identifier:null, pathName:this.dataHandler.getHierarchyTiers()[0].Plural};
+      let localValues = {hierarchydepth:0, name:this.appDefaultName, identifier:null, pathName:this.dataHandler.getHierarchyTiers()[0].Plural};
       this.navCtrl.setRoot(HierarchyPage,localValues);
   }
 
@@ -276,7 +281,7 @@ export class HierarchyControllerPage {
           this.hierarchyGlobals.setDataSynced(true);
           this.hierarchyGlobals.setDataLoaded(true);
         }
-        else{
+        else{  // Data is not loaded
           // internal
           // ask user to confirm sync
           // perform sync
@@ -286,13 +291,13 @@ export class HierarchyControllerPage {
             // Upload changed data (with conflict checks)
             // Download all data over
           }
-          else
+          else  // User wants to re-sync
           {
               this.getDataFromStorage('Online, !Synced, !Loaded');
           }
         }
       }
-      else
+      else  // Data should be synced.  - Grab it locally
       {
         if(!this.hierarchyGlobals.getDataLoaded())
         {
@@ -300,13 +305,6 @@ export class HierarchyControllerPage {
             return;
         }
       }
-      // waiting for data to be loaded before saving it locally
-      while(!this.hierarchyGlobals.getDataDoneLoading()){await this.delay(100);}
-      this.storage.set('localDataObject', this.dataHandler.getDataObjects()).then( data => {
-        console.log("Saving data locally:");
-        console.log(this.dataHandler.getDataObjects());
-        this.hierarchyGlobals.saveConfiguration();
-      });
     }
     else
     {
@@ -488,78 +486,89 @@ export class HierarchyControllerPage {
 
       await data.subscribe(result =>
         {
-
-          let hierarchyTier =  this.dataHandler.getHierarchyTiers()[ii];
-          //console.log(this.item["Characteristics"].length);
-         for( var l = 0 ; l < hierarchyTier["Characteristics"].length ; l++ )
-         {
-           let ll = l;
-            //console.log(this.item["Characteristics"][i]["datatype"]);
-           if(hierarchyTier["Characteristics"][ll]["datatype"] == 'xsd:hexBinary')
+           let hierarchyTier =  this.dataHandler.getHierarchyTiers()[ii];
+           //console.log(this.item["Characteristics"].length);
+           for( var l = 0 ; l < hierarchyTier["Characteristics"].length ; l++ ) // Searching for images to compress
            {
-             let label = hierarchyTier["Characteristics"][ll]["Label"];
-             // console.log("result:");
-             // console.log(result);
-             for(var item in result)
+             let ll = l;
+              //console.log(this.item["Characteristics"][i]["datatype"]);
+             if(hierarchyTier["Characteristics"][ll]["datatype"] == 'xsd:hexBinary')
              {
-               let itemitem = item;
-               //if( ddatasize > 3mb)
-
-
-               // console.log(subItem);
-               // console.log(result[itemitem][label]);
-               // result[itemitem][label] = await imageCompression(result[itemitem][label], this.imageOptions); // compression code
-               // item[label] = await imageCompression(item[label], options); // compression code
-               if(result[itemitem][label] != null)
+               let label = hierarchyTier["Characteristics"][ll]["Label"];
+               // console.log("result:");
+               // console.log(result);
+               for(var item in result)
                {
+                 let itemitem = item;
+                 //if( ddatasize > 3mb)
 
-                 if(result[itemitem][label].length / 1024 / 1024 >= 2.9)
+
+                 // console.log(subItem);
+                 // console.log(result[itemitem][label]);
+                 // result[itemitem][label] = await imageCompression(result[itemitem][label], this.imageOptions); // compression code
+                 // item[label] = await imageCompression(item[label], options); // compression code
+                 if(result[itemitem][label] != null)
                  {
-                  let contentType = 'image/png';
-                  let b64Data = result[itemitem][label];
-                  let blob = b64toBlob(b64Data, contentType);
 
-                  console.log('Old Blob');
-                  console.log(blob);
-                  // result[itemitem][label] =
-                  let compressedImage = imageCompression(blob, this.imageOptions).then(data => {
-                    console.log("DataURL")
-                    console.log(imageCompression.getDataUrlFromFile(blob));
-                    console.log(imageCompression.getDataUrlFromFile(data));
+                   if(result[itemitem][label].length / 1024 / 1024 >= 2.9)
+                   {
+                    let contentType = 'image/png';
+                    let b64Data = result[itemitem][label];
+                    let blob = b64toBlob(b64Data, contentType);
 
-                    let base64data: any;
-                    var reader = new FileReader();
-                    reader.readAsDataURL(data);
-                    reader.onloadend = function() {
-                        base64data = reader.result;
-                        console.log("base64");
-                        console.log(base64data);
-                    }
-                  }); // compression code
+                    // console.log('Old Blob');
+                    // console.log(blob);
+                    // result[itemitem][label] =
+                    let compressedImage = imageCompression(blob, this.imageOptions).then(data => {
+                      // console.log("DataURL")
+                      // console.log(imageCompression.getDataUrlFromFile(blob));
+                      // console.log(imageCompression.getDataUrlFromFile(data));
+
+                      let base64data: any;
+                      var reader = new FileReader();
+                      reader.readAsDataURL(data);
+                      reader.onloadend = function() {
+                          base64data = reader.result;
+                          // console.log("base64");
+                          // console.log(base64data);
+                      }
+                    }); // compression code
+                   }
+                   //
+                   // console.log("Original Photo Name");
+                   // console.log(result[itemitem]["Name"]);
+                   // console.log('Original Photo size ' + result[itemitem][label].length / 1024 / 1024 + ' MB');
+                   // if(result[itemitem]["Name"] == "Dinah's Pen" )
+                   // {
+                   //   console.log(result[itemitem][label]);
+                   // }
+                   // console.log(result[itemitem]["Name"]);
                  }
-                 //
-                 console.log("Original Photo Name");
-                 console.log(result[itemitem]["Name"]);
-                 console.log('Original Photo size ' + result[itemitem][label].length / 1024 / 1024 + ' MB');
-                 // if(result[itemitem]["Name"] == "Dinah's Pen" )
-                 // {
-                 //   console.log(result[itemitem][label]);
-                 // }
-                 // console.log(result[itemitem]["Name"]);
                }
-
              }
            }
-         }
-
-
-        // LABEL: GLOBAL DATA
-        this.dataHandler.dataObjectPush(result, ii);
-
-         if(i == hierarchyTiers.length)
-         {
-           this.hierarchyGlobals.setDataDoneLoading(true);
-         }
+           // LABEL: GLOBAL DATA
+           this.dataHandler.dataObjectPush(result, ii);
+           // console.log("Pushing Depth:");
+           // console.log(ii);
+           if(ii == hierarchyTiers.length - 1)
+           {
+             // waiting for data to be loaded before saving it locally
+             let allData = this.dataHandler.getDataObjects();
+             this.storage.set('localDataObject', allData).then( data => {
+               // DEBUG
+               // console.log("Saving data locally:");
+               // console.log(this.dataHandler.getDataObjects());
+               this.hierarchyGlobals.setDataDoneLoading(true);
+               // DEBUG
+               // this.storage.get('localDataObject').then( savedata =>
+               // {
+               //           console.log("Save data locally:");
+               //           console.log(savedata);
+               // });
+               this.hierarchyGlobals.saveConfiguration();
+             });
+           }
         },
         error =>
         {
@@ -576,15 +585,23 @@ export class HierarchyControllerPage {
   {
     this.storage.get('localDataObject').then( data =>
     {
-      console.log(data);
+      // console.log("Data from storage: ");
+      // console.log(data);
       let localData = data;
+      if(localData == null && (this.hierarchyGlobals.getDataSynced() == true))  // No data saved (and it should have been!), nothing to load!
+      {
+          this.showError({status: 'No Local Data (Try Again): ' + msg}, 'Storage');
+          this.hierarchyGlobals.setDataSynced(false);
+          return;
+      }
+
       if(localData == null)  // No data saved, nothing to load!
       {
           this.showError({status: 'No Local Data: ' + msg}, 'Storage');
           return;
       }
       this.dataHandler.setDataObject(localData);
-      this.isTest = true;
+      // this.isTest = true;
       this.hierarchyGlobals.setDataDoneLoading(true);
       this.hierarchyGlobals.setDataLoaded(true);
     });
