@@ -251,5 +251,12 @@ export class GlobalDataHandlerProvider {
    }
  }
 
+ clearLocalData()
+ {
+   this.storage.remove('localDataObject').then( data => {
+     // Notify user dat is cleared
+   });
+ }
+
 
 }
