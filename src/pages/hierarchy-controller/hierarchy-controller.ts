@@ -528,7 +528,8 @@ export class HierarchyControllerPage {
                       var reader = new FileReader();
                       reader.readAsDataURL(data);
                       reader.onloadend = function() {
-                          base64data = reader.result;
+                          // base64data = reader.result;
+                          base64data = reader.result.split(',')[1];
                           // console.log("base64");
                           // console.log(base64data);
                           // Set image as base 64 compressed
