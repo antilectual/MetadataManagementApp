@@ -167,7 +167,7 @@ export class EditPage {
    uploadEditedData()
    {
      this.saveEditedData();
-     // this.dataHandler.pushSavedData(this.hierarchyDepth);
+     this.dataHandler.pushSavedData(this.hierarchyDepth, this.dataObject);
    }
 
 }

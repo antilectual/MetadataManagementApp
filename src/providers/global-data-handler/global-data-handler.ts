@@ -93,7 +93,7 @@ export class GlobalDataHandlerProvider {
     for(i = 0; i < this.dataObject[hierarchyDepth].length; i++)
     {
 
-      console.log(this.dataObject[hierarchyDepth][i]);
+      // console.log(this.dataObject[hierarchyDepth][i]);
       if (this.dataObject[hierarchyDepth][i][this.uniqueIDLabel] == uniqueID)
       {
         // DEBUG
@@ -206,7 +206,8 @@ export class GlobalDataHandlerProvider {
    // console.log("WhereToPost \n" + this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Name);
    this.http.post(remote, dataObject, {headers: {"Accept":'application/json', 'Content-Type':'application/json'}}).subscribe(data => {
        // DEBUG
-       console.log("data = \n " + data);
+       console.log("Pushed data:");
+       console.log(dataObject);
        this.hierarchyGlobals.setHierarchyIsUpdatedStatus(false, depth);
        this.removeUniqueIDFromUpdater(depth, dataObject[this.uniqueIDLabel]);
        // add update success to udpate message
@@ -245,7 +246,7 @@ export class GlobalDataHandlerProvider {
      {
        // console.log("pushDataObject");
        // console.log(dataObjectToPush);
-      // pushSavedData(depth, dataObjectToPush);
+      this.pushSavedData(depth, dataObjectToPush);
      }
 
    }

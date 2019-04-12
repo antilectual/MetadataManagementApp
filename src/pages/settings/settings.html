@@ -25,7 +25,9 @@
   </ion-item>
   </ion-list>
 
-  <button [disabled] = "!gvars.getOnline()" ion-button (click) = "dataHandler.pushAllData()">Sync Metadata</button>
-  <button [disabled] = "!gvars.getOnline()" ion-button (click) = "dataHandler.clearLocalData()">Clear Local Data</button>
-
+  <ng-container *ngIf="!gvars.getPlatform() != 'web'">
+    <button [disabled] = "!gvars.getOnline()" ion-button (click) = "dataHandler.pushAllData()">Sync Metadata</button>
+    <button [disabled] = "!gvars.getOnline()" ion-button (click) = "dataHandler.clearLocalData()">Clear Local Data</button>
+  </ng-container>
+  
 </ion-content>

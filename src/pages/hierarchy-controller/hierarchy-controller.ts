@@ -531,6 +531,8 @@ export class HierarchyControllerPage {
                           base64data = reader.result;
                           // console.log("base64");
                           // console.log(base64data);
+                          // Set image as base 64 compressed
+                          result[itemitem][label] = base64data;
                       }
                     }); // compression code
                    }

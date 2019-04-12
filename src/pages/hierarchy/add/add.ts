@@ -78,7 +78,6 @@ export class AddPage {
    uploadEditedData()
    {
      this.saveEditedData();
-     // Don't use this function - use data handler instead!
-     // this.dataHandler.pushSavedData(this.hierarchyDepth);
+     this.dataHandler.pushSavedData(this.hierarchyDepth, this.newDataObject);
    }
 }
