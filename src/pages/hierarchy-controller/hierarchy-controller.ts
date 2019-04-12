@@ -48,7 +48,6 @@ export class HierarchyControllerPage {
   constructor(public http: HttpClient, public navCtrl: NavController, public navParams: NavParams, public loadingController: LoadingController,
     public gvars: GlobalvarsProvider, public dataHandler: GlobalDataHandlerProvider, public hierarchyGlobals: HierarchyControllerProvider, public storage: Storage) {
       // DEBUG:
-      this.appDefaultName = this.hierarchyGlobals.appDefaultName;
       this.loadAll();
   }
 
@@ -70,6 +69,7 @@ export class HierarchyControllerPage {
   */
   async loadAll()
   {
+    this.appDefaultName = this.hierarchyGlobals.appDefaultName;
     this.loadOntologyWaiting();
     try { await this.getOntology();}
     catch (err) {return;}
@@ -273,9 +273,12 @@ export class HierarchyControllerPage {
 
     if(this.gvars.getOnline())
     {
+      // console.log("DataSynced = " + this.hierarchyGlobals.getDataSynced());
+      // console.log("DataLoaded = " + this.hierarchyGlobals.getDataLoaded());
       // Sync for data is a potentially common event
       if(!this.hierarchyGlobals.getDataSynced()){   // Have not retrieved data from server
         if(!this.hierarchyGlobals.getDataLoaded()){
+          // console.log("GetData = " + this.hierarchyGlobals.getDataLoaded());
           try {this.getData();}
           catch(error) {console.log('error = ' + error); throw error;}
           this.hierarchyGlobals.setDataSynced(true);

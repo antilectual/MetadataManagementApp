@@ -96,6 +96,7 @@ export class HierarchyControllerProvider {
     if(this.updateStatusHierarhcy.length > 0)
     {
       return (this.isDataSynced || this.isDataSyncedToServer());
+      // return this.isDataSynced;
     }
     else
     {
@@ -135,6 +136,16 @@ export class HierarchyControllerProvider {
       dataSynced = dataSynced && this.updateStatusHierarhcy[ii];
     }
     return dataSynced;
+  }
+
+  setDataSyncedToServer(val)
+  {
+    let i = 0;
+    for(i = 0; i < this.updateStatusHierarhcy.length; i++)
+    {
+      let ii = i;
+      this.updateStatusHierarhcy[ii] = val;
+    }
   }
 
 

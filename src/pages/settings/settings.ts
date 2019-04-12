@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController} from 'ionic-angular';
 import { GlobalvarsProvider } from '../../providers/globalvars/globalvars';
 import { GlobalDataHandlerProvider } from '../../providers/global-data-handler/global-data-handler';
+import { HierarchyControllerPage } from '../hierarchy-controller/hierarchy-controller';
+import { HierarchyControllerProvider } from '../../providers/hierarchy-controller/hierarchy-controller';
 /**
  * Generated class for the SettingsPage page.
  *
@@ -22,7 +24,9 @@ export class SettingsPage {
   //Light dark themes
   public selectedTheme: String;
 
-  constructor(public navCtrl: NavController, public gvars: GlobalvarsProvider, public dataHandler: GlobalDataHandlerProvider) {
+  public hierarchyController: HierarchyControllerPage;
+
+  constructor(public navCtrl: NavController, public gvars: GlobalvarsProvider, public dataHandler: GlobalDataHandlerProvider, public hierarchyGlobals: HierarchyControllerProvider) {
     this.gvars.getTheme().subscribe(val => this.selectedTheme = val);
 
     if(this.gvars.getOnline())
@@ -69,6 +73,22 @@ export class SettingsPage {
       this.gvars.setTheme('dark-theme');
       this.darkTheme = true;
     }
+  }
+
+  syncData()
+  {
+    // Upload all updated data stored in the app
+    this.dataHandler.pushAllData();
+    this.hierarchyGlobals.setDataSynced(false);
+    this.hierarchyGlobals.setDataSyncedToServer(false);
+    // console.log("SyncData");
+    // console.log(this.hierarchyGlobals.getDataSynced());
+    // console.log("HierarchyUpdateStatus = ");
+    // console.log(this.hierarchyGlobals.getHierarchyUpdateStatus());
+    this.hierarchyGlobals.setDataLoaded(false);
+    this.hierarchyGlobals.setDataDoneLoading(false);
+    this.navCtrl.setRoot(HierarchyControllerPage);
+
   }
 
 }

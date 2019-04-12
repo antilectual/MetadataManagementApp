@@ -220,12 +220,15 @@ export class GlobalDataHandlerProvider {
  {
    let i = 0;
    // Must be 0 to length. Starts at top of hierarchy and goes down
-   for(i = 0; i < this.hierarchyTiers.length; i++ )
+   if(this.hierarchyTiers != null)
    {
-     let depth = i;
-     this.pushDataTier(depth);
+     for(i = 0; i < this.hierarchyTiers.length; i++ )
+     {
+        let depth = i;
+        this.pushDataTier(depth);
+     }
+      this.hierarchyGlobals.setDataSynced(true);
    }
-   this.hierarchyGlobals.setDataSynced(true);
  }
 
  pushDataTier(depth)

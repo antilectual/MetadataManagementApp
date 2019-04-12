@@ -26,8 +26,8 @@
   </ion-list>
 
   <ng-container *ngIf="!gvars.getPlatform() != 'web'">
-    <button [disabled] = "!gvars.getOnline()" ion-button (click) = "dataHandler.pushAllData()">Sync Metadata</button>
-    <button [disabled] = "!gvars.getOnline()" ion-button (click) = "dataHandler.clearLocalData()">Clear Local Data</button>
+    <button [disabled] = "!gvars.getOnline()" ion-button (click) = "syncData()">Sync Metadata</button>
+    <button ion-button (click) = "dataHandler.clearLocalData()">Clear Local Data</button>
   </ng-container>
-  
+
 </ion-content>
