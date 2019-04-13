@@ -27,7 +27,7 @@ export class GlobalDataHandlerProvider {
   // String that identifies the label for Unique Identifier.
   uniqueIDLabel = "Unique Identifier";
 
-  image: any;
+  b16image:  any;
 
   imageOptions = {
     maxSizeMB: .2,          // (default: Number.POSITIVE_INFINITY)
@@ -221,8 +221,18 @@ export class GlobalDataHandlerProvider {
          // while(base64Compressed == ""){await this.delay(100);}
          // console.log(base64Compressed);
 
-         await this.compressB64Img(dataObject[characteristics[i].Label]);
-         console.log(this.image);
+         // await this.compressB64Img(dataObject[characteristics[i].Label]);
+         let img = dataObject[characteristics[i].Label];
+         if(img != null)
+         {
+           // console.log("IMAGE LEN");
+           // console.log(img.length / 1024 / 1024);
+            dataObject[characteristics[i].Label] = this.baseSwap_64_to_16(img);
+         }//if not null...
+         console.log("PushImG");
+         console.log(this.b16image);
+
+
 
          // //CONVERT BASE 64 TO BASE 16
          // var base16Img: any
@@ -239,10 +249,11 @@ export class GlobalDataHandlerProvider {
    // DEBUG
    // console.log("DataObject \n" + JSON.stringify(this.dataObject));
    // console.log("WhereToPost \n" + this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Name);
+   console.log("Pushing data:");
+   console.log(dataObject);
    this.http.post(remote, dataObject, {headers: {"Accept":'application/json', 'Content-Type':'application/json'}}).subscribe(data => {
        // DEBUG
-       console.log("Pushed data:");
-       console.log(dataObject);
+
        this.hierarchyGlobals.setHierarchyIsUpdatedStatus(false, depth);
        this.removeUniqueIDFromUpdater(depth, dataObject[this.uniqueIDLabel]);
        // add update success to udpate message
@@ -297,71 +308,75 @@ export class GlobalDataHandlerProvider {
    });
  }
 
-baseSwap_64_to_16 (rawImage){
-         if(rawImage === null){
-             return rawImage;
-         }
+  baseSwap_64_to_16 (rawImage){
+           if(rawImage === null){
+               return rawImage;
+           }
 
-         // convert image
-         var raw = atob(rawImage);
-         var HEX = '';
-         let i=0;
-         for ( i = 0; i < raw.length; i++ ) {
-             var _hex = raw.charCodeAt(i).toString(16)
-             HEX += (_hex.length==2?_hex:'0'+_hex);
-         }
-         return HEX.toUpperCase();
-     }
+           // convert image
+           var raw = atob(rawImage);
+           var HEX = '';
+           let i=0;
+           for ( i = 0; i < raw.length; i++ ) {
+               var _hex = raw.charCodeAt(i).toString(16)
+               HEX += (_hex.length==2?_hex:'0'+_hex);
+           }
+           return HEX.toUpperCase();
+  }
 
-async compressB64Img(img)
-{
-  if(img != null)
+  async compressB64Img(img)
   {
-    // console.log("IMAGE LEN");
-    // console.log(img.length / 1024 / 1024);
-    // console.log(this.imageOptions.maxSizeMB);
-    if(img.length / 1024 / 1024 >= this.imageOptions.maxSizeMB)
+    if(img != null)
     {
-      // console.log("HERE");
-     let contentType = 'image/png';
-     let b64Data = img;
-     let blob = b64toBlob(b64Data, contentType);
+      // console.log("IMAGE LEN");
+      // console.log(img.length / 1024 / 1024);
+      // console.log(this.imageOptions.maxSizeMB);
+      if(img.length / 1024 / 1024 >= this.imageOptions.maxSizeMB)
+      {
+        // console.log("HERE");
+       let contentType = 'image/png';
+       let b64Data = img;
+       let blob = b64toBlob(b64Data, contentType);
 
-     // console.log('Old Blob');
-     // console.log(blob);
-     // result[itemitem][label] =
-     let compressedImage = await imageCompression(blob, this.imageOptions).then(data => {
-       // console.log("DataURL")
-       // console.log("THIS:")
-       // console.log(imageCompression.getDataUrlFromFile(blob));
-       // console.log(imageCompression.getDataUrlFromFile(data));
+       // console.log('Old Blob');
+       // console.log(blob);
+       // result[itemitem][label] =
+       imageCompression(blob, this.imageOptions).then(data => {
+         // console.log("DataURL")
+         // console.log("THIS:")
+         // console.log(imageCompression.getDataUrlFromFile(blob));
+         // console.log(imageCompression.getDataUrlFromFile(data));
 
-       let base64data: any;
-       var reader = new FileReader();
-       reader.readAsDataURL(data);
-       // console.log("Img");
-       // console.log(imageCompression.getDataUrlFromFile(data));
+         let base64data: any;
+         var reader = new FileReader();
+         reader.onloadend = function() {
+             // base64data = reader.result;
+             base64data = reader.result.split(',')[1];
+             // console.log("base64");
+             // console.log(base64data);
+             // Set image as base 64 compressed
+             // this.b16image = base64data;
+             console.log("ReaderImg");
+             console.log(this.b16image);
+             // console.log("THIS");
+             // console.log(result[itemitem][label]);
+         }
+         reader.readAsDataURL(data);
 
-       reader.onloadend = function() {
-           // base64data = reader.result;
-           base64data = reader.result.split(',')[1];
-           // console.log("base64");
-           // console.log(base64data);
-           // Set image as base 64 compressed
-           this.image = base64data;
-           // console.log("ReaderImg");
-           // console.log(img);
-           // console.log("THIS");
-           // console.log(result[itemitem][label]);
-       }
-     },
-     error =>
-     {
-       console.log(error);
-       // throw error;
-     }); // compression code
-   }//if not null...
-  }//if img size...
-}//function
+         console.log("BASE");
+         console.log(base64data);
+        //  let i = 0;
+        // while(this.image == ""){await this.delay(100); i++; console.log(i); console.log(this.image);}
+         // console.log("Img");
+         // console.log(imageCompression.getDataUrlFromFile(data));
+       }); // compression code
+       console.log("ReaderImg2");
+       console.log(this.b16image);
+     }//if img size...
+    }//if not null...
+  }//function
 
+  async delay(ms: number) {
+      return new Promise( resolve => setTimeout(resolve, ms) );
+  }
 }
