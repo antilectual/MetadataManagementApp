@@ -4,6 +4,9 @@ import { Storage } from '@ionic/storage';
 import { HierarchyControllerProvider } from '../hierarchy-controller/hierarchy-controller';
 import { GlobalvarsProvider } from '../../providers/globalvars/globalvars';
 
+import imageCompression from 'browser-image-compression';
+import b64toBlob from 'b64-to-blob';
+
 /*
   Generated class for the GlobalDataHandlerProvider provider.
 
@@ -23,6 +26,15 @@ export class GlobalDataHandlerProvider {
   uniqueIdentifierUpdateList = {};
   // String that identifies the label for Unique Identifier.
   uniqueIDLabel = "Unique Identifier";
+
+  image: any;
+
+  imageOptions = {
+    maxSizeMB: .2,          // (default: Number.POSITIVE_INFINITY)
+     maxWidthOrHeight: 700,   // compressedFile will scale down by ratio to a point that width or height is smaller than maxWidthOrHeight (default: undefined)
+     useWebWorker: true,      // optional, use multi-thread web worker, fallback to run in main-thread (default: true)
+     maxIteration: 20        // optional, max number of iteration to compress the image (default: 10)
+  }
 
   constructor(public http: HttpClient, public storage: Storage, private hierarchyGlobals: HierarchyControllerProvider, public gvars: GlobalvarsProvider) {
     // console.log('Hello GlobalDataHandlerProvider Provider');
@@ -173,7 +185,7 @@ export class GlobalDataHandlerProvider {
   }
   // ******************** REMOTE PUSH FUNCTIONS *************************
   // These Push Functions involve sending data directly to the server for remote storage
-  pushSavedData(depth, dataObject)
+  async pushSavedData(depth, dataObject)
   {
 
    // DEBUG
@@ -199,6 +211,29 @@ export class GlobalDataHandlerProvider {
        if(characteristics[i].datatype == "xsd:hexBinary")
        {
          // delete dataObject[characteristics[i].Label];
+
+         // console.log("Before:");
+         // console.log(dataObject[characteristics[i].Label]);
+
+         // COMPRESS BASE64 DATA
+         // var base64Compressed = "";
+         // base64Compressed = this.compressB64Img(dataObject[characteristics[i].Label]);
+         // while(base64Compressed == ""){await this.delay(100);}
+         // console.log(base64Compressed);
+
+         await this.compressB64Img(dataObject[characteristics[i].Label]);
+         console.log(this.image);
+
+         // //CONVERT BASE 64 TO BASE 16
+         // var base16Img: any
+         // base16Img = this.baseSwap_64_to_16(base64Compressed);
+         // console.log(base16Img);
+         // dataObject[characteristics[i].Label] = base16Img;
+
+         // console.log("After:");
+         // console.log(dataObject[characteristics[i].Label]);
+
+
        }
    }
    // DEBUG
@@ -262,5 +297,71 @@ export class GlobalDataHandlerProvider {
    });
  }
 
+baseSwap_64_to_16 (rawImage){
+         if(rawImage === null){
+             return rawImage;
+         }
+
+         // convert image
+         var raw = atob(rawImage);
+         var HEX = '';
+         let i=0;
+         for ( i = 0; i < raw.length; i++ ) {
+             var _hex = raw.charCodeAt(i).toString(16)
+             HEX += (_hex.length==2?_hex:'0'+_hex);
+         }
+         return HEX.toUpperCase();
+     }
+
+async compressB64Img(img)
+{
+  if(img != null)
+  {
+    // console.log("IMAGE LEN");
+    // console.log(img.length / 1024 / 1024);
+    // console.log(this.imageOptions.maxSizeMB);
+    if(img.length / 1024 / 1024 >= this.imageOptions.maxSizeMB)
+    {
+      // console.log("HERE");
+     let contentType = 'image/png';
+     let b64Data = img;
+     let blob = b64toBlob(b64Data, contentType);
+
+     // console.log('Old Blob');
+     // console.log(blob);
+     // result[itemitem][label] =
+     let compressedImage = await imageCompression(blob, this.imageOptions).then(data => {
+       // console.log("DataURL")
+       // console.log("THIS:")
+       // console.log(imageCompression.getDataUrlFromFile(blob));
+       // console.log(imageCompression.getDataUrlFromFile(data));
+
+       let base64data: any;
+       var reader = new FileReader();
+       reader.readAsDataURL(data);
+       // console.log("Img");
+       // console.log(imageCompression.getDataUrlFromFile(data));
+
+       reader.onloadend = function() {
+           // base64data = reader.result;
+           base64data = reader.result.split(',')[1];
+           // console.log("base64");
+           // console.log(base64data);
+           // Set image as base 64 compressed
+           this.image = base64data;
+           // console.log("ReaderImg");
+           // console.log(img);
+           // console.log("THIS");
+           // console.log(result[itemitem][label]);
+       }
+     },
+     error =>
+     {
+       console.log(error);
+       // throw error;
+     }); // compression code
+   }//if not null...
+  }//if img size...
+}//function
 
 }

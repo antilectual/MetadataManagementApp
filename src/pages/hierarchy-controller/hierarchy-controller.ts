@@ -33,7 +33,7 @@ export class HierarchyControllerPage {
   appDefaultName: string;
   // isTest = false;
   imageOptions = {
-    maxSizeMB: 2.85,          // (default: Number.POSITIVE_INFINITY)
+    maxSizeMB: .2,          // (default: Number.POSITIVE_INFINITY)
      maxWidthOrHeight: 1000,   // compressedFile will scale down by ratio to a point that width or height is smaller than maxWidthOrHeight (default: undefined)
      useWebWorker: true,      // optional, use multi-thread web worker, fallback to run in main-thread (default: true)
      maxIteration: 10        // optional, max number of iteration to compress the image (default: 10)
@@ -513,10 +513,11 @@ export class HierarchyControllerPage {
                  if(result[itemitem][label] != null)
                  {
 
-                   if(result[itemitem][label].length / 1024 / 1024 >= 2.9)
+                   if(result[itemitem][label].length / 1024 / 1024 >= this.imageOptions.maxSizeMB)
                    {
                     let contentType = 'image/png';
                     let b64Data = result[itemitem][label];
+
                     let blob = b64toBlob(b64Data, contentType);
 
                     // console.log('Old Blob');
@@ -524,12 +525,14 @@ export class HierarchyControllerPage {
                     // result[itemitem][label] =
                     let compressedImage = imageCompression(blob, this.imageOptions).then(data => {
                       // console.log("DataURL")
+                      // console.log("THIS:")
                       // console.log(imageCompression.getDataUrlFromFile(blob));
                       // console.log(imageCompression.getDataUrlFromFile(data));
 
                       let base64data: any;
                       var reader = new FileReader();
                       reader.readAsDataURL(data);
+
                       reader.onloadend = function() {
                           // base64data = reader.result;
                           base64data = reader.result.split(',')[1];
@@ -537,6 +540,8 @@ export class HierarchyControllerPage {
                           // console.log(base64data);
                           // Set image as base 64 compressed
                           result[itemitem][label] = base64data;
+                          // console.log("THIS");
+                          // console.log(result[itemitem][label]);
                       }
                     }); // compression code
                    }
