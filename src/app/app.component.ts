@@ -17,6 +17,7 @@ import { HierarchyControllerPage } from '../pages/hierarchy-controller/hierarchy
 import { GlobalvarsProvider } from '../providers/globalvars/globalvars';
 import { Storage } from '@ionic/storage';
 import { HierarchyControllerProvider } from '../providers/hierarchy-controller/hierarchy-controller';
+import { Platform } from 'ionic-angular';
 //import { ReadPage } from '../pages/hierarchy/read/read';
 // import { ExamplePage } from '../pages/example/example';
 
@@ -33,7 +34,7 @@ export class MyApp {
 
     pages: Array<{title: string, component: any}>;
 
-    constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public gvars: GlobalvarsProvider, public menuCtrl: MenuController, private storage: Storage, public hierarchyGlobals: HierarchyControllerProvider,) {
+    constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public gvars: GlobalvarsProvider, public menuCtrl: MenuController, private storage: Storage, public hierarchyGlobals: HierarchyControllerProvider, public plt: Platform) {
       this.initializeApp();
 
       this.storage.get('configuration').then( data =>
@@ -46,8 +47,33 @@ export class MyApp {
           this.hierarchyGlobals.setDataSynced(data['isDataSynced']);
         }
       });
+      console.log("Platforms: ");
+      console.log(this.plt.platforms());
+
+      // SET PLATFORM
+      if(this.plt.is('ios'))
+      {
+          this.gvars.setPlatform('IOS');
+      }
+      else if (this.plt.is('android'))
+      {
+        this.gvars.setPlatform('android');
+      }
+      else if (this.plt.is('mobileweb'))
+      {
+        this.gvars.setPlatform('android');
+      }
+      else if (this.plt.is('core'))
+      {
+        this.gvars.setPlatform('web');
+      }
+      else
+      {
+        this.gvars.setPlatform('android');
+      }
+
       // TODO: Make this acquired from the device
-      this.gvars.setPlatform('android');
+
       // TODO: Get online status from device
       this.gvars.setOnline(true);
       this.gvars.getTheme().subscribe(val => this.selectedTheme = val);

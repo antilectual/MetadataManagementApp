@@ -37,7 +37,6 @@ export class SettingsPage {
     {
       this.status = false;
     }
-
     if(this.selectedTheme == 'dark-theme')
       this.darkTheme = true;
     else
