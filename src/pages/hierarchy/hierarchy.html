@@ -7,6 +7,7 @@
       <ion-title><img width="200" height="50" (click)="goHome()" src="../../assets/imgs/white_logo.png"></ion-title>
     </div>
   </ion-navbar>
+
 </ion-header>
 
 <ion-content padding #pageContent [scroll-content]="pageContent" [scroll-indicator]="scrollFooter">
@@ -19,17 +20,15 @@
       <!-- Prints title given from top of JSON object, if NULL, prints NRDC -->
       <h6 *ngIf="currentDisplayPath != null" style="text-align:center;"><b>{{currentDisplayPath}}</b><br></h6>
       <h6 *ngIf="currentDisplayPath == null" style="text-align:center;"><b>{{title}}</b><br></h6>
-
       <ng-container *ngIf="hierarchyDepth > 0">
-        <!-- Prints view and edit buttons under details -->
-        <font size = "-1">Details:</font>
-        <button ion-item class="navPath" (click)="editCharacteristics('read')">
-          View
-        </button>
-        <button ion-item class="navPath" (click)="editCharacteristics('edit')">
-          Edit
-        </button>
+        <ion-navbar style="text-align:center; background:#00FF11">
+            <!-- Prints view and edit buttons under details -->
+            <ion-icon name="eye" style="vertical-align: bottom;" (click)="editCharacteristics('read')"></ion-icon><div style="vertical-align: middle; display:inline-block" (click)="editCharacteristics('read')">View&nbsp;</div>
+            <ion-icon name="create" style="vertical-align: bottom;" (click)="editCharacteristics('edit')" ></ion-icon><div style="vertical-align: middle; display:inline-block" (click)="editCharacteristics('edit')">Edit&nbsp;</div>
+            <ion-icon name="add" style="vertical-align: bottom;" (click)="createAddPage()"></ion-icon><div style="vertical-align: middle; display:inline-block" (click)="createAddPage()">Add</div>
+          </ion-navbar>
       </ng-container>
+
 
       <br>
       <div *ngIf="hierarchyDepth <= maxIndex">{{hierarchyTiers[hierarchyDepth]?.Plural}}:</div>
