@@ -1,9 +1,16 @@
 page-read {
-  
+
+  ion-label {
+      font-family: $font-family-label;
+  }
 
 }
 
 ion-icon
 {
   font-size: 30px;
+}
+
+.textcolor {
+    font-family: $font-family-base;
 }

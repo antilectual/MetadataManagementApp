@@ -20,12 +20,13 @@
   </ng-container>
 
 
-  <ion-col *ngIf="gvars.getUserName() != 'Matt'" class="icon icon-user"><ion-icon name="contact"></ion-icon></ion-col>
-  <ng-container *ngIf="gvars.getUserName() == 'Matt'" >
-    <img src="../../assets/imgs/matt_login.png">
+  <ion-col *ngIf="gvars.getUserName() != 'Matt' && gvars.getUserName() != 'Brianna' && gvars.getUserName() != 'Chris' && gvars.getUserName() != 'Nick'  " class="icon icon-user"><ion-icon name="contact"></ion-icon></ion-col>
+  <ng-container *ngIf="gvars.getUserName() == 'Matt' || gvars.getUserName() == 'Brianna' || gvars.getUserName() == 'Chris' || gvars.getUserName() == 'Nick'" >
+    <img src="../../assets/imgs/{{gvars.getUserName().toLowerCase()}}.png">
   </ng-container>
-  <h3>{{gvars.getUserName()}}</h3>
 
+  <h3>{{gvars.getUserName()}}</h3>
+  <!-- Hello <div style="font-weight: bold;vertical-align: middle; display:inline-block;"> {{gvars.getUserName()}}</div>!<br> -->
 
   <button ion-button>Favorites</button>
   <button ion-button>Last Activity</button>
@@ -33,7 +34,7 @@
   <!-- <ion-col class="icon icon-online" *ngIf="status == 'y'" ><ion-icon name="cloud"></ion-icon></ion-col>
   <ion-col class ="icon icon-offline" *ngIf="status == 'n'" ><ion-icon name="close-circle"></ion-icon></ion-col> -->
 
-  <h3 *ngIf="status == 'y'" > Connection Status: Online </h3>
-  <h3 *ngIf="status == 'n'" > Connection Status: Offline </h3>
+  <h3 *ngIf="gvars.getOnline()" > Connection Status: Online </h3>
+  <h3 *ngIf="!this.gvars.getOnline()" > Connection Status: Offline </h3>
 
 </ion-content>

@@ -19,7 +19,7 @@
   <!-- <p text-center><img src="{{image}}"></p> -->
 
   <!-- <div *ngIf="hierarchyDepth <= maxIndex">{{hierarchyTiers[hierarchyDepth]?.Plural}}</div> -->
-  <h6> Add New {{item['Name']}}</h6>
+  <div style="padding-left: 10px;"><h6>Add new {{camelize(item['Name'])}} for {{referredItemName}}</h6></div>
   <page-formfields-add
     [hierarchy]='item["Characteristics"]'
     [data]="dataObject" [newData]="newDataObject">

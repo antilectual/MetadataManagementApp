@@ -224,13 +224,13 @@ export class HierarchyPage
    * @post
    */
    createAddPage(){
-     if(this.hierarchyDepth - 1 < 0)
+     if(this.hierarchyDepth < 0)
      {
        //do nothing
      }
      else
      {
-       this.navCtrl.push(AddPage,[(this.dataHandler.getHierarchyTiers())[this.hierarchyDepth], this.hierarchyDepth, this.previousPathIDName, this.uniqueIdentifier]);
+       this.navCtrl.push(AddPage,[(this.dataHandler.getHierarchyTiers())[this.hierarchyDepth], this.hierarchyDepth, this.previousPathIDName, this.uniqueIdentifier, this.currentDisplayPath]);
      }
    }
 

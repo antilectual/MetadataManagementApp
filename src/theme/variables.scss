@@ -92,14 +92,51 @@ $colors: (
 
 
 @font-face {
-    font-family: "Draft B";
+    font-family: "Draft B Italic";
     src: url($font-path+'/Draft B Regular Italic.otf');
 }
+@font-face {
+    font-family: "Draft B";
+    src: url($font-path+'/Draft B Regular.otf');
+}
+@font-face {
+    font-family: "Dubiel";
+    src: url($font-path+'/DUBIEL.TTF');
+}
+@font-face {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: bold;
+    src: url($font-path+'/Montserrat-Bold.ttf');
+}
+@font-face {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: normal;
+    src: url($font-path+'/Montserrat-Regular.ttf');
+}
+@font-face {
+    font-family: "timeburner";
+    src: url($font-path+'/timeburnerbold.ttf');
+}
+
 
 $font-family-base: "Draft B";
 $font-family-md-base: "Draft B";
 $font-family-ios-base: "Draft B";
 $font-family-wp-base: "Draft B";
+
+$font-family-label: "Draft B Italic";
+$font-family-md-label: "Draft B Italic";
+$font-family-ios-label: "Draft B Italic";
+$font-family-wp-label: "Draft B Italic";
+
+
+
+// $font-family-base: "Draft B";
+// $font-family-md-base: "Draft B";
+// $font-family-ios-base: "Draft B";
+// $font-family-wp-base: "Draft B";
 // $font-size-base:  24px;
 // $font-size-small: 20px;
 // $font-size-large: 28px;

@@ -24,6 +24,8 @@ import { GlobalvarsProvider } from '../providers/globalvars/globalvars';
 import { GlobalDataHandlerProvider } from '../providers/global-data-handler/global-data-handler';
 import { HierarchyControllerProvider } from '../providers/hierarchy-controller/hierarchy-controller';
 import { ScrollIndicatorDirective } from '../directives/scroll-indicator/scroll-indicator';
+import { Network } from '@ionic-native/network';
+import { NetworkProvider } from '../providers/network/network';
 
 @NgModule({
   declarations: [
@@ -71,7 +73,9 @@ import { ScrollIndicatorDirective } from '../directives/scroll-indicator/scroll-
     GlobalvarsProvider,
     Base64,
     GlobalDataHandlerProvider,
-    HierarchyControllerProvider
+    HierarchyControllerProvider,
+    Network,
+    NetworkProvider
   ]
 })
 export class AppModule {}
