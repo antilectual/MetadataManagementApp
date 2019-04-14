@@ -356,8 +356,8 @@ export class GlobalDataHandlerProvider {
              // console.log(base64data);
              // Set image as base 64 compressed
              // this.b16image = base64data;
-             console.log("ReaderImg");
-             console.log(this.b16image);
+             // console.log("ReaderImg");
+             // console.log(this.b16image);
              // console.log("THIS");
              // console.log(result[itemitem][label]);
          }
