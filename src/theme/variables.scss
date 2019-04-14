@@ -92,8 +92,12 @@ $colors: (
 
 
 @font-face {
-    font-family: "Draft B";
+    font-family: "Draft B Italic";
     src: url($font-path+'/Draft B Regular Italic.otf');
+}
+@font-face {
+    font-family: "Draft B";
+    src: url($font-path+'/Draft B Regular.otf');
 }
 @font-face {
     font-family: "Dubiel";
@@ -117,15 +121,15 @@ $colors: (
 }
 
 
-$font-family-base: "Montserrat";
-$font-family-md-base: "Montserrat";
-$font-family-ios-base: "Montserrat";
-$font-family-wp-base: "Montserrat";
+$font-family-base: "Draft B";
+$font-family-md-base: "Draft B";
+$font-family-ios-base: "Draft B";
+$font-family-wp-base: "Draft B";
 
-$font-family-label: "Draft B";
-$font-family-md-label: "Draft B";
-$font-family-ios-label: "Draft B";
-$font-family-wp-label: "Draft B";
+$font-family-label: "Draft B Italic";
+$font-family-md-label: "Draft B Italic";
+$font-family-ios-label: "Draft B Italic";
+$font-family-wp-label: "Draft B Italic";
 
 
 
