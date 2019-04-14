@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { GlobalDataHandlerProvider } from '../../../providers/global-data-handler/global-data-handler';
 import { GlobalvarsProvider } from '../../../providers/globalvars/globalvars';
 import { HierarchyControllerProvider } from '../../../providers/hierarchy-controller/hierarchy-controller';
+import { HomePage } from '../../home/home';
 
 // import { Observable } from 'rxjs/Observable';
 
@@ -67,8 +68,7 @@ export class EditPage {
   * @pre
   * @post
   */
-  editDateFields()
-  {
+  editDateFields() {
     //if item.Characteristics.datatype == 'xsd:datetime'
     //Debug Logs
     //console.log(this.item["Characteristics"].length);
@@ -89,8 +89,7 @@ export class EditPage {
   * @pre
   * @post
   */
-  displayTime(characteristic, dataIndex)
-  {
+  displayTime(characteristic, dataIndex) {
     // var referenceCalculationLabel;
     // if(characteristic["datatype"] == 'xsd:datetime')
     // {
@@ -151,8 +150,7 @@ export class EditPage {
    * @pre
    * @post
    */
-   saveEditedData()
-   {
+   saveEditedData() {
      this.dataHandler.updateDataObject(this.dataObject, this.hierarchyDepth, this.uniqueIdentifier);
      this.hierarchyGlobals.setHierarchyIsUpdatedStatus(false, this.hierarchyDepth);
    }
@@ -163,10 +161,13 @@ export class EditPage {
    * @pre
    * @post
    */
-   uploadEditedData()
-   {
+   uploadEditedData() {
      this.saveEditedData();
      this.dataHandler.pushSavedData(this.hierarchyDepth, this.dataObject);
+   }
+
+   goHome() {
+     this.navCtrl.setRoot(HomePage);
    }
 
 }

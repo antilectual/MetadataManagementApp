@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 // import { Observable } from 'rxjs/Observable';
 import { EditPage } from '../edit/edit';
 import { GlobalDataHandlerProvider } from '../../../providers/global-data-handler/global-data-handler';
+import { HomePage } from '../../home/home';
 
 // import { Base64 } from '@ionic-native/base64/ngx';
 
@@ -141,8 +142,10 @@ export class ReadPage {
    * @post
    */
    // TODO: Fix this link to the read page to pass the correct data
-   goToEdit()
-   {
+   goToEdit() {
      this.navCtrl.push(EditPage,[this.item, this.dataObject]);
+   }
+   goHome() {
+     this.navCtrl.setRoot(HomePage);
    }
 }

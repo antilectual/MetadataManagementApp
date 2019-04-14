@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { GlobalDataHandlerProvider } from '../../../providers/global-data-handler/global-data-handler';
 import { GlobalvarsProvider } from '../../../providers/globalvars/globalvars';
 import { HierarchyControllerProvider } from '../../../providers/hierarchy-controller/hierarchy-controller';
+import { HomePage } from '../../home/home';
 import uuidv4 from 'uuid/v4';
 
 // import { Observable } from 'rxjs/Observable';
@@ -62,8 +63,7 @@ export class AddPage {
    * @pre
    * @post
    */
-   saveEditedData()
-   {
+   saveEditedData() {
      // DEBUG
      // console.log("UniqueID \n" + this.uniqueIdentifier);
      // console.log(this.newDataObject);
@@ -77,8 +77,7 @@ export class AddPage {
    * @pre
    * @post
    */
-   uploadEditedData()
-   {
+   uploadEditedData() {
      this.saveEditedData();
      this.dataHandler.pushSavedData(this.hierarchyDepth, this.newDataObject);
    }
@@ -87,6 +86,10 @@ export class AddPage {
     return str.replace(/(\w+)|/g, function(match, p1, p2) {
       if (p1) {return p1.charAt(0).toUpperCase() + p1.substring(1)};
       if (p2) {return p2 = ''};
-  });
-}
+    });
+  }
+
+  goHome() {
+    this.navCtrl.setRoot(HomePage);
+  }
 }
