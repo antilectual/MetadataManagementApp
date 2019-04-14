@@ -18,16 +18,6 @@
       <h6 *ngIf="currentDisplayPath != null" style="text-align:center;"><b>{{currentDisplayPath}}</b><br></h6>
       <h6 *ngIf="currentDisplayPath == null" style="text-align:center;"><b>{{title}}</b><br></h6>
 
-      <ion-navbar style="text-align:center; background:#00FF11">
-          <!-- Prints view and edit buttons under details -->
-          <ng-container *ngIf="hierarchyDepth > 0">
-            <ion-icon name="eye" style="vertical-align: middle; padding-left: 10px;" (click)="editCharacteristics('read')"></ion-icon><div style="vertical-align: middle; display:inline-block; padding-right: 10px;" (click)="editCharacteristics('read')"> View</div>|
-            <ion-icon name="create" style="vertical-align: middle; padding-left: 10px;" (click)="editCharacteristics('edit')" ></ion-icon><div style="vertical-align: middle; display:inline-block;  padding-right: 10px;" (click)="editCharacteristics('edit')"> Edit</div>|
-          </ng-container>
-          <ng-container *ngIf="hierarchyDepth <= maxIndex">
-            <ion-icon name="add" style="vertical-align: middle; padding-left: 10px;" (click)="createAddPage()"></ion-icon><div style="vertical-align: middle; display:inline-block" (click)="createAddPage()"> Add</div>
-          </ng-container>
-      </ion-navbar>
 
       <br>
       <div class="ion-label" *ngIf="hierarchyDepth <= maxIndex">{{hierarchyTiers[hierarchyDepth]?.Plural}}:</div>
@@ -54,7 +44,7 @@
       <!-- Button to add items to hierarchy level -->
 
 
-      <ion-fab  *ngIf="hierarchyDepth <= maxIndex" bottom right #fab style="padding-bottom: 15px;">
+      <!-- <ion-fab  *ngIf="hierarchyDepth <= maxIndex" bottom right #fab style="padding-bottom: 15px;">
         <ng-container *ngIf="hierarchyDepth > 0">
           <button ion-fab (click)="editCharacteristics('read')"  style="vertical-align: middle; display:inline-block;">
             <ion-icon name="eye" style="vertical-align: middle; display:inline-block; " (click)="editCharacteristics('read')"></ion-icon>
@@ -68,15 +58,24 @@
             <ion-icon name="ios-add-outline" style="display:inline-block;"  ></ion-icon>
           </button>
         </ng-container>
-      </ion-fab>
+      </ion-fab> -->
 
 </ion-content>
 <ion-footer>
-
+        <ion-navbar style="text-align:center; background:#00FF11">
+            <!-- Prints view and edit buttons under details -->
+            <ng-container *ngIf="hierarchyDepth > 0">
+              <ion-icon class="whitetextcolor" name="eye" style="vertical-align: middle; padding-left: 10px;" (click)="editCharacteristics('read')"></ion-icon><div class="whitetextcolor" style="vertical-align: middle; display:inline-block; padding-right: 10px;" (click)="editCharacteristics('read')"> View</div><div class="whitetextcolor" style="display:inline-block;">|</div>
+              <ion-icon class="whitetextcolor" name="create" style="vertical-align: middle; padding-left: 10px;" (click)="editCharacteristics('edit')" ></ion-icon><div class="whitetextcolor" style="vertical-align: middle; display:inline-block;  padding-right: 10px;" (click)="editCharacteristics('edit')"> Edit</div><div class="whitetextcolor" style="display:inline-block;">|</div>
+            </ng-container>
+            <ng-container *ngIf="hierarchyDepth <= maxIndex">
+              <ion-icon class="whitetextcolor" name="add" style="vertical-align: middle; padding-left: 10px;" (click)="createAddPage()"></ion-icon><div class="whitetextcolor" style="vertical-align: middle; display:inline-block" (click)="createAddPage()"> Add</div>
+            </ng-container>
+        </ion-navbar>
 </ion-footer>
-<ion-footer  #scrollFooter>
-    <div class="edit-footer">
+<ion-footer  #scrollFooter >
+    <!-- <div class="edit-footer">
       More
       <div style="float: right; padding-top: 5px; padding-right: 10px"> <img width="15" height="15" src="../../assets/imgs/arrowdown.png">&nbsp;</div>
-    </div>
+    </div> -->
 </ion-footer>
