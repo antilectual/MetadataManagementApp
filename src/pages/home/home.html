@@ -20,10 +20,11 @@
   </ng-container>
 
 
-  <ion-col *ngIf="gvars.getUserName() != 'Matt'" class="icon icon-user"><ion-icon name="contact"></ion-icon></ion-col>
-  <ng-container *ngIf="gvars.getUserName() == 'Matt'" >
-    <img src="../../assets/imgs/matt_login.png">
+  <ion-col *ngIf="gvars.getUserName() != 'Matt' && gvars.getUserName() != 'Brianna' && gvars.getUserName() != 'Chris' && gvars.getUserName() != 'Nick'  " class="icon icon-user"><ion-icon name="contact"></ion-icon></ion-col>
+  <ng-container *ngIf="gvars.getUserName() == 'Matt' || gvars.getUserName() == 'Brianna' || gvars.getUserName() == 'Chris' || gvars.getUserName() == 'Nick'" >
+    <img src="../../assets/imgs/{{gvars.getUserName()}}.png">
   </ng-container>
+
   <h3>{{gvars.getUserName()}}</h3>
 
 
