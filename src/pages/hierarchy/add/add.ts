@@ -45,7 +45,7 @@ export class AddPage {
       let idName = navParams.data[2];
       let idValue = navParams.data[3];
       this. referredItemName = navParams.data[4];
-      this.newDataObject[this.idName] = idValue;
+      this.newDataObject[idName] = idValue;
       this.newDataObject[this.uniqueIDCheck] = this.uniqueIdentifier;
 
       // DEBUG:

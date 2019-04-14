@@ -33,7 +33,7 @@
   <!-- <ion-col class="icon icon-online" *ngIf="status == 'y'" ><ion-icon name="cloud"></ion-icon></ion-col>
   <ion-col class ="icon icon-offline" *ngIf="status == 'n'" ><ion-icon name="close-circle"></ion-icon></ion-col> -->
 
-  <h3 *ngIf="status == 'y'" > Connection Status: Online </h3>
-  <h3 *ngIf="status == 'n'" > Connection Status: Offline </h3>
+  <h3 *ngIf="gvars.getOnline()" > Connection Status: Online </h3>
+  <h3 *ngIf="!this.gvars.getOnline()" > Connection Status: Offline </h3>
 
 </ion-content>

@@ -4,7 +4,7 @@
 //import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 
 import { Component, ViewChild } from '@angular/core';
-import { Platform, Nav, MenuController } from 'ionic-angular';
+import { Platform, Nav, MenuController, Events} from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
@@ -17,7 +17,8 @@ import { HierarchyControllerPage } from '../pages/hierarchy-controller/hierarchy
 import { GlobalvarsProvider } from '../providers/globalvars/globalvars';
 import { Storage } from '@ionic/storage';
 import { HierarchyControllerProvider } from '../providers/hierarchy-controller/hierarchy-controller';
-import { Platform } from 'ionic-angular';
+import { Network } from '@ionic-native/network';
+import { NetworkProvider } from '../providers/network/network';
 //import { ReadPage } from '../pages/hierarchy/read/read';
 // import { ExamplePage } from '../pages/example/example';
 
@@ -31,16 +32,18 @@ export class MyApp {
 
   //Light/Dark themes
   selectedTheme: String;
+  connectSubscription: any;
+  disconnectSubscription: any;
 
     pages: Array<{title: string, component: any}>;
 
-    constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public gvars: GlobalvarsProvider, public menuCtrl: MenuController, private storage: Storage, public hierarchyGlobals: HierarchyControllerProvider, public plt: Platform) {
+    constructor(public events: Events, public statusBar: StatusBar, public splashScreen: SplashScreen, public gvars: GlobalvarsProvider, public menuCtrl: MenuController, private storage: Storage, public hierarchyGlobals: HierarchyControllerProvider, public plt: Platform, private network: Network, public networkProvider: NetworkProvider) {
       this.initializeApp();
 
       this.storage.get('configuration').then( data =>
       {
-        // console.log("App Config Data = ");
-        // console.log(data);
+        console.log("App Config Data = ");
+        console.log(data);
         if(data != null)
         {
           console.log("data != null");
@@ -72,10 +75,11 @@ export class MyApp {
         this.gvars.setPlatform('android');
       }
 
-      // TODO: Make this acquired from the device
-
-      // TODO: Get online status from device
+      // Set online status for web. Will update by device using provider.
       this.gvars.setOnline(true);
+
+
+
       this.gvars.getTheme().subscribe(val => this.selectedTheme = val);
 
       this.pages = [
@@ -89,15 +93,29 @@ export class MyApp {
     }
 
     initializeApp() {
-          this.platform.ready().then(() => {
+          this.plt.ready().then(() => {
             // Okay, so the platform is ready and our plugins are available.
             // Here you can do any higher level native things you might need.
             this.statusBar.styleDefault();
             this.splashScreen.hide();
+
+            this.networkProvider.initializeNetworkEvents();
+
+            // Network Online/Offline detection
+            // Offline event
+            this.events.subscribe('network:offline', () => {
+                this.gvars.setOnline(false);
+            });
+
+            // Online event
+            this.events.subscribe('network:online', () => {
+            this.gvars.setOnline(true);
+            });
       });
     }
 
     openPage(page) {
       this.nav.setRoot(page.component);
     }
+
 }
