@@ -26,6 +26,7 @@ export class AddPage {
   uniqueIDCheck = "Unique Identifier";
   newDataObject = {};
   tzOffset: any;
+  referredItemName: any;
 
 // navParams.data contains the following:
 //  [0] - JSON containing:
@@ -43,7 +44,8 @@ export class AddPage {
       this.uniqueIdentifier = uuidv4();
       let idName = navParams.data[2];
       let idValue = navParams.data[3];
-      this.newDataObject[idName] = idValue;
+      this. referredItemName = navParams.data[4];
+      this.newDataObject[this.idName] = idValue;
       this.newDataObject[this.uniqueIDCheck] = this.uniqueIdentifier;
 
       // DEBUG:
@@ -80,4 +82,11 @@ export class AddPage {
      this.saveEditedData();
      this.dataHandler.pushSavedData(this.hierarchyDepth, this.newDataObject);
    }
+
+  camelize(str) {
+    return str.replace(/(\w+)|/g, function(match, p1, p2) {
+      if (p1) {return p1.charAt(0).toUpperCase() + p1.substring(1)};
+      if (p2) {return p2 = ''};
+  });
+}
 }

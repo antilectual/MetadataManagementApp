@@ -20,14 +20,16 @@
       <!-- Prints title given from top of JSON object, if NULL, prints NRDC -->
       <h6 *ngIf="currentDisplayPath != null" style="text-align:center;"><b>{{currentDisplayPath}}</b><br></h6>
       <h6 *ngIf="currentDisplayPath == null" style="text-align:center;"><b>{{title}}</b><br></h6>
-      <ng-container *ngIf="hierarchyDepth > 0">
-        <ion-navbar style="text-align:center; background:#00FF11">
+      <ion-navbar style="text-align:center; background:#00FF11">
             <!-- Prints view and edit buttons under details -->
-            <ion-icon name="eye" style="vertical-align: bottom;" (click)="editCharacteristics('read')"></ion-icon><div style="vertical-align: middle; display:inline-block" (click)="editCharacteristics('read')">View&nbsp;</div>
-            <ion-icon name="create" style="vertical-align: bottom;" (click)="editCharacteristics('edit')" ></ion-icon><div style="vertical-align: middle; display:inline-block" (click)="editCharacteristics('edit')">Edit&nbsp;</div>
-            <ion-icon name="add" style="vertical-align: bottom;" (click)="createAddPage()"></ion-icon><div style="vertical-align: middle; display:inline-block" (click)="createAddPage()">Add</div>
-          </ion-navbar>
-      </ng-container>
+            <ng-container *ngIf="hierarchyDepth > 0">
+              <ion-icon name="eye" style="vertical-align: bottom;" (click)="editCharacteristics('read')"></ion-icon><div style="vertical-align: middle; display:inline-block" (click)="editCharacteristics('read')">View&nbsp;</div>
+              <ion-icon name="create" style="vertical-align: bottom;" (click)="editCharacteristics('edit')" ></ion-icon><div style="vertical-align: middle; display:inline-block" (click)="editCharacteristics('edit')">Edit&nbsp;</div>
+            </ng-container>
+            <ng-container *ngIf="hierarchyDepth <= maxIndex">
+              <ion-icon name="add" style="vertical-align: bottom;" (click)="createAddPage()"></ion-icon><div style="vertical-align: middle; display:inline-block" (click)="createAddPage()">Add</div>
+            </ng-container>
+        </ion-navbar>
 
 
       <br>
