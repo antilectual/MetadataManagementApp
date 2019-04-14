@@ -39,16 +39,16 @@ export class MyApp {
 
       this.storage.get('configuration').then( data =>
       {
-        console.log("App Config Data = ");
-        console.log(data);
+        // console.log("App Config Data = ");
+        // console.log(data);
         if(data != null)
         {
           console.log("data != null");
           this.hierarchyGlobals.setDataSynced(data['isDataSynced']);
         }
       });
-      console.log("Platforms: ");
-      console.log(this.plt.platforms());
+      // console.log("Platforms: ");
+      // console.log(this.plt.platforms());
 
       // SET PLATFORM
       if(this.plt.is('ios'))
