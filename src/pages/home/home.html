@@ -22,7 +22,7 @@
 
   <ion-col *ngIf="gvars.getUserName() != 'Matt' && gvars.getUserName() != 'Brianna' && gvars.getUserName() != 'Chris' && gvars.getUserName() != 'Nick'  " class="icon icon-user"><ion-icon name="contact"></ion-icon></ion-col>
   <ng-container *ngIf="gvars.getUserName() == 'Matt' || gvars.getUserName() == 'Brianna' || gvars.getUserName() == 'Chris' || gvars.getUserName() == 'Nick'" >
-    <img src="../../assets/imgs/{{gvars.getUserName()}}.png">
+    <img src="../../assets/imgs/{{gvars.getUserName().toLowerCase()}}.png">
   </ng-container>
 
   <h3>{{gvars.getUserName()}}</h3>
