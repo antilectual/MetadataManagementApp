@@ -78,9 +78,9 @@ export class HierarchyControllerPage {
     catch (err) {return;}
     while(!this.hierarchyGlobals.getOntologyDoneLoading() && !this.isError){await this.delay(100);}
     await this.loadingScreens[this.loadingScreens.length - 2].dismiss();
-    // while(!this.hierarchyGlobals.getDataDoneLoading() && !this.isError){await this.delay(100);}
+    while(!this.hierarchyGlobals.getDataDoneLoading() && !this.isError){await this.delay(100);}
     await this.loadingScreens[this.loadingScreens.length - 1].dismiss();
-    // this.loadingScreens.pop();
+    this.loadingScreens.pop();
     this.loadingScreens.pop();
     if(!this.isError)
     {
@@ -523,7 +523,7 @@ export class HierarchyControllerPage {
                     // console.log('Old Blob');
                     // console.log(blob);
                     // result[itemitem][label] =
-                    let compressedImage = imageCompression(blob, this.imageOptions).then(data => {
+                    imageCompression(blob, this.imageOptions).then(data => {
                       // console.log("DataURL")
                       // console.log("THIS:")
                       // console.log(imageCompression.getDataUrlFromFile(blob));

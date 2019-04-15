@@ -28,6 +28,7 @@ export class GlobalDataHandlerProvider {
   uniqueIDLabel = "Unique Identifier";
 
   b16image:  any;
+  public testJSONString: string;
 
   imageOptions = {
     maxSizeMB: .2,          // (default: Number.POSITIVE_INFINITY)
@@ -195,6 +196,7 @@ export class GlobalDataHandlerProvider {
        // remote = remote + "POST/" + this.uniqueIdentifier; // Doesn't exist
    remote = remote + "Post";
    let i = 0;
+   let dataObject16 = Object.assign({}, dataObject);
    // DEBUG
    // console.log("URL \n" + remote);
    // console.log("dataobjectlength = " + Object.keys(this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Characteristics).length);
@@ -222,12 +224,13 @@ export class GlobalDataHandlerProvider {
          // console.log(base64Compressed);
 
          // await this.compressB64Img(dataObject[characteristics[i].Label]);
+
          let img = dataObject[characteristics[i].Label];
          if(img != null)
          {
            // console.log("IMAGE LEN");
            // console.log(img.length / 1024 / 1024);
-            dataObject[characteristics[i].Label] = this.baseSwap_64_to_16(img);
+           this.b16image = dataObject16[characteristics[i].Label] = this.baseSwap_64_to_16(img);
          }//if not null...
          console.log("PushImG");
          console.log(this.b16image);
@@ -249,8 +252,17 @@ export class GlobalDataHandlerProvider {
    // DEBUG
    // console.log("DataObject \n" + JSON.stringify(this.dataObject));
    // console.log("WhereToPost \n" + this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Name);
-   console.log("Pushing data:");
-   console.log(dataObject);
+// console.log("Pushing data:");
+// console.log(dataObject);
+   // TODO: REMOVE TEST
+   this.testJSONString = JSON.stringify(dataObject);
+// console.log("Test String:");
+// console.log(this.testJSONString);
+   // this.file.writeFile('e:/jsonsave/', 'updatedJSON.json', this.testJSONString, {replace: true}).then(_ => console.log('Directory exists')).catch(err => console.log('Directory doesn\'t exist'));
+   // this.file.checkDir('e:/', 'jsonsave').then(_ => console.log('Directory exists')).catch(err =>
+   //   console.log('Directory doesn\'t exist'));
+
+   // Pushing 64 bit photo in object
    this.http.post(remote, dataObject, {headers: {"Accept":'application/json', 'Content-Type':'application/json'}}).subscribe(data => {
        // DEBUG
 
@@ -260,6 +272,25 @@ export class GlobalDataHandlerProvider {
     }, error => {
        console.log(error);
    });
+
+   // pushing 16 bit photo in object
+   this.http.post(remote, dataObject16, {headers: {"Accept":'application/json', 'Content-Type':'application/json'}}).subscribe(data => {
+       // DEBUG
+
+       this.hierarchyGlobals.setHierarchyIsUpdatedStatus(false, depth);
+       this.removeUniqueIDFromUpdater(depth, dataObject[this.uniqueIDLabel]);
+       // add update success to udpate message
+    }, error => {
+       console.log(error);
+   });
+
+   // localhost flask service saveEditedData
+   this.http.post('http://localhost:8300/saveJSON/', dataObject, {headers: {"Accept":'application/json', 'Content-Type':'application/json'}}).subscribe(data => {
+     console.log("Saved to localhost");
+    }, error => {
+       console.log(error);
+   });
+
  }
 
  pushAllData()

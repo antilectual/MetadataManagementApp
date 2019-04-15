@@ -2,8 +2,8 @@
 <widget id="io.ionic.starter" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Metdata Management App</name>
     <description>Metdata Management App</description>
-    <author email="" href=""></author>
-    <content original-src="index.html" src="http://192.168.7.246:8100" />
+    <author email="" href="" />
+    <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
@@ -86,9 +86,9 @@
     <plugin name="cordova-plugin-camera" spec="4.0.3" />
     <plugin name="cordova-plugin-file-transfer" spec="1.7.1" />
     <plugin name="cordova-plugin-filepath" spec="1.5.1" />
-    <plugin name="cordova-plugin-file" spec="6.0.1" />
     <plugin name="cordova-sqlite-storage" spec="~2.6.0" />
     <allow-navigation href="http://192.168.7.246:8100" sessionid="a1223aa6" />
     <engine name="browser" spec="^5.0.4" />
     <engine name="android" spec="^7.1.4" />
+    <plugin name="cordova-plugin-file" spec="6.0.1" />
 </widget>

@@ -65,6 +65,27 @@ export class LoginPage {
       //validator: UsernamePage.checkUsername,
       updateOn: 'change'
     });
+
+
+    // ------------------------ TEMPORARY HACK TO BYPASS LOGIN -------------------------------
+    // this.loginCredentials["User Name"] = this.username;
+    // this.loginCredentials["Password"] = CryptoJS.SHA256(this.password).toString(CryptoJS.enc.Hex);
+    // this.gvars.setLoggedIn(true);
+    // // DEBUG
+    // // console.log("Web Response:");
+    // // console.log(data);
+    // // console.log("Login:");
+    // // console.log(this.gvars.getLoggedIn());
+    // this.password = "";
+    // if(this.gvars.getLoggedIn())      //(!this.slideOneForm.valid)
+    // {
+    //   // MenuCtrl is disabling the slide menu and re-enabling it once logged in.
+    //   this.gvars.setUserName(this.username);
+    //   this.menuCtrl.enable(true, 'authenticated');
+    //   this.submitAttempt = false;
+    //   this.goToHome();
+    // }
+      // ------------------------ </TEMPORARY HACK TO BYPASS LOGIN -------------------------------
   }
 
   /**
