@@ -282,11 +282,12 @@ export class GlobalDataHandlerProvider {
    // });
 
    // localhost flask service saveEditedData
-   this.http.post('http://localhost:8300/saveJSON/', dataObject, {headers: {"Accept":'application/json', 'Content-Type':'application/json'}}).subscribe(data => {
-     console.log("Saved to localhost");
-    }, error => {
-       console.log(error);
-   });
+   // DEBUG: useful for debugging http requests
+   // this.http.post('http://localhost:8300/saveJSON/', dataObject, {headers: {"Accept":'application/json', 'Content-Type':'application/json'}}).subscribe(data => {
+   //   console.log("Saved to localhost");
+   //  }, error => {
+   //     console.log(error);
+   // });
 
  }
 

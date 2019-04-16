@@ -513,6 +513,7 @@ export class HierarchyControllerPage {
                  if(result[itemitem][label] != null)
                  {
 
+                   // THIS IF STATEMENT FAILS IF THE IMAGE IS BASE16 (or not BASE64)
                    if(result[itemitem][label].length / 1024 / 1024 >= this.imageOptions.maxSizeMB)
                    {
                     let contentType = 'image/png';
@@ -523,6 +524,8 @@ export class HierarchyControllerPage {
                     // console.log('Old Blob');
                     // console.log(blob);
                     // result[itemitem][label] =
+
+
                     imageCompression(blob, this.imageOptions).then(data => {
                       // console.log("DataURL")
                       // console.log("THIS:")
