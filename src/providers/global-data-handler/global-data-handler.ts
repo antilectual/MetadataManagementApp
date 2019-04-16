@@ -230,13 +230,10 @@ export class GlobalDataHandlerProvider {
          {
            // console.log("IMAGE LEN");
            // console.log(img.length / 1024 / 1024);
-           this.b16image = dataObject16[characteristics[i].Label] = this.baseSwap_64_to_16(img);
+           // this.b16image = dataObject16[characteristics[i].Label] = this.baseSwap_64_to_16(img);
          }//if not null...
-         console.log("PushImG");
-         console.log(this.b16image);
-
-
-
+         // console.log("PushImG");
+         // console.log(this.b16image);
          // //CONVERT BASE 64 TO BASE 16
          // var base16Img: any
          // base16Img = this.baseSwap_64_to_16(base64Compressed);
@@ -274,15 +271,15 @@ export class GlobalDataHandlerProvider {
    });
 
    // pushing 16 bit photo in object
-   this.http.post(remote, dataObject16, {headers: {"Accept":'application/json', 'Content-Type':'application/json'}}).subscribe(data => {
-       // DEBUG
-
-       this.hierarchyGlobals.setHierarchyIsUpdatedStatus(false, depth);
-       this.removeUniqueIDFromUpdater(depth, dataObject[this.uniqueIDLabel]);
-       // add update success to udpate message
-    }, error => {
-       console.log(error);
-   });
+   // this.http.post(remote, dataObject16, {headers: {"Accept":'application/json', 'Content-Type':'application/json'}}).subscribe(data => {
+   //     // DEBUG
+   //
+   //     this.hierarchyGlobals.setHierarchyIsUpdatedStatus(false, depth);
+   //     this.removeUniqueIDFromUpdater(depth, dataObject[this.uniqueIDLabel]);
+   //     // add update success to udpate message
+   //  }, error => {
+   //     console.log(error);
+   // });
 
    // localhost flask service saveEditedData
    this.http.post('http://localhost:8300/saveJSON/', dataObject, {headers: {"Accept":'application/json', 'Content-Type':'application/json'}}).subscribe(data => {
