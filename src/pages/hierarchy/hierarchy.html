@@ -66,6 +66,9 @@
 
       <!-- Button to add items to hierarchy level -->
 
+
+</ion-content>
+
       <ng-container *ngIf="gvars.menuChoice == 'Horizontal Buttons'">
         <ion-fab bottom right #fab style="padding-bottom: 15px;">
           <ng-container *ngIf="hierarchyDepth > 0">
@@ -101,9 +104,6 @@
         </ng-container>
       </ion-fab>
     </ng-container>
-
-</ion-content>
-
 
     <!-- Prints view and edit buttons under details -->
 <ion-footer *ngIf="gvars.menuChoice == 'Bottom Bar'">
