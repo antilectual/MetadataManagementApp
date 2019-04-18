@@ -85,9 +85,9 @@ export class GlobalDataHandlerProvider {
 
   getDataObjectFromUniqueID(depth, uniqueID)
   {
-    for(var dataObject in this.dataObject[depth])
+    for(var dataObjectIndex in this.dataObject[depth])
     {
-      let d = dataObject;
+      let d = this.dataObject[depth][dataObjectIndex];
       if(d[this.uniqueIDLabel] == uniqueID)
       {
         return d;
