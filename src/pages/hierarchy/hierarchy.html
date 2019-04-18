@@ -67,7 +67,7 @@
       <!-- Button to add items to hierarchy level -->
 
       <ng-container *ngIf="gvars.menuChoice == 'Horizontal Buttons'">
-        <ion-fab  *ngIf="hierarchyDepth <= maxIndex" bottom right #fab style="padding-bottom: 15px;">
+        <ion-fab bottom right #fab style="padding-bottom: 15px;">
           <ng-container *ngIf="hierarchyDepth > 0">
             <button ion-fab (click)="editCharacteristics('read')"  style="vertical-align: middle; display:inline-block;">
               <ion-icon name="eye"></ion-icon>
@@ -85,7 +85,7 @@
     </ng-container>
 
     <ng-container *ngIf="gvars.menuChoice == 'Vertical Buttons'">
-      <ion-fab  *ngIf="hierarchyDepth <= maxIndex" bottom right #fab style="padding-bottom: 15px;">
+      <ion-fab bottom right #fab style="padding-bottom: 15px;">
         <ng-container *ngIf="hierarchyDepth > 0">
           <button ion-fab (click)="editCharacteristics('read')"  style="vertical-align: middle;">
             <ion-icon name="eye" (click)="editCharacteristics('read')"></ion-icon>
@@ -106,24 +106,26 @@
 
 
     <!-- Prints view and edit buttons under details -->
-<ion-footer  *ngIf="gvars.menuChoice == 'Bottom Bar'">
-        <ion-navbar style="text-align:center; background:#00FF11">
-            <ng-container *ngIf="hierarchyDepth > 0">
-              <ion-icon class="whitetextcolor" name="eye" style="vertical-align: middle; padding-left: 10px;" (click)="editCharacteristics('read')"></ion-icon><div class="whitetextcolor" style="vertical-align: middle; display:inline-block; padding-right: 10px;" (click)="editCharacteristics('read')"> View</div><div class="whitetextcolor" style="display:inline-block;">|</div>
-              <ion-icon class="whitetextcolor" name="create" style="vertical-align: middle; padding-left: 10px;" (click)="editCharacteristics('edit')" ></ion-icon><div class="whitetextcolor" style="vertical-align: middle; display:inline-block;  padding-right: 10px;" (click)="editCharacteristics('edit')"> Edit</div>
-            </ng-container>
-            <ng-container *ngIf="hierarchyDepth <= maxIndex">
-              <ng-container *ngIf="hierarchyDepth > 0">
-                <div class="whitetextcolor" style="display:inline-block;">|</div>
-              </ng-container>
-              <ion-icon class="whitetextcolor" name="add" style="vertical-align: middle; padding-left: 10px;" (click)="createAddPage()"></ion-icon><div class="whitetextcolor" style="vertical-align: middle; display:inline-block" (click)="createAddPage()"> Add</div>
-            </ng-container>
-        </ion-navbar>
+<ion-footer *ngIf="gvars.menuChoice == 'Bottom Bar'">
+    <ion-navbar style="text-align:center; background:#00FF11">
+        <ng-container *ngIf="hierarchyDepth > 0">
+          <ion-icon class="whitetextcolor" name="eye" style="vertical-align: middle; padding-left: 10px;" (click)="editCharacteristics('read')"></ion-icon><div class="whitetextcolor" style="vertical-align: middle; display:inline-block; padding-right: 10px;" (click)="editCharacteristics('read')"> View</div><div class="whitetextcolor" style="display:inline-block;">|</div>
+          <ion-icon class="whitetextcolor" name="create" style="vertical-align: middle; padding-left: 10px;" (click)="editCharacteristics('edit')" ></ion-icon><div class="whitetextcolor" style="vertical-align: middle; display:inline-block;  padding-right: 10px;" (click)="editCharacteristics('edit')"> Edit</div>
+        </ng-container>
+        <ng-container *ngIf="hierarchyDepth <= maxIndex">
+          <ng-container *ngIf="hierarchyDepth > 0">
+            <div class="whitetextcolor" style="display:inline-block;">|</div>
+          </ng-container>
+          <ion-icon class="whitetextcolor" name="add" style="vertical-align: middle; padding-left: 10px;" (click)="createAddPage()"></ion-icon><div class="whitetextcolor" style="vertical-align: middle; display:inline-block" (click)="createAddPage()"> Add</div>
+        </ng-container>
+    </ion-navbar>
 </ion-footer>
 
-<ion-footer  #scrollFooter >
-    <div class="edit-footer">
-      More
-      <div style="float: right; padding-top: 5px; padding-right: 10px"> <img width="15" height="15" src="../../assets/imgs/arrowdown.png">&nbsp;</div>
-    </div>
-</ion-footer>
+<!-- <ng-container  *ngIf="gvars.menuChoice != 'Bottom Bar'">
+  <ion-footer #scrollFooter >
+      <div class="edit-footer">
+        More
+        <div style="float: right; padding-top: 5px; padding-right: 10px"> <img width="15" height="15" src="../../assets/imgs/arrowdown.png">&nbsp;</div>
+      </div>
+  </ion-footer>
+</ng-container> -->
