@@ -25,6 +25,15 @@
   </ion-item>
   </ion-list>
 
+  <ion-list>
+    <ion-item>
+      <ion-label>{{selectOptions.title}}</ion-label>
+      <ion-select [selectOptions]="selectOptions" [(ngModel)]="gvars.menuChoice">
+        <ion-option *ngFor="let option of gvars.getMenuOptions()">{{option}}</ion-option>
+      </ion-select>
+    </ion-item>
+  </ion-list>
+
   <ng-container *ngIf="gvars.getPlatform() != 'web'">
     <button [disabled] = "!gvars.getOnline()" ion-button (click) = "syncData()">Sync Metadata</button>
     <button ion-button (click) = "dataHandler.clearLocalData()">Clear Local Data</button>

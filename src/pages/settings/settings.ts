@@ -26,6 +26,11 @@ export class SettingsPage {
 
   public hierarchyController: HierarchyControllerPage;
 
+  selectOptions = {
+    title: 'Bar Type',
+    mode: 'md'
+  };
+
   constructor(public navCtrl: NavController, public gvars: GlobalvarsProvider, public dataHandler: GlobalDataHandlerProvider, public hierarchyGlobals: HierarchyControllerProvider) {
     this.gvars.getTheme().subscribe(val => this.selectedTheme = val);
 
