@@ -17,6 +17,7 @@ import { HierarchyControllerPage } from '../pages/hierarchy-controller/hierarchy
 import { GlobalvarsProvider } from '../providers/globalvars/globalvars';
 import { Storage } from '@ionic/storage';
 import { HierarchyControllerProvider } from '../providers/hierarchy-controller/hierarchy-controller';
+import { GlobalDataHandlerProvider } from '../providers/global-data-handler/global-data-handler';
 import { Network } from '@ionic-native/network';
 import { NetworkProvider } from '../providers/network/network';
 //import { ReadPage } from '../pages/hierarchy/read/read';
@@ -37,7 +38,7 @@ export class MyApp {
 
     pages: Array<{title: string, component: any}>;
 
-    constructor(public events: Events, public statusBar: StatusBar, public splashScreen: SplashScreen, public gvars: GlobalvarsProvider, public menuCtrl: MenuController, private storage: Storage, public hierarchyGlobals: HierarchyControllerProvider, public plt: Platform, private network: Network, public networkProvider: NetworkProvider) {
+    constructor(public events: Events, public statusBar: StatusBar, public splashScreen: SplashScreen, public gvars: GlobalvarsProvider, public menuCtrl: MenuController, private storage: Storage, public hierarchyGlobals: HierarchyControllerProvider, public dataHandler: GlobalDataHandlerProvider, public plt: Platform, private network: Network, public networkProvider: NetworkProvider) {
       this.initializeApp();
 
       this.storage.get('configuration').then( data =>
@@ -46,8 +47,12 @@ export class MyApp {
         console.log(data);
         if(data != null)
         {
-          this.hierarchyGlobals.setLocalUsername(data.username);
-          this.hierarchyGlobals.setLocalPassword(data.userpassword);
+          this.hierarchyGlobals.setLocalUsername(data['username']);
+          this.hierarchyGlobals.setLocalPassword(data['userpassword']);
+          if(data['uniqueIdentifierUpdateList'] != null)
+          {
+            this.dataHandler.setUniqueIdentifierUpdateList(data['uniqueIdentifierUpdateList']);
+          }
           this.hierarchyGlobals.setDataSynced(data['isDataSynced']);
         }
       });

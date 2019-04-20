@@ -189,4 +189,8 @@ export class HierarchyControllerProvider {
     this.saveConfiguration();
   }
 
+  storeUniqueIdentifiers(val)
+  {
+    this.configuration['uniqueIdentifierUpdateList'] = Object.assign({}, val);
+  }
 }
