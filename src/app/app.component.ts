@@ -46,7 +46,8 @@ export class MyApp {
         console.log(data);
         if(data != null)
         {
-          console.log("data != null");
+          this.hierarchyGlobals.setLocalUsername(data.username);
+          this.hierarchyGlobals.setLocalPassword(data.userpassword);
           this.hierarchyGlobals.setDataSynced(data['isDataSynced']);
         }
       });
