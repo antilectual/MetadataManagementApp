@@ -15,13 +15,13 @@ export class NetworkProvider {
 
   previousStatus;
 
-  constructor(public alertCtrl: AlertController,
-              public network: Network,
-              public eventCtrl: Events) {
+    constructor(public alertCtrl: AlertController,
+                public network: Network,
+                public eventCtrl: Events) {
 
-    this.previousStatus = ConnectionStatusEnum.Online;
+      this.previousStatus = ConnectionStatusEnum.Online;
 
-  }
+    }
 
     public initializeNetworkEvents(): void {
         this.network.onDisconnect().subscribe(() => {
@@ -33,9 +33,19 @@ export class NetworkProvider {
         this.network.onConnect().subscribe(() => {
             if (this.previousStatus === ConnectionStatusEnum.Offline) {
                 this.eventCtrl.publish('network:online');
+                this.presetOnlineAlert();
             }
             this.previousStatus = ConnectionStatusEnum.Online;
         });
+    }
+
+    async presetOnlineAlert() {
+        let alert = await this.alertCtrl.create({
+            title: 'Device is now Online',
+            subTitle: 'Synchronization Available',
+            buttons: ['OK']
+        });
+        await alert.present();
     }
 
 }
