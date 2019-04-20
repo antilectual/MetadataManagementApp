@@ -20,8 +20,8 @@
   </ng-container>
 
 
-  <ion-col *ngIf="gvars.getUserName() != 'Matt' && gvars.getUserName() != 'Brianna' && gvars.getUserName() != 'Chris' && gvars.getUserName() != 'Nick'  " class="icon icon-user"><ion-icon name="contact"></ion-icon></ion-col>
-  <ng-container *ngIf="gvars.getUserName() == 'Matt' || gvars.getUserName() == 'Brianna' || gvars.getUserName() == 'Chris' || gvars.getUserName() == 'Nick'" >
+  <ion-col *ngIf="gvars.getUserName().toLowerCase() != 'matt' && gvars.getUserName().toLowerCase() != 'brianna' && gvars.getUserName().toLowerCase() != 'chris' && gvars.getUserName().toLowerCase() != 'nick'  " class="icon icon-user"><ion-icon name="contact"></ion-icon></ion-col>
+  <ng-container *ngIf="gvars.getUserName().toLowerCase() == 'matt' || gvars.getUserName().toLowerCase() == 'brianna' || gvars.getUserName().toLowerCase() == 'chris' || gvars.getUserName().toLowerCase() == 'nick'" >
     <img src="../../assets/imgs/{{gvars.getUserName().toLowerCase()}}.png">
   </ng-container>
 
