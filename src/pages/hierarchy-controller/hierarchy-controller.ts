@@ -418,7 +418,14 @@ export class HierarchyControllerPage {
     // let local = '../../assets/data/test.json';
     // Remote service containing the ontology
     //let remote = 'http://sensor.nevada.edu/GS/Services/Ragnarok/';
-    let remote = '../../assets/data/ontology.json';
+    if(this.gvars.getUserName() == 'Matt' || this.gvars.getUserName() == 'matt' || this.gvars.getUserName() == 'MATT')
+    {
+      let remote = '../../assets/data/ontology_short.json';
+    }
+    else
+    {
+      let remote = '../../assets/data/ontology.json';
+    }
     let data: Observable<any> = this.http.get(remote);
     this.hierarchyGlobals.setOntologyDoneLoading(false);
     // this.isOntologyDoneLoading = false;
