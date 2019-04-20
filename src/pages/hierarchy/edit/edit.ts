@@ -7,7 +7,7 @@ import { HierarchyControllerProvider } from '../../../providers/hierarchy-contro
 import { HomePage } from '../../home/home';
 //import { Base64 } from '@ionic-native/base64/ngx';
 
-import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
+import { Camera, CameraOptions } from '@ionic-native/camera';
 
 
 @IonicPage()
@@ -16,13 +16,6 @@ import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
   templateUrl: 'edit.html',
 })
 export class EditPage {
-
- camOptions: CameraOptions = {
-      quality: 100,
-      destinationType: this.camera.DestinationType.DATA_URL,
-      encodingType: this.camera.EncodingType.PNG,
-      mediaType: this.camera.MediaType.PICTURE
-  }
 
   item: any;
   isImage: boolean;//for displaying the add photo button
@@ -48,7 +41,7 @@ export class EditPage {
 //  [2] - The depth of the Hierarchy the edit page is reading from
 //  [3] - The unique identifier of the specific object being edited
 // private base64: Base64
-  constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, public dataHandler: GlobalDataHandlerProvider, public gvars: GlobalvarsProvider, public hierarchyGlobals: HierarchyControllerProvider, private camera: Camera) {
+  constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, public dataHandler: GlobalDataHandlerProvider, public gvars: GlobalvarsProvider, public hierarchyGlobals: HierarchyControllerProvider, public camera: Camera) {
       this.item = navParams.data[0];
       this.dataObject = Object.assign({}, navParams.data[1]);
       // this.dataObject = navParams.data[1];
@@ -78,7 +71,7 @@ export class EditPage {
   editDateFields() {
     //if item.Characteristics.datatype == 'xsd:datetime'
     //Debug Logs
-    //console.log(this.item["Characteristics"].length);
+    //console.log(this.item["Charact"].length);
     for( var i = 0 ; i < this.item["Characteristics"].length ; i++ )
    {
       //console.log(this.item["Characteristics"][i]["datatype"]);
@@ -180,16 +173,29 @@ export class EditPage {
    }
 
 
-async takePicture()
+takePicture()
 {
-     this.camera.getPicture(this.camOptions).then((imageData) => {
+    console.log("Take Picture:");
+     const camOptions: CameraOptions = {
+       quality: 50,
+       destinationType: this.camera.DestinationType.DATA_URL,
+       sourceType: this.camera.PictureSourceType.CAMERA,
+       encodingType: this.camera.EncodingType.JPEG,
+       cameraDirection: this.camera.Direction.BACK,
+       mediaType: this.camera.MediaType.PICTURE,
+       targetWidth: 700,
+       targetHeight: 700,
+       correctOrientation: true
+     };
+
+     this.camera.getPicture(camOptions).then((imageData) => {
    // imageData is either a base64 encoded string or a file URI
    // If it's base64 (DATA_URL):
       // this.base64Data = 'data:image/png;base64,' + imageData;
       this.base64Data = imageData;
       this.image = "data:image/png;base64,"+ imageData;
     }, (err) => {
-   // Handle error
+        console.log("Camera issue:" + err);
   });
 }
 

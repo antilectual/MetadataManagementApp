@@ -21,7 +21,7 @@
     "@angular/platform-browser": "5.2.11",
     "@angular/platform-browser-dynamic": "5.2.11",
     "@ionic-native/base64": "^5.3.0",
-    "@ionic-native/camera": "^5.5.0",
+    "@ionic-native/camera": "^4.20.0",
     "@ionic-native/core": "^4.20.0",
     "@ionic-native/file": "^5.2.0",
     "@ionic-native/file-path": "^5.0.0",
@@ -80,7 +80,8 @@
       "cordova-plugin-network-information": {}
     },
     "platforms": [
-      "browser"
+      "browser",
+      "android"
     ]
   }
 }
