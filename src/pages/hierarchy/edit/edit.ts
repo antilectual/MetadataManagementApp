@@ -5,10 +5,9 @@ import { GlobalDataHandlerProvider } from '../../../providers/global-data-handle
 import { GlobalvarsProvider } from '../../../providers/globalvars/globalvars';
 import { HierarchyControllerProvider } from '../../../providers/hierarchy-controller/hierarchy-controller';
 import { HomePage } from '../../home/home';
-
-// import { Observable } from 'rxjs/Observable';
-
 //import { Base64 } from '@ionic-native/base64/ngx';
+
+import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 
 
 @IonicPage()
@@ -18,9 +17,15 @@ import { HomePage } from '../../home/home';
 })
 export class EditPage {
 
-
+ camOptions: CameraOptions = {
+      quality: 100,
+      destinationType: this.camera.DestinationType.DATA_URL,
+      encodingType: this.camera.EncodingType.PNG,
+      mediaType: this.camera.MediaType.PICTURE
+  }
 
   item: any;
+  isImage: boolean;//for displaying the add photo button
   dataObject: any;
   dataURI: any;
   isDataPresent: boolean;
@@ -43,7 +48,7 @@ export class EditPage {
 //  [2] - The depth of the Hierarchy the edit page is reading from
 //  [3] - The unique identifier of the specific object being edited
 // private base64: Base64
-  constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, public dataHandler: GlobalDataHandlerProvider, public gvars: GlobalvarsProvider, public hierarchyGlobals: HierarchyControllerProvider) {
+  constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, public dataHandler: GlobalDataHandlerProvider, public gvars: GlobalvarsProvider, public hierarchyGlobals: HierarchyControllerProvider, private camera: Camera) {
       this.item = navParams.data[0];
       this.dataObject = Object.assign({}, navParams.data[1]);
       // this.dataObject = navParams.data[1];
@@ -53,8 +58,10 @@ export class EditPage {
       //console.log("nav Params \n" + navParams.data[3]);
       //console.log(this.dataURI);
       //If there is a photo, display image
+      this.isImage = false;
       if(navParams.data[1].Photo != null){
         this.image = "data:image/png;base64,"+ navParams.data[1].Photo;
+        this.isImage = true;
       }
       this.editDateFields();
       //DEBUG
@@ -151,6 +158,7 @@ export class EditPage {
    * @post
    */
    saveEditedData() {
+     if(this.base64Data != null) { this.dataObject['Photo'] = this.base64Data; }
      this.dataHandler.updateDataObject(this.dataObject, this.hierarchyDepth, this.uniqueIdentifier);
      this.hierarchyGlobals.setHierarchyIsUpdatedStatus(false, this.hierarchyDepth);
    }
@@ -162,6 +170,7 @@ export class EditPage {
    * @post
    */
    uploadEditedData() {
+     if(this.base64Data != null) { this.dataObject['Photo'] = this.base64Data; }
      this.saveEditedData();
      this.dataHandler.pushSavedData(this.hierarchyDepth, this.dataObject);
    }
@@ -169,5 +178,19 @@ export class EditPage {
    goHome() {
      this.navCtrl.setRoot(HomePage);
    }
+
+
+async takePicture()
+{
+     this.camera.getPicture(this.camOptions).then((imageData) => {
+   // imageData is either a base64 encoded string or a file URI
+   // If it's base64 (DATA_URL):
+      // this.base64Data = 'data:image/png;base64,' + imageData;
+      this.base64Data = imageData;
+      this.image = "data:image/png;base64,"+ imageData;
+    }, (err) => {
+   // Handle error
+  });
+}
 
 }

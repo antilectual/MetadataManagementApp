@@ -27,6 +27,8 @@ import { ScrollIndicatorDirective } from '../directives/scroll-indicator/scroll-
 import { Network } from '@ionic-native/network';
 import { NetworkProvider } from '../providers/network/network';
 
+import { Camera } from '@ionic-native/camera/ngx';
+
 @NgModule({
   declarations: [
     MyApp,
@@ -75,7 +77,8 @@ import { NetworkProvider } from '../providers/network/network';
     GlobalDataHandlerProvider,
     HierarchyControllerProvider,
     Network,
-    NetworkProvider
+    NetworkProvider,
+    Camera
   ]
 })
 export class AppModule {}
