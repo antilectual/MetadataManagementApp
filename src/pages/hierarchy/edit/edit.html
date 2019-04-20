@@ -17,6 +17,7 @@
 
 <ion-content #pageContent [scroll-content]="pageContent" [scroll-indicator]="scrollFooter" >
   <p text-center><img src="{{image}}"></p>
+  <ng-container *ngIf ="isImage" (click) = "takePicture()"><button ion-button>Add Photo</button></ng-container>
   <page-formfields
     [hierarchy]='item["Characteristics"]'
     [data]="dataObject">
