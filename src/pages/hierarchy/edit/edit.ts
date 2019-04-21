@@ -31,6 +31,7 @@ export class EditPage {
   photoLabel:any;
   tzOffset: any;
   public selectedTheme: String;
+  dateLabel: any;
 
 // navParams.data contains the following:
 //  [0] - JSON containing:

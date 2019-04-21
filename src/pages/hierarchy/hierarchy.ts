@@ -217,6 +217,13 @@ export class HierarchyPage
      return newTime;
    }
 
+   camelize(str) {
+     return str.replace(/(\w+)|/g, function(match, p1, p2) {
+       if (p1) {return p1.charAt(0).toUpperCase() + p1.substring(1)};
+       if (p2) {return p2 = ''};
+     });
+   }
+
    /**
    * @brief
    * @param
@@ -224,15 +231,17 @@ export class HierarchyPage
    * @post
    */
    createAddPage(){
-     if(this.hierarchyDepth < 0)
+     if(this.hierarchyDepth == 0)
      {
-       //do nothing
+       //(this.dataHandler.getHierarchyTiers())[this.hierarchyDepth]
+       let item = this.camelize((this.dataHandler.getHierarchyTiers())[this.hierarchyDepth]['Name']);
+       // console.log(item);
+
+       this.dataHandler.presetOnlineAlert("Error", "Unable to Add new " + item);
      }
      else
      {
        this.navCtrl.push(AddPage,[(this.dataHandler.getHierarchyTiers())[this.hierarchyDepth], this.hierarchyDepth, this.previousPathIDName, this.uniqueIdentifier, this.currentDisplayPath]);
      }
    }
-
-
 }
