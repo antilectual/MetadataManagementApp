@@ -28,6 +28,7 @@ export class EditPage {
   //String for filtering in html
   uniqueIDCheck = "Unique Identifier";
   uniqueIdentifier: any;
+  photoLabel:any;
 
   tzOffset: any;
 
@@ -52,9 +53,26 @@ export class EditPage {
       //console.log(this.dataURI);
       //If there is a photo, display image
       this.isImage = false;
-      if(navParams.data[1].Photo != null){
-        this.image = "data:image/png;base64,"+ navParams.data[1].Photo;
-        this.isImage = true;
+      let i = 0;
+      let characteristics = this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Characteristics;
+      for(i = 0; i < characteristics.length; i++)
+      {
+        let ii = i;
+        if(characteristics[ii].datatype == "xsd:hexBinary")
+        {
+           this.photoLabel = characteristics[ii].Label;
+           this.isImage = true;
+        }
+      }
+
+      if(navParams.data[1][this.photoLabel] != null){
+        this.image = "data:image/png;base64,"+ navParams.data[1][this.photoLabel];
+        // this.isImage = true;
+      }
+
+      if(this.isImage)
+      {
+        // this.dataObject['Photo'];
       }
       this.editDateFields();
       //DEBUG
@@ -151,7 +169,7 @@ export class EditPage {
    * @post
    */
    saveEditedData() {
-     if(this.base64Data != null) { this.dataObject['Photo'] = this.base64Data; }
+     if(this.base64Data != null) { this.dataObject[this.photoLabel] = this.base64Data; }
      this.dataHandler.updateDataObject(this.dataObject, this.hierarchyDepth, this.uniqueIdentifier);
      this.hierarchyGlobals.setHierarchyIsUpdatedStatus(false, this.hierarchyDepth);
    }
@@ -163,7 +181,7 @@ export class EditPage {
    * @post
    */
    uploadEditedData() {
-     if(this.base64Data != null) { this.dataObject['Photo'] = this.base64Data; }
+     if(this.base64Data != null) { this.dataObject[this.photoLabel] = this.base64Data; }
      this.saveEditedData();
      this.dataHandler.pushSavedData(this.hierarchyDepth, this.dataObject);
    }
