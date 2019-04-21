@@ -110,9 +110,13 @@ export class AddPage {
    * @post
    */
    uploadEditedData() {
-     if(this.base64Data != null) { this.newDataObject[this.photoLabel] = this.base64Data; }
-     this.saveEditedData();
-     this.dataHandler.pushSavedData(this.hierarchyDepth, this.newDataObject);
+     //if login true
+     // if(this.loginPage.attemptLogin(true))
+     {
+       if(this.base64Data != null) { this.newDataObject[this.photoLabel] = this.base64Data; }
+       this.saveEditedData();
+       this.dataHandler.pushSavedData(this.hierarchyDepth, this.newDataObject);
+     }
    }
 
   camelize(str) {

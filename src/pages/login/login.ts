@@ -87,7 +87,7 @@ export class LoginPage {
 * @post
 */
   // TODO: Add error handling and notify user of bad logins.
-  attemptLogin()
+  attemptLogin(isReauthentication = false)
   {
       this.loginCredentials["User Name"] = this.username;
       this.loginCredentials["Password"] = CryptoJS.SHA256(this.password).toString(CryptoJS.enc.Hex);
@@ -114,17 +114,41 @@ export class LoginPage {
               this.menuCtrl.enable(true, 'authenticated');
               this.hierarchyGlobals.setConfigLoginPassword(this.loginCredentials["User Name"], this.loginCredentials["Password"]);
               this.submitAttempt = false;
-              this.goToHome();
+              if(!isReauthentication)
+              {
+                this.goToHome();
+              }
+              else
+              {
+                return true;
+              }
             }
             else
             {
               this.submitAttempt = true;
-              this.presetOnlineAlert("Failed to login", "Bad username or password.");
+              if(!isReauthentication)
+              {
+                this.presetOnlineAlert("Failed to login", "Bad username or password.");
+              }
+              else
+              {
+                this.presetOnlineAlert("Failed to login", "Please save and sign in again to submit data.");
+                return false;
+              }
               //TODO Create popup for user
             }
          }, error => {
             console.log(error);
-            this.presetOnlineAlert("Failed to login", "No login service available.");
+            if(!isReauthentication)
+            {
+              this.presetOnlineAlert("Failed to login", "No login service available.");
+            }
+            else
+            {
+
+              this.presetOnlineAlert("Failed to login", "No login service available.");
+              return false;
+            }
         });
       }
       else // check against stored login information

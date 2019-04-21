@@ -330,6 +330,10 @@ export class GlobalDataHandlerProvider {
    this.storage.remove('localDataObject').then( data => {
      this.hierarchyGlobals.setDataSynced(false);
      this.hierarchyGlobals.setDataSyncedToServer(false);
+     this.hierarchyGlobals.setOntologyLoaded(false);
+     this.hierarchyGlobals.setOntologySynced(false);
+     this.hierarchyGlobals.setOntologyDoneLoading(false);
+     this.hierarchyGlobals.setDataSyncedToServer(false);
      this.hierarchyGlobals.setDataLoaded(false);
      this.hierarchyGlobals.setDataDoneLoading(false);
      this.setDataObject(null);

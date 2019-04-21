@@ -201,11 +201,15 @@ export class EditPage {
    * @post
    */
    uploadEditedData() {
-     if(this.base64Data != null) { this.dataObject[this.photoLabel] = this.base64Data; }
-     this.saveEditedData();
-     this.dataHandler.pushSavedData(this.hierarchyDepth, this.dataObject).then(() => {
-          this.dataHandler.presetOnlineAlert("Upload", "Data saved to server.");
-     });
+     // if login true
+     // if(this.loginPage.attemptLogin(true))
+     {
+       if(this.base64Data != null) { this.dataObject[this.photoLabel] = this.base64Data; }
+       this.saveEditedData();
+       this.dataHandler.pushSavedData(this.hierarchyDepth, this.dataObject).then(() => {
+            this.dataHandler.presetOnlineAlert("Upload", "Data saved to server.");
+       });
+     }
    }
 
    goHome() {

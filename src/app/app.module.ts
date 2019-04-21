@@ -28,6 +28,7 @@ import { Network } from '@ionic-native/network';
 import { NetworkProvider } from '../providers/network/network';
 import { Geolocation } from '@ionic-native/geolocation';
 import { Camera } from '@ionic-native/camera';
+import { LoginServiceProvider } from '../providers/login-service/login-service';
 
 @NgModule({
   declarations: [
@@ -79,7 +80,8 @@ import { Camera } from '@ionic-native/camera';
     Network,
     NetworkProvider,
     Camera,
-    Geolocation
+    Geolocation,
+    LoginServiceProvider
   ]
 })
 export class AppModule {}
