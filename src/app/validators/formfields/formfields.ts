@@ -7,6 +7,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { FormBuilder, FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
+import { DatePicker } from '@ionic-native/date-picker/ngx';
 
 @IonicPage()
 @Component({
@@ -30,7 +31,7 @@ export class FormfieldsPage implements OnInit{
 //String for filtering in html
    uniqueIDCheck = "Unique Identifier";
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public formBuilder: FormBuilder)
+  constructor(public navCtrl: NavController, public navParams: NavParams, public formBuilder: FormBuilder, public datePicker: DatePicker)
   {
   }
 
@@ -96,5 +97,12 @@ export class FormfieldsPage implements OnInit{
     {
       return this.decValidator;
     }
+  }
+
+  updateDateTime(data)
+  {
+    // console.log(data);
+
+    
   }
 }
