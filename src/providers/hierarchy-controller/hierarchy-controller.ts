@@ -200,4 +200,10 @@ export class HierarchyControllerProvider {
     this.configuration['menuchoice'] = val;
     this.saveConfiguration();
   }
+
+  storeTheme(val)
+  {
+    this.configuration['theme'] = val;
+    this.saveConfiguration();
+  }
 }

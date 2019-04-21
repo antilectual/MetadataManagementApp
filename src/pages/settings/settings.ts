@@ -70,11 +70,13 @@ export class SettingsPage {
   {
     if( this.selectedTheme === 'dark-theme'){
       this.gvars.setTheme('light-theme');
+      this.hierarchyGlobals.storeTheme('light-theme');
       this.darkTheme = false;
 
     }
     else{
       this.gvars.setTheme('dark-theme');
+      this.hierarchyGlobals.storeTheme('dark-theme');
       this.darkTheme = true;
     }
   }

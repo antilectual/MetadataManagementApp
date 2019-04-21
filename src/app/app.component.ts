@@ -56,7 +56,11 @@ export class MyApp {
           this.hierarchyGlobals.setDataSynced(data['isDataSynced']);
           if(data['menuchoice'] != null)
           {
-            this.gvars.menuChoice = data['menuchoice'];  
+            this.gvars.menuChoice = data['menuchoice'];
+          }
+          if(data['theme'] != null)
+          {
+            this.gvars.setTheme(data['theme']);  
           }
         }
       });
