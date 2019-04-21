@@ -16,6 +16,7 @@
   <p text-center><img src="{{image}}"></p>
   <ng-container *ngFor="let char of item.Characteristics">
   <ng-container *ngIf = 'char.datatype != "xsd:hexBinary"'>
+  <ng-container *ngIf ='char.datatype != "xsd:datetime"' >
   <ng-container *ngIf="dataObject[char.Label] !=''">
   <ng-container *ngIf="dataObject[char.Label] != null">
   <ng-container *ngIf="dataObject[char.Label] != ' '">
@@ -32,6 +33,7 @@
 
         <ion-input type="text" placeholder={{char?.Label}}></ion-input>
       </ion-item-->
+  </ng-container>
   </ng-container>
   </ng-container>
   </ng-container>

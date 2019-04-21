@@ -99,7 +99,7 @@ export class FormfieldsPage implements OnInit{
     }
   }
 
-  updateDateTime(data)
+  updateDateTime(label)
   {
     // console.log(data);
     this.datePicker.show
@@ -107,7 +107,9 @@ export class FormfieldsPage implements OnInit{
       date: new Date(),
       mode: 'date',
       androidTheme: this.datePicker.ANDROID_THEMES.THEME_HOLO_DARK
-    })
-      .then(date=>console.log('Got Date: ', date));
+    }).then(date=>
+      (this.data[label] = date.toISOString())
+    );
   }
+
 }
