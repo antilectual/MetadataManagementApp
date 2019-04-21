@@ -6,9 +6,8 @@ import { GlobalvarsProvider } from '../../../providers/globalvars/globalvars';
 import { HierarchyControllerProvider } from '../../../providers/hierarchy-controller/hierarchy-controller';
 import { HomePage } from '../../home/home';
 //import { Base64 } from '@ionic-native/base64/ngx';
-
 import { Camera, CameraOptions } from '@ionic-native/camera';
-
+import { DatePicker } from '@ionic-native/date-picker/ngx';
 
 @IonicPage()
 @Component({
@@ -43,7 +42,7 @@ export class EditPage {
 //  [2] - The depth of the Hierarchy the edit page is reading from
 //  [3] - The unique identifier of the specific object being edited
 // private base64: Base64
-  constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, public dataHandler: GlobalDataHandlerProvider, public gvars: GlobalvarsProvider, public hierarchyGlobals: HierarchyControllerProvider, public camera: Camera) {
+  constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, public dataHandler: GlobalDataHandlerProvider, public gvars: GlobalvarsProvider, public hierarchyGlobals: HierarchyControllerProvider, public camera: Camera, public datePicker: DatePicker) {
       this.item = navParams.data[0];
       this.dataObject = Object.assign({}, navParams.data[1]);
       // this.dataObject = navParams.data[1];
@@ -64,6 +63,13 @@ export class EditPage {
         {
            this.photoLabel = characteristics[ii].Label;
            this.isImage = true;
+        }
+
+        else if(characteristics[ii].datatype == "xsd:datetime")
+        {
+          this.dateLabel = characteristics[ii].Label;
+          // console.log(this.newDataObject[this.dateLabel]);
+
         }
       }
 
@@ -192,6 +198,8 @@ export class EditPage {
      this.dataHandler.updateDataObject(this.dataObject, this.hierarchyDepth, this.uniqueIdentifier);
      this.hierarchyGlobals.setHierarchyIsUpdatedStatus(false, this.hierarchyDepth);
      this.dataHandler.presetOnlineAlert("Save", "Data saved to device.");
+
+     console.log(this.dateLabel);
    }
 
    /**
