@@ -25,7 +25,7 @@
     "@ionic-native/core": "^4.20.0",
     "@ionic-native/file": "^5.2.0",
     "@ionic-native/file-path": "^5.0.0",
-    "@ionic-native/geolocation": "^5.5.0",
+    "@ionic-native/geolocation": "^4.20.0",
     "@ionic-native/network": "^4.20.0",
     "@ionic-native/splash-screen": "~4.17.0",
     "@ionic-native/status-bar": "~4.17.0",
@@ -80,7 +80,9 @@
       "cordova-plugin-filepath": {},
       "cordova-sqlite-storage": {},
       "cordova-plugin-network-information": {},
-      "cordova-plugin-geolocation": {}
+      "cordova-plugin-geolocation": {
+        "GEOLOCATION_USAGE_DESCRIPTION": "To locate you"
+      }
     },
     "platforms": [
       "browser",

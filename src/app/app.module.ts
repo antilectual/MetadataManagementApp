@@ -26,7 +26,7 @@ import { HierarchyControllerProvider } from '../providers/hierarchy-controller/h
 import { ScrollIndicatorDirective } from '../directives/scroll-indicator/scroll-indicator';
 import { Network } from '@ionic-native/network';
 import { NetworkProvider } from '../providers/network/network';
-
+import { Geolocation } from '@ionic-native/geolocation';
 import { Camera } from '@ionic-native/camera';
 
 @NgModule({
@@ -78,7 +78,8 @@ import { Camera } from '@ionic-native/camera';
     HierarchyControllerProvider,
     Network,
     NetworkProvider,
-    Camera
+    Camera,
+    Geolocation
   ]
 })
 export class AppModule {}

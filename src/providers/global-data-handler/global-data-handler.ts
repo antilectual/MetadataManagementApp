@@ -421,11 +421,34 @@ export class GlobalDataHandlerProvider {
     await alert.present();
   }
 
-  storeLocal()
-  {
+  storeLocal() {
     this.storage.set('localDataObject', this.getDataObjects()).then( data => {
       // this.hierarchyGlobals.saveConfiguration();
     });
   }
+
+  async presetGPSAlert(title, longitude, latitude, altitude) {
+    let alert = await this.alertCtrl.create({
+      title: title,
+      subTitle: "Longitude, Latitude, Altitude",
+      buttons: ['OK'],
+      inputs: [
+        {
+          name: 'longitude',
+          value: longitude
+        },
+        {
+          name: 'latitude',
+          value: latitude
+        },
+        {
+          name: 'altitude',
+          value: altitude
+        }
+      ]
+    });
+    await alert.present();
+  }
+
 
 }

@@ -8,6 +8,7 @@ import { HomePage } from '../../home/home';
 import uuidv4 from 'uuid/v4';
 
 import { Camera, CameraOptions } from '@ionic-native/camera';
+import { Geolocation } from '@ionic-native/geolocation';
 
 // import { Observable } from 'rxjs/Observable';
 
@@ -45,7 +46,7 @@ export class AddPage {
 //  [2] - The depth of the Hierarchy the edit page is reading from
 //  [3] - The unique identifier of the specific object being edited
 // private base64: Base64
-  constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, public dataHandler: GlobalDataHandlerProvider, public gvars: GlobalvarsProvider, public hierarchyGlobals: HierarchyControllerProvider, public camera: Camera) {
+  constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, public dataHandler: GlobalDataHandlerProvider, public gvars: GlobalvarsProvider, public hierarchyGlobals: HierarchyControllerProvider, public camera: Camera, public geolocation: Geolocation) {
       this.item = navParams.data[0];
       this.hierarchyDepth = navParams.data[1];
       this.uniqueIdentifier = uuidv4();
@@ -150,4 +151,18 @@ export class AddPage {
           console.log("Camera issue:" + err);
     });
   }
+
+   getLocation()
+   {
+     this.geolocation.getCurrentPosition().then((data) => {
+       // let locationMessage = "Latitude: " + data.coords.latitude + ", Longitude: " + data.coords.longitude + ", Altitude: " + data.coords.altitude;
+       this.dataHandler.presetGPSAlert("Location", data.coords.latitude, data.coords.longitude, data.coords.altitude);
+       // console.log("GEOLOC");
+       // console.log(data);
+       // resp.coords.latitude
+       // resp.coords.longitude
+      }).catch((error) => {
+        console.log('Error getting location', error);
+      });
+   }
 }
