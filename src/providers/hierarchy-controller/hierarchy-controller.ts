@@ -192,5 +192,12 @@ export class HierarchyControllerProvider {
   storeUniqueIdentifiers(val)
   {
     this.configuration['uniqueIdentifierUpdateList'] = Object.assign({}, val);
+    this.saveConfiguration();
+  }
+
+  storeMenuChoice(val)
+  {
+    this.configuration['menuchoice'] = val;
+    this.saveConfiguration();
   }
 }

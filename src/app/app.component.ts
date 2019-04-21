@@ -54,6 +54,10 @@ export class MyApp {
             this.dataHandler.setUniqueIdentifierUpdateList(data['uniqueIdentifierUpdateList']);
           }
           this.hierarchyGlobals.setDataSynced(data['isDataSynced']);
+          if(data['menuchoice'] != null)
+          {
+            this.gvars.menuChoice = data['menuchoice'];  
+          }
         }
       });
       // console.log("Platforms: ");
