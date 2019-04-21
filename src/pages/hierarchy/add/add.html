@@ -16,7 +16,9 @@
 
 
 <ion-content #pageContent [scroll-content]="pageContent" [scroll-indicator]="scrollFooter" >
-  <!-- <p text-center><img src="{{image}}"></p> -->
+  <p text-center><img src="{{image}}"></p>
+  <!-- <button ion-button  *ngIf="isImage" (click)="takePicture()">Take Photo</button> -->
+  <button ion-button  *ngIf="isImage">Take Photo</button>
 
   <!-- <div *ngIf="hierarchyDepth <= maxIndex">{{hierarchyTiers[hierarchyDepth]?.Plural}}</div> -->
   <div style="padding-left: 10px;"><h6>Add new {{camelize(item['Name'])}} for {{referredItemName}}</h6></div>

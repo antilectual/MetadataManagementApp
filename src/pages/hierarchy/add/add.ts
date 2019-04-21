@@ -7,6 +7,8 @@ import { HierarchyControllerProvider } from '../../../providers/hierarchy-contro
 import { HomePage } from '../../home/home';
 import uuidv4 from 'uuid/v4';
 
+import { Camera, CameraOptions } from '@ionic-native/camera';
+
 // import { Observable } from 'rxjs/Observable';
 
 //import { Base64 } from '@ionic-native/base64/ngx';
@@ -28,6 +30,8 @@ export class AddPage {
   newDataObject = {};
   tzOffset: any;
   referredItemName: any;
+  isImage: boolean;
+  photoLabel: any;
 
 // navParams.data contains the following:
 //  [0] - JSON containing:
@@ -49,6 +53,30 @@ export class AddPage {
       this.newDataObject[idName] = idValue;
       this.newDataObject[this.uniqueIDCheck] = this.uniqueIdentifier;
 
+      this.isImage = false;
+      let i = 0;
+      let characteristics = this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Characteristics;
+      for(i = 0; i < characteristics.length; i++)
+      {
+        let ii = i;
+        if(characteristics[ii].datatype == "xsd:hexBinary")
+        {
+           this.photoLabel = characteristics[ii].Label;
+           this.isImage = true;
+        }
+      }
+
+      if(navParams.data[1][this.photoLabel] != null){
+        this.image = "data:image/png;base64,"+ navParams.data[1][this.photoLabel];
+        // this.isImage = true;
+      }
+
+      // console.log(this.gvars.getPlatform());
+      if(this.gvars.getPlatform() == "web")
+      {
+        this.isImage = false;
+      }
+
       // DEBUG:
 
       // console.log("ADD PAGE:");
@@ -67,6 +95,7 @@ export class AddPage {
      // DEBUG
      // console.log("UniqueID \n" + this.uniqueIdentifier);
      // console.log(this.newDataObject);
+     if(this.base64Data != null) { this.dataObject[this.photoLabel] = this.base64Data; }
      this.dataHandler.addDataObject(this.newDataObject, this.hierarchyDepth);
      this.hierarchyGlobals.setHierarchyIsUpdatedStatus(false, this.hierarchyDepth);
    }
@@ -78,6 +107,7 @@ export class AddPage {
    * @post
    */
    uploadEditedData() {
+     if(this.base64Data != null) { this.dataObject[this.photoLabel] = this.base64Data; }
      this.saveEditedData();
      this.dataHandler.pushSavedData(this.hierarchyDepth, this.newDataObject);
    }
@@ -91,5 +121,31 @@ export class AddPage {
 
   goHome() {
     this.navCtrl.setRoot(HomePage);
+  }
+
+  takePicture()
+  {
+      console.log("Take Picture:");
+       const camOptions: CameraOptions = {
+         quality: 50,
+         destinationType: this.camera.DestinationType.DATA_URL,
+         sourceType: this.camera.PictureSourceType.CAMERA,
+         encodingType: this.camera.EncodingType.JPEG,
+         cameraDirection: this.camera.Direction.BACK,
+         mediaType: this.camera.MediaType.PICTURE,
+         targetWidth: 700,
+         targetHeight: 700,
+         correctOrientation: true
+       };
+
+       this.camera.getPicture(camOptions).then((imageData) => {
+     // imageData is either a base64 encoded string or a file URI
+     // If it's base64 (DATA_URL):
+        // this.base64Data = 'data:image/png;base64,' + imageData;
+        this.base64Data = imageData;
+        this.image = "data:image/png;base64,"+ imageData;
+      }, (err) => {
+          console.log("Camera issue:" + err);
+    });
   }
 }
