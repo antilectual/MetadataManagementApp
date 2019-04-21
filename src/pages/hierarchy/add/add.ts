@@ -32,6 +32,8 @@ export class AddPage {
   referredItemName: any;
   isImage: boolean;
   photoLabel: any;
+  base64Data: any;
+  image:any;
 
 // navParams.data contains the following:
 //  [0] - JSON containing:
@@ -43,7 +45,7 @@ export class AddPage {
 //  [2] - The depth of the Hierarchy the edit page is reading from
 //  [3] - The unique identifier of the specific object being edited
 // private base64: Base64
-  constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, public dataHandler: GlobalDataHandlerProvider, public gvars: GlobalvarsProvider, public hierarchyGlobals: HierarchyControllerProvider) {
+  constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, public dataHandler: GlobalDataHandlerProvider, public gvars: GlobalvarsProvider, public hierarchyGlobals: HierarchyControllerProvider, public camera: Camera) {
       this.item = navParams.data[0];
       this.hierarchyDepth = navParams.data[1];
       this.uniqueIdentifier = uuidv4();
@@ -95,7 +97,7 @@ export class AddPage {
      // DEBUG
      // console.log("UniqueID \n" + this.uniqueIdentifier);
      // console.log(this.newDataObject);
-     if(this.base64Data != null) { this.dataObject[this.photoLabel] = this.base64Data; }
+     if(this.base64Data != null) { this.newDataObject[this.photoLabel] = this.base64Data; }
      this.dataHandler.addDataObject(this.newDataObject, this.hierarchyDepth);
      this.hierarchyGlobals.setHierarchyIsUpdatedStatus(false, this.hierarchyDepth);
    }
@@ -107,7 +109,7 @@ export class AddPage {
    * @post
    */
    uploadEditedData() {
-     if(this.base64Data != null) { this.dataObject[this.photoLabel] = this.base64Data; }
+     if(this.base64Data != null) { this.newDataObject[this.photoLabel] = this.base64Data; }
      this.saveEditedData();
      this.dataHandler.pushSavedData(this.hierarchyDepth, this.newDataObject);
    }
