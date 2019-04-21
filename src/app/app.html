@@ -15,9 +15,13 @@
         <ion-icon *ngIf = "p.title == 'About'" name="help-circle" style = "padding-right: 10px; vertical-align: bottom;"></ion-icon>
         <ion-icon *ngIf = "p.title == 'Metadata Entry'" name="paper" style = "padding-right: 10px; vertical-align: bottom;"></ion-icon>
         <ion-icon *ngIf = "p.title == 'Settings'" name="switch" style = "padding-right: 10px; vertical-align: bottom;"></ion-icon>
-        <ion-icon *ngIf = "p.title == 'Logout'" name="return-right" style = "padding-right: 10px; vertical-align: bottom;"></ion-icon>
+        <ion-icon *ngIf = "p.title == 'Logout'" name="log-out" style = "padding-right: 10px; vertical-align: bottom;"></ion-icon>
         {{p.title}}
       </button>
+      <ng-container *ngIf="this.plt.is('android') || this.plt.is('ios')">
+        <button class="navPath" menuClose ion-item (click)="exitApp()" style="vertical-align: middle;"><ion-icon name="exit" style = "padding-right: 10px; vertical-align: bottom;"></ion-icon>Exit</button>
+      </ng-container>
+
     </ion-list>
   </ion-content>
 </ion-menu>

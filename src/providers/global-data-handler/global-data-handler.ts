@@ -64,6 +64,8 @@ export class GlobalDataHandlerProvider {
       this.uniqueIdentifierUpdateList[depth] = [];
     }
     this.uniqueIdentifierUpdateList[depth].push(uniqueID);
+    console.log("Saving UIDs");
+    console.log(this.uniqueIdentifierUpdateList);
     this.hierarchyGlobals.setHierarchyIsUpdatedStatus(false, depth);
   }
 
@@ -123,6 +125,7 @@ export class GlobalDataHandlerProvider {
 
     this.hierarchyGlobals.setHierarchyIsUpdatedStatus(false, hierarchyDepth);
     this.setUpdateUniqueIdentifier(hierarchyDepth, uniqueID);
+    this.hierarchyGlobals.storeUniqueIdentifiers(this.uniqueIdentifierUpdateList);
     // DEBUG
     // this.storage.set('localDataObject', this.dataObject);
     // this.hierarchyGlobals.setDataSynced(true);
@@ -138,6 +141,7 @@ export class GlobalDataHandlerProvider {
     });
     this.hierarchyGlobals.setHierarchyIsUpdatedStatus(false, hierachyDepth);
     this.setUpdateUniqueIdentifier(hierachyDepth, object[this.uniqueIDLabel]);
+    this.hierarchyGlobals.storeUniqueIdentifiers(this.uniqueIdentifierUpdateList);
   }
 
     // *********** REMOVE FUNCTIONS ********************
@@ -226,6 +230,10 @@ export class GlobalDataHandlerProvider {
          // await this.compressB64Img(dataObject[characteristics[i].Label]);
 
          let img = dataObject[characteristics[i].Label];
+         if(img == null)
+         {
+           dataObject[characteristics[i].Label] = "";
+         }
          if(img != null)
          {
            // console.log("IMAGE LEN");
@@ -262,7 +270,9 @@ export class GlobalDataHandlerProvider {
    // Pushing 64 bit photo in object
    this.http.post(remote, dataObject, {headers: {"Accept":'application/json', 'Content-Type':'application/json'}}).subscribe(data => {
        // DEBUG
-
+       console.log("Posting");
+       console.log(dataObject);
+       console.log(data);
        this.hierarchyGlobals.setHierarchyIsUpdatedStatus(false, depth);
        this.removeUniqueIDFromUpdater(depth, dataObject[this.uniqueIDLabel]);
        // add update success to udpate message
@@ -408,4 +418,10 @@ export class GlobalDataHandlerProvider {
   async delay(ms: number) {
       return new Promise( resolve => setTimeout(resolve, ms) );
   }
+
+  setUniqueIdentifierUpdateList(val)
+  {
+     this.uniqueIdentifierUpdateList = Object.assign({}, val);
+  }
+
 }
