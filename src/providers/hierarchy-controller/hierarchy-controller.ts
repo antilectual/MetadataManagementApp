@@ -207,4 +207,10 @@ export class HierarchyControllerProvider {
     this.configuration['theme'] = val;
     this.saveConfiguration();
   }
+
+
+  saveAsConfiguration(val)
+  {
+    this.configuration = val;
+  }
 }

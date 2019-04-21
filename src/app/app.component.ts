@@ -70,6 +70,7 @@ export class MyApp {
               this.hierarchyGlobals.setHierarchyIsUpdatedStatus(data['unsyncedHierachyTiers'][ii], ii);
             }
           }
+          this.hierarchyGlobals.saveAsConfiguration(data);
         }
       });
 
