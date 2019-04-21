@@ -71,6 +71,10 @@ export class MyApp {
               this.hierarchyGlobals.setHierarchyIsUpdatedStatus(data['unsyncedHierachyTiers'][ii], ii);
             }
           }
+          if(data['localDataObject'] != null)
+          {
+            this.hierarchyGlobals.setDataSynced(true);
+          }
         }
       });
       // console.log("Platforms: ");

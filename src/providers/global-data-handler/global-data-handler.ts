@@ -1,8 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
+import { AlertController } from 'ionic-angular';
 import { HierarchyControllerProvider } from '../hierarchy-controller/hierarchy-controller';
 import { GlobalvarsProvider } from '../../providers/globalvars/globalvars';
+
 
 import imageCompression from 'browser-image-compression';
 import b64toBlob from 'b64-to-blob';
@@ -37,28 +39,24 @@ export class GlobalDataHandlerProvider {
      maxIteration: 20        // optional, max number of iteration to compress the image (default: 10)
   }
 
-  constructor(public http: HttpClient, public storage: Storage, private hierarchyGlobals: HierarchyControllerProvider, public gvars: GlobalvarsProvider) {
+  constructor(public http: HttpClient, public storage: Storage, private hierarchyGlobals: HierarchyControllerProvider, public gvars: GlobalvarsProvider, public alertCtrl: AlertController) {
     // console.log('Hello GlobalDataHandlerProvider Provider');
   }
 
   // *********** SET FUNCTIONS ************************
-  setHierarchyTiers(val)
-  {
+  setHierarchyTiers(val) {
     this.hierarchyTiers = val;
   }
 
-  setDataObject(val)
-  {
+  setDataObject(val) {
     this.dataObject = val;
   }
 
-  setSubUris(val)
-  {
+  setSubUris(val) {
     this.subURIs = val;
   }
 
-  setUpdateUniqueIdentifier(depth, uniqueID)
-  {
+  setUpdateUniqueIdentifier(depth, uniqueID) {
     if(this.uniqueIdentifierUpdateList[depth] == null)
     {
       this.uniqueIdentifierUpdateList[depth] = [];
@@ -70,23 +68,19 @@ export class GlobalDataHandlerProvider {
   }
 
   // *********** GET FUNCTIONS ************************
-  getHierarchyTiers()
-  {
+  getHierarchyTiers() {
     return this.hierarchyTiers;
   }
 
-  getDataObjects()
-  {
+  getDataObjects() {
     return this.dataObject;
   }
 
-  getSubUris()
-  {
+  getSubUris() {
     return this.subURIs;
   }
 
-  getDataObjectFromUniqueID(depth, uniqueID)
-  {
+  getDataObjectFromUniqueID(depth, uniqueID) {
     for(var dataObjectIndex in this.dataObject[depth])
     {
       let d = this.dataObject[depth][dataObjectIndex];
@@ -98,9 +92,8 @@ export class GlobalDataHandlerProvider {
   }
 
   // *********** UPDATE FUNCTIONS ************************
-  updateDataObject(object, hierarchyDepth, uniqueID)
-  {
-    // DEBUG
+  updateDataObject(object, hierarchyDepth, uniqueID) {
+    // DEBU
     // console.log("update HierarchyDepth = " + hierarchyDepth);
     // console.log("Data Object");
     // console.log(object);
@@ -133,8 +126,7 @@ export class GlobalDataHandlerProvider {
   }
 
   // *********** ADD FUNCTIONS *************************
-  addDataObject(object, hierachyDepth)
-  {
+  addDataObject(object, hierachyDepth) {
     this.dataObject[hierachyDepth].push(object);
     this.storage.set('localDataObject', this.dataObject).then( data => {
       this.hierarchyGlobals.saveConfiguration();
@@ -145,8 +137,7 @@ export class GlobalDataHandlerProvider {
   }
 
     // *********** REMOVE FUNCTIONS ********************
-  removeUniqueIDFromUpdater(depth, uniqueID)
-  {
+  removeUniqueIDFromUpdater(depth, uniqueID) {
     for(var key in this.uniqueIdentifierUpdateList[depth])
     {
       let k = key;
@@ -162,8 +153,7 @@ export class GlobalDataHandlerProvider {
   }
 
   // *********** PUSH FUNCTIONS ************************
-  dataObjectPush(val,i)
-  {
+  dataObjectPush(val,i) {
     if(this.dataObject == null)
     {
       this.dataObject = [];
@@ -175,8 +165,7 @@ export class GlobalDataHandlerProvider {
     }
   }
 
-  subURIPush(val, i)
-  {
+  subURIPush(val, i) {
 
     if(this.subURIs == null)
     {
@@ -190,8 +179,7 @@ export class GlobalDataHandlerProvider {
   }
   // ******************** REMOTE PUSH FUNCTIONS *************************
   // These Push Functions involve sending data directly to the server for remote storage
-  async pushSavedData(depth, dataObject)
-  {
+  async pushSavedData(depth, dataObject) {
 
    // DEBUG
    // console.log("URL(S) \n" + this.dataHandler.getSubUris());
@@ -257,12 +245,12 @@ export class GlobalDataHandlerProvider {
    // DEBUG
    // console.log("DataObject \n" + JSON.stringify(this.dataObject));
    // console.log("WhereToPost \n" + this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Name);
-// console.log("Pushing data:");
-// console.log(dataObject);
+    // console.log("Pushing data:");
+    // console.log(dataObject);
    // TODO: REMOVE TEST
    this.testJSONString = JSON.stringify(dataObject);
-// console.log("Test String:");
-// console.log(this.testJSONString);
+    // console.log("Test String:");
+    // console.log(this.testJSONString);
    // this.file.writeFile('e:/jsonsave/', 'updatedJSON.json', this.testJSONString, {replace: true}).then(_ => console.log('Directory exists')).catch(err => console.log('Directory doesn\'t exist'));
    // this.file.checkDir('e:/', 'jsonsave').then(_ => console.log('Directory exists')).catch(err =>
    //   console.log('Directory doesn\'t exist'));
@@ -301,8 +289,7 @@ export class GlobalDataHandlerProvider {
 
  }
 
- pushAllData()
- {
+ pushAllData() {
    let i = 0;
    // Must be 0 to length. Starts at top of hierarchy and goes down
    if(this.hierarchyTiers != null)
@@ -316,8 +303,7 @@ export class GlobalDataHandlerProvider {
    }
  }
 
- pushDataTier(depth)
- {
+ pushDataTier(depth) {
 
    // console.log("Pushing Tier: " + depth + ", Index: " + index);
    // check each identifier against the list of identifiers needing syncronizing
@@ -340,14 +326,18 @@ export class GlobalDataHandlerProvider {
    }
  }
 
- clearLocalData()
- {
+ clearLocalData() {
    this.storage.remove('localDataObject').then( data => {
-     // Notify user dat is cleared
+     this.hierarchyGlobals.setDataSynced(false);
+     this.hierarchyGlobals.setDataSyncedToServer(false);
+     this.hierarchyGlobals.setDataLoaded(false);
+     this.hierarchyGlobals.setDataDoneLoading(false);
+     this.setDataObject(null);
+     this.presetOnlineAlert("Local Data Cleared", "");
    });
  }
 
-  baseSwap_64_to_16 (rawImage){
+  baseSwap_64_to_16 (rawImage) {
            if(rawImage === null){
                return rawImage;
            }
@@ -363,8 +353,7 @@ export class GlobalDataHandlerProvider {
            return HEX.toUpperCase();
   }
 
-  async compressB64Img(img)
-  {
+  async compressB64Img(img) {
     if(img != null)
     {
       // console.log("IMAGE LEN");
@@ -419,9 +408,17 @@ export class GlobalDataHandlerProvider {
       return new Promise( resolve => setTimeout(resolve, ms) );
   }
 
-  setUniqueIdentifierUpdateList(val)
-  {
+  setUniqueIdentifierUpdateList(val) {
      this.uniqueIdentifierUpdateList = Object.assign({}, val);
+  }
+
+  async presetOnlineAlert(title, msg) {
+    let alert = await this.alertCtrl.create({
+      title: title,
+      subTitle: msg,
+      buttons: ['OK']
+    });
+    await alert.present();
   }
 
 }

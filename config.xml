@@ -88,7 +88,8 @@
     <plugin name="cordova-plugin-filepath" spec="1.5.1" />
     <plugin name="cordova-sqlite-storage" spec="~2.6.0" />
     <allow-navigation href="http://192.168.7.246:8100" sessionid="a1223aa6" />
-    <engine name="browser" spec="^5.0.4" />
-    <engine name="android" spec="^7.1.4" />
     <plugin name="cordova-plugin-file" spec="6.0.1" />
+    <plugin name="cordova-plugin-geolocation" spec="4.0.1" />
+    <engine name="browser" spec="^5.0.4" />
+    <engine name="android" spec="8.0.0" />
 </widget>

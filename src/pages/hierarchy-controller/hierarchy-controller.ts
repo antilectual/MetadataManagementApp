@@ -289,15 +289,20 @@ export class HierarchyControllerPage {
           // internal
           // ask user to confirm sync
           // perform sync
-          let confirmSync = true; // TODO: Set by user
+          let confirmSync = (this.dataHandler.getDataObjects() == null); // TODO: Set by user
           if(confirmSync)
           {
             // Upload changed data (with conflict checks)
             // Download all data over
+            // console.log("GetData = " + this.hierarchyGlobals.getDataLoaded());
+              try {this.getData();}
+              catch(error) {console.log('error = ' + error); throw error;}
+              this.hierarchyGlobals.setDataSynced(true);
+              this.hierarchyGlobals.setDataLoaded(true);
           }
           else  // User wants to re-sync
           {
-              this.getDataFromStorage('Online, !Synced, !Loaded');
+              this.getDataFromStorage('Online, Not Synced, Not Loaded');
           }
         }
       }
@@ -312,10 +317,8 @@ export class HierarchyControllerPage {
     }
     else
     {
-        this.getDataFromStorage('!Online');
+        this.getDataFromStorage('Not Online');
     }
-
-
   }
 
 
@@ -604,7 +607,8 @@ export class HierarchyControllerPage {
     }
   }
 
-  async getDataFromStorage(msg) {
+  async getDataFromStorage(msg)
+  {
     this.storage.get('localDataObject').then( data =>
     {
       // console.log("Data from storage: ");
