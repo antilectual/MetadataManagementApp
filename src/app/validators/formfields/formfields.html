@@ -25,6 +25,14 @@
           <ion-label color="primary" stacked>{{char.Label}}</ion-label>
           <ion-datetime display-format="MM/DD/YYYY h:mm A"></ion-datetime>
         </ng-container> -->
+        <ng-container *ngIf='char.datatype == "xsd:datetime"'>
+          <ion-item *ngIf='char.Label != uniqueIDCheck' [class.invalid]="!metaDataForm.controls.items.controls[i].controls[char.Label].valid">
+            <ion-label color="primary" stacked>{{char.Label}}</ion-label>
+            <!-- <ion-input type="text" formControlName={{char.Label}} value={{data[char.Label]}} [(ngModel)]="data[char.Label]"></ion-input> -->
+            <ion-label>{{data[char.Label]}}</ion-label>
+          </ion-item>
+        </ng-container>
+
       </ng-container>
     </ng-container>
   </ng-container>
