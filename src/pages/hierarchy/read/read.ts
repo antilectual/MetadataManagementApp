@@ -136,9 +136,10 @@ export class ReadPage {
     }
 
      var displayDate = new Date(dataIndex);
-     var displayTime = new Date(displayDate.getTime() + this.tzOffset * 60 * 1000);
-     var hourOffset = this.tzOffset/60;
-     displayTime.setHours(displayDate.getHours() - hourOffset);
+     // var displayTime = new Date(displayDate.getTime() + this.tzOffset * 60 * 1000);
+     var displayTime = new Date(displayDate.getTime() + (this.tzOffset * 60 * 1000)/120);
+     // var hourOffset = this.tzOffset/60;
+     // displayTime.setHours(displayDate.getHours() - hourOffset);
      //Debug Log
      // console.log(displayDate.getMonth());
      var display = this.pad(displayDate.getMonth() + 1)
