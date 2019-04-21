@@ -41,10 +41,9 @@ export class MyApp {
     constructor(public events: Events, public statusBar: StatusBar, public splashScreen: SplashScreen, public gvars: GlobalvarsProvider, public menuCtrl: MenuController, private storage: Storage, public hierarchyGlobals: HierarchyControllerProvider, public dataHandler: GlobalDataHandlerProvider, public plt: Platform, public networkProvider: NetworkProvider) {
       this.initializeApp();
 
-      this.storage.get('configuration').then( data =>
-      {
-        console.log("App Config Data = ");
-        console.log(data);
+      this.storage.get('configuration').then( data => {
+        // console.log("App Config Data = ");
+        // console.log(data);
         if(data != null)
         {
           this.hierarchyGlobals.setLocalUsername(data['username']);
@@ -71,10 +70,16 @@ export class MyApp {
               this.hierarchyGlobals.setHierarchyIsUpdatedStatus(data['unsyncedHierachyTiers'][ii], ii);
             }
           }
-          if(data['localDataObject'] != null)
-          {
-            this.hierarchyGlobals.setDataSynced(true);
-          }
+        }
+      });
+
+      this.storage.get('localDataObject').then( data => {
+        console.log("Local Storage Data = ");
+        // console.log(data);
+        if(data != null)
+        {
+          // console.log("Has Local Data");
+          this.hierarchyGlobals.setDataSynced(true);
         }
       });
       // console.log("Platforms: ");

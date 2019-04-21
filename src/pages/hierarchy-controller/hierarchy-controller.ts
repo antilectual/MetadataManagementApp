@@ -85,7 +85,7 @@ export class HierarchyControllerPage {
     this.loadingScreens.pop();
     if(!this.isError)
     {
-
+      this.dataHandler.storeLocal();
       this.goHierachyPage();
       // if(this.isTest)
       // {
@@ -310,6 +310,20 @@ export class HierarchyControllerPage {
       {
         if(!this.hierarchyGlobals.getDataLoaded())
         {
+            let dataRemote = this.dataRemote;
+            let i = 0;
+            let hierarchyTiers = this.dataHandler.getHierarchyTiers();
+            for (i; i < hierarchyTiers.length; i++)
+            {
+              // re-indexing. required to index appropriately due to JS scoping
+              let ii = i;
+              // Proper viewing name of header
+              let subURI = hierarchyTiers[ii].Plural;
+              // Create URL for the hierarchyTiers from this header (removing spaces first)
+              subURI = subURI.replace(/ +/g, "");
+              // e.g. http://sensor.nevada.edu/Services/NRDC/Infrastructure/Services/Sites.svc/
+              this.dataHandler.subURIPush(dataRemote + subURI + ".svc/", ii);
+            }
             this.getDataFromStorage('Online, Synced');
             return;
         }
@@ -499,8 +513,7 @@ export class HierarchyControllerPage {
       let data: Observable<any> = this.http.get(this.subURI);
       // let data: Observable<any> = this.storage.get('localDataObject').then(result =>
 
-      await data.subscribe(result =>
-        {
+      await data.subscribe(result => {
            let hierarchyTier =  this.dataHandler.getHierarchyTiers()[ii];
            //console.log(this.item["Characteristics"].length);
            for( var l = 0 ; l < hierarchyTier["Characteristics"].length ; l++ ) // Searching for images to compress
@@ -579,21 +592,7 @@ export class HierarchyControllerPage {
            // console.log(ii);
            if(ii == hierarchyTiers.length - 1)
            {
-             // waiting for data to be loaded before saving it locally
-             let allData = this.dataHandler.getDataObjects();
-             this.storage.set('localDataObject', allData).then( data => {
-               // DEBUG
-               // console.log("Saving data locally:");
-               // console.log(this.dataHandler.getDataObjects());
-               this.hierarchyGlobals.setDataDoneLoading(true);
-               // DEBUG
-               // this.storage.get('localDataObject').then( savedata =>
-               // {
-               //           console.log("Save data locally:");
-               //           console.log(savedata);
-               // });
-               this.hierarchyGlobals.saveConfiguration();
-             });
+             this.hierarchyGlobals.setDataDoneLoading(true);
            }
         },
         error =>

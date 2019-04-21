@@ -256,7 +256,7 @@ export class GlobalDataHandlerProvider {
    //   console.log('Directory doesn\'t exist'));
 
    // Pushing 64 bit photo in object
-   this.http.post(remote, dataObject, {headers: {"Accept":'application/json', 'Content-Type':'application/json'}}).subscribe(data => {
+   await this.http.post(remote, dataObject, {headers: {"Accept":'application/json', 'Content-Type':'application/json'}}).subscribe(data => {
        // DEBUG
        console.log("Posting");
        console.log(dataObject);
@@ -419,6 +419,13 @@ export class GlobalDataHandlerProvider {
       buttons: ['OK']
     });
     await alert.present();
+  }
+
+  storeLocal()
+  {
+    this.storage.set('localDataObject', this.getDataObjects()).then( data => {
+      // this.hierarchyGlobals.saveConfiguration();
+    });
   }
 
 }

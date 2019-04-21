@@ -190,6 +190,7 @@ export class EditPage {
      if(this.base64Data != null) { this.dataObject[this.photoLabel] = this.base64Data; }
      this.dataHandler.updateDataObject(this.dataObject, this.hierarchyDepth, this.uniqueIdentifier);
      this.hierarchyGlobals.setHierarchyIsUpdatedStatus(false, this.hierarchyDepth);
+     this.dataHandler.presetOnlineAlert("Save", "Data saved to device.");
    }
 
    /**
@@ -201,38 +202,37 @@ export class EditPage {
    uploadEditedData() {
      if(this.base64Data != null) { this.dataObject[this.photoLabel] = this.base64Data; }
      this.saveEditedData();
-     this.dataHandler.pushSavedData(this.hierarchyDepth, this.dataObject);
+     this.dataHandler.pushSavedData(this.hierarchyDepth, this.dataObject).then(() => {
+          this.dataHandler.presetOnlineAlert("Upload", "Data saved to server.");
+     });
    }
 
    goHome() {
      this.navCtrl.setRoot(HomePage);
    }
 
+   takePicture() {
+       const camOptions: CameraOptions = {
+         quality: 50,
+         destinationType: this.camera.DestinationType.DATA_URL,
+         sourceType: this.camera.PictureSourceType.CAMERA,
+         encodingType: this.camera.EncodingType.JPEG,
+         cameraDirection: this.camera.Direction.BACK,
+         mediaType: this.camera.MediaType.PICTURE,
+         targetWidth: 700,
+         targetHeight: 700,
+         correctOrientation: true
+       };
 
-takePicture()
-{
-    console.log("Take Picture:");
-     const camOptions: CameraOptions = {
-       quality: 50,
-       destinationType: this.camera.DestinationType.DATA_URL,
-       sourceType: this.camera.PictureSourceType.CAMERA,
-       encodingType: this.camera.EncodingType.JPEG,
-       cameraDirection: this.camera.Direction.BACK,
-       mediaType: this.camera.MediaType.PICTURE,
-       targetWidth: 700,
-       targetHeight: 700,
-       correctOrientation: true
-     };
-
-     this.camera.getPicture(camOptions).then((imageData) => {
-   // imageData is either a base64 encoded string or a file URI
-   // If it's base64 (DATA_URL):
-      // this.base64Data = 'data:image/png;base64,' + imageData;
-      this.base64Data = imageData;
-      this.image = "data:image/png;base64,"+ imageData;
-    }, (err) => {
-        console.log("Camera issue:" + err);
-  });
-}
+       this.camera.getPicture(camOptions).then((imageData) => {
+       // imageData is either a base64 encoded string or a file URI
+       // If it's base64 (DATA_URL):
+        // this.base64Data = 'data:image/png;base64,' + imageData;
+        this.base64Data = imageData;
+        this.image = "data:image/png;base64,"+ imageData;
+      }, (err) => {
+          console.log("Camera issue:" + err);
+    });
+   }
 
 }
