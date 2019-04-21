@@ -26,6 +26,8 @@ export class SettingsPage {
 
   public hierarchyController: HierarchyControllerPage;
 
+  dataRemote = 'http://sensor.nevada.edu/Services/NRDC/Infrastructure/Services/';
+
   selectOptions = {
     title: 'Bar Type',
     mode: 'md'
@@ -83,8 +85,25 @@ export class SettingsPage {
 
   syncData()
   {
+
+
+    let dataRemote = this.dataRemote;
+    let i = 0;
+    let hierarchyTiers = this.dataHandler.getHierarchyTiers();
+    for (i; i < hierarchyTiers.length; i++)
+    {
+      // re-indexing. required to index appropriately due to JS scoping
+      let ii = i;
+      // Proper viewing name of header
+      let subURI = hierarchyTiers[ii].Plural;
+      // Create URL for the hierarchyTiers from this header (removing spaces first)
+      subURI = subURI.replace(/ +/g, "");
+      // e.g. http://sensor.nevada.edu/Services/NRDC/Infrastructure/Services/Sites.svc/
+      this.dataHandler.subURIPush(dataRemote + subURI + ".svc/", ii);
+    }
     // Upload all updated data stored in the app
     this.dataHandler.pushAllData();
+    this.dataHandler.setDataObject(null);
     this.hierarchyGlobals.setDataSynced(false);
     this.hierarchyGlobals.setDataSyncedToServer(false);
     // console.log("SyncData");

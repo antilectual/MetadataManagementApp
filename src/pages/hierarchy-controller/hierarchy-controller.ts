@@ -38,6 +38,7 @@ export class HierarchyControllerPage {
      useWebWorker: true,      // optional, use multi-thread web worker, fallback to run in main-thread (default: true)
      maxIteration: 10        // optional, max number of iteration to compress the image (default: 10)
   }
+  dataRemote = 'http://sensor.nevada.edu/Services/NRDC/Infrastructure/Services/';
 
   /**
   * @brief Constructor for the hierarchy-controller
@@ -473,7 +474,7 @@ export class HierarchyControllerPage {
   {
     // TODO: Create a confi setting for this
     // Remote database service containing the metadata
-    let dataRemote = 'http://sensor.nevada.edu/Services/NRDC/Infrastructure/Services/';
+    let dataRemote = this.dataRemote;
     // the fun synchronous asynchronous code block -----------
     // -----------
     let i = 0;
@@ -603,8 +604,7 @@ export class HierarchyControllerPage {
     }
   }
 
-  async getDataFromStorage(msg)
-  {
+  async getDataFromStorage(msg) {
     this.storage.get('localDataObject').then( data =>
     {
       // console.log("Data from storage: ");

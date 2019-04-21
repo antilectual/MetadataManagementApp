@@ -192,6 +192,7 @@ export class HierarchyControllerProvider {
   storeUniqueIdentifiers(val)
   {
     this.configuration['uniqueIdentifierUpdateList'] = Object.assign({}, val);
+    this.configuration['unsyncedHierachyTiers'] = this.updateStatusHierarhcy;
     this.saveConfiguration();
   }
 

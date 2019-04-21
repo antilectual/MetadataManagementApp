@@ -18,7 +18,7 @@ import { GlobalvarsProvider } from '../providers/globalvars/globalvars';
 import { Storage } from '@ionic/storage';
 import { HierarchyControllerProvider } from '../providers/hierarchy-controller/hierarchy-controller';
 import { GlobalDataHandlerProvider } from '../providers/global-data-handler/global-data-handler';
-import { Network } from '@ionic-native/network';
+// import { Network } from '@ionic-native/network';
 import { NetworkProvider } from '../providers/network/network';
 //import { ReadPage } from '../pages/hierarchy/read/read';
 // import { ExamplePage } from '../pages/example/example';
@@ -38,7 +38,7 @@ export class MyApp {
 
     pages: Array<{title: string, component: any}>;
 
-    constructor(public events: Events, public statusBar: StatusBar, public splashScreen: SplashScreen, public gvars: GlobalvarsProvider, public menuCtrl: MenuController, private storage: Storage, public hierarchyGlobals: HierarchyControllerProvider, public dataHandler: GlobalDataHandlerProvider, public plt: Platform, private network: Network, public networkProvider: NetworkProvider) {
+    constructor(public events: Events, public statusBar: StatusBar, public splashScreen: SplashScreen, public gvars: GlobalvarsProvider, public menuCtrl: MenuController, private storage: Storage, public hierarchyGlobals: HierarchyControllerProvider, public dataHandler: GlobalDataHandlerProvider, public plt: Platform, public networkProvider: NetworkProvider) {
       this.initializeApp();
 
       this.storage.get('configuration').then( data =>
@@ -60,7 +60,16 @@ export class MyApp {
           }
           if(data['theme'] != null)
           {
-            this.gvars.setTheme(data['theme']);  
+            this.gvars.setTheme(data['theme']);
+          }
+          if(data['unsyncedHierachyTiers'] != null)
+          {
+            let i = 0;
+            for(i = 0; i < data['unsyncedHierachyTiers.length']; i++)
+            {
+              let ii = i;
+              this.hierarchyGlobals.setHierarchyIsUpdatedStatus(data['unsyncedHierachyTiers'][ii], ii);
+            }
           }
         }
       });

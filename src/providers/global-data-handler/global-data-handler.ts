@@ -200,7 +200,7 @@ export class GlobalDataHandlerProvider {
        // remote = remote + "POST/" + this.uniqueIdentifier; // Doesn't exist
    remote = remote + "Post";
    let i = 0;
-   let dataObject16 = Object.assign({}, dataObject);
+   // let dataObject16 = Object.assign({}, dataObject);
    // DEBUG
    // console.log("URL \n" + remote);
    // console.log("dataobjectlength = " + Object.keys(this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Characteristics).length);
