@@ -70,10 +70,12 @@ export class EditPage {
         // this.isImage = true;
       }
 
-      if(this.isImage)
+      // console.log(this.gvars.getPlatform());
+      if(this.gvars.getPlatform() == "web")
       {
-        // this.dataObject['Photo'];
+        this.isImage = false;
       }
+
       this.editDateFields();
       //DEBUG
       // this.dataObject["Name"] = "It's all WHACK!";
