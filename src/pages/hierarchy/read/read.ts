@@ -28,6 +28,7 @@ export class ReadPage {
   hierarchyDepth: any;
   tzOffset: any;
   currentDisplayPath: any;
+  photoLabel: any;
   // displayTime: any;
 
 // navParams.data contains the following:
@@ -45,11 +46,22 @@ export class ReadPage {
           this.dataObject = navParams.data[1];
           this.hierarchyDepth = navParams.data[2];
           this.currentDisplayPath = navParams.data[3];
+
+          let characteristics = this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Characteristics;
+          let i = 0;
+          for(i = 0; i < characteristics.length; i++)
+          {
+            let ii = i;
+            if(characteristics[ii].datatype == "xsd:hexBinary")
+            {
+               this.photoLabel = characteristics[ii].Label;
+            }
+          }
           // DEBUG:
           //console.log(this.dataURI);
           //If there is a photo, display image
-          if(navParams.data[1].Photo != null){
-            this.image = "data:image/png;base64,"+ navParams.data[1].Photo;
+          if(navParams.data[1][this.photoLabel] != null){
+            this.image = "data:image/png;base64,"+ navParams.data[1][this.photoLabel];
           }
           this.editDateFields();
           //console.log(this.image);

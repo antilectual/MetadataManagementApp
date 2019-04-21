@@ -15,7 +15,7 @@
   <!-- <img [src]="image" width="200px" height="248px"> -->
   <p text-center><img src="{{image}}"></p>
   <ng-container *ngFor="let char of item.Characteristics">
-  <ng-container *ngIf = 'char.Label != "Photo"'>
+  <ng-container *ngIf = 'char.datatype != "xsd:hexBinary"'>
   <ng-container *ngIf="dataObject[char.Label] !=''">
   <ng-container *ngIf="dataObject[char.Label] != null">
   <ng-container *ngIf="dataObject[char.Label] != ' '">

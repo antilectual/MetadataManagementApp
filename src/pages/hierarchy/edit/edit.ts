@@ -5,10 +5,9 @@ import { GlobalDataHandlerProvider } from '../../../providers/global-data-handle
 import { GlobalvarsProvider } from '../../../providers/globalvars/globalvars';
 import { HierarchyControllerProvider } from '../../../providers/hierarchy-controller/hierarchy-controller';
 import { HomePage } from '../../home/home';
-
-// import { Observable } from 'rxjs/Observable';
-
 //import { Base64 } from '@ionic-native/base64/ngx';
+
+import { Camera, CameraOptions } from '@ionic-native/camera';
 
 
 @IonicPage()
@@ -18,9 +17,8 @@ import { HomePage } from '../../home/home';
 })
 export class EditPage {
 
-
-
   item: any;
+  isImage: boolean;//for displaying the add photo button
   dataObject: any;
   dataURI: any;
   isDataPresent: boolean;
@@ -30,6 +28,7 @@ export class EditPage {
   //String for filtering in html
   uniqueIDCheck = "Unique Identifier";
   uniqueIdentifier: any;
+  photoLabel:any;
 
   tzOffset: any;
 
@@ -43,7 +42,7 @@ export class EditPage {
 //  [2] - The depth of the Hierarchy the edit page is reading from
 //  [3] - The unique identifier of the specific object being edited
 // private base64: Base64
-  constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, public dataHandler: GlobalDataHandlerProvider, public gvars: GlobalvarsProvider, public hierarchyGlobals: HierarchyControllerProvider) {
+  constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, public dataHandler: GlobalDataHandlerProvider, public gvars: GlobalvarsProvider, public hierarchyGlobals: HierarchyControllerProvider, public camera: Camera) {
       this.item = navParams.data[0];
       this.dataObject = Object.assign({}, navParams.data[1]);
       // this.dataObject = navParams.data[1];
@@ -53,8 +52,27 @@ export class EditPage {
       //console.log("nav Params \n" + navParams.data[3]);
       //console.log(this.dataURI);
       //If there is a photo, display image
-      if(navParams.data[1].Photo != null){
-        this.image = "data:image/png;base64,"+ navParams.data[1].Photo;
+      this.isImage = false;
+      let i = 0;
+      let characteristics = this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Characteristics;
+      for(i = 0; i < characteristics.length; i++)
+      {
+        let ii = i;
+        if(characteristics[ii].datatype == "xsd:hexBinary")
+        {
+           this.photoLabel = characteristics[ii].Label;
+           this.isImage = true;
+        }
+      }
+
+      if(navParams.data[1][this.photoLabel] != null){
+        this.image = "data:image/png;base64,"+ navParams.data[1][this.photoLabel];
+        // this.isImage = true;
+      }
+
+      if(this.isImage)
+      {
+        // this.dataObject['Photo'];
       }
       this.editDateFields();
       //DEBUG
@@ -71,7 +89,7 @@ export class EditPage {
   editDateFields() {
     //if item.Characteristics.datatype == 'xsd:datetime'
     //Debug Logs
-    //console.log(this.item["Characteristics"].length);
+    //console.log(this.item["Charact"].length);
     for( var i = 0 ; i < this.item["Characteristics"].length ; i++ )
    {
       //console.log(this.item["Characteristics"][i]["datatype"]);
@@ -151,6 +169,7 @@ export class EditPage {
    * @post
    */
    saveEditedData() {
+     if(this.base64Data != null) { this.dataObject[this.photoLabel] = this.base64Data; }
      this.dataHandler.updateDataObject(this.dataObject, this.hierarchyDepth, this.uniqueIdentifier);
      this.hierarchyGlobals.setHierarchyIsUpdatedStatus(false, this.hierarchyDepth);
    }
@@ -162,6 +181,7 @@ export class EditPage {
    * @post
    */
    uploadEditedData() {
+     if(this.base64Data != null) { this.dataObject[this.photoLabel] = this.base64Data; }
      this.saveEditedData();
      this.dataHandler.pushSavedData(this.hierarchyDepth, this.dataObject);
    }
@@ -169,5 +189,32 @@ export class EditPage {
    goHome() {
      this.navCtrl.setRoot(HomePage);
    }
+
+
+takePicture()
+{
+    console.log("Take Picture:");
+     const camOptions: CameraOptions = {
+       quality: 50,
+       destinationType: this.camera.DestinationType.DATA_URL,
+       sourceType: this.camera.PictureSourceType.CAMERA,
+       encodingType: this.camera.EncodingType.JPEG,
+       cameraDirection: this.camera.Direction.BACK,
+       mediaType: this.camera.MediaType.PICTURE,
+       targetWidth: 700,
+       targetHeight: 700,
+       correctOrientation: true
+     };
+
+     this.camera.getPicture(camOptions).then((imageData) => {
+   // imageData is either a base64 encoded string or a file URI
+   // If it's base64 (DATA_URL):
+      // this.base64Data = 'data:image/png;base64,' + imageData;
+      this.base64Data = imageData;
+      this.image = "data:image/png;base64,"+ imageData;
+    }, (err) => {
+        console.log("Camera issue:" + err);
+  });
+}
 
 }

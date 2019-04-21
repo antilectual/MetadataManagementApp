@@ -10,7 +10,12 @@
 
   <ion-content>
     <ion-list>
-      <button class="navPath" menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">
+      <button class="navPath" menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)" style = "vertical-align: middle;">
+        <ion-icon *ngIf = "p.title == 'Home'" name="home" style = "padding-right: 10px; vertical-align: bottom;"></ion-icon>
+        <ion-icon *ngIf = "p.title == 'About'" name="help-circle" style = "padding-right: 10px; vertical-align: bottom;"></ion-icon>
+        <ion-icon *ngIf = "p.title == 'Metadata Entry'" name="paper" style = "padding-right: 10px; vertical-align: bottom;"></ion-icon>
+        <ion-icon *ngIf = "p.title == 'Settings'" name="switch" style = "padding-right: 10px; vertical-align: bottom;"></ion-icon>
+        <ion-icon *ngIf = "p.title == 'Logout'" name="return-right" style = "padding-right: 10px; vertical-align: bottom;"></ion-icon>
         {{p.title}}
       </button>
     </ion-list>
