@@ -6,10 +6,8 @@ import { GlobalvarsProvider } from '../../../providers/globalvars/globalvars';
 import { HierarchyControllerProvider } from '../../../providers/hierarchy-controller/hierarchy-controller';
 import { HomePage } from '../../home/home';
 //import { Base64 } from '@ionic-native/base64/ngx';
-
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Geolocation } from '@ionic-native/geolocation';
-
 
 @IonicPage()
 @Component({
@@ -32,6 +30,7 @@ export class EditPage {
   photoLabel:any;
   tzOffset: any;
   public selectedTheme: String;
+  dateLabel: any;
 
 // navParams.data contains the following:
 //  [0] - JSON containing:
@@ -64,6 +63,13 @@ export class EditPage {
         {
            this.photoLabel = characteristics[ii].Label;
            this.isImage = true;
+        }
+
+        else if(characteristics[ii].datatype == "xsd:datetime")
+        {
+          this.dateLabel = characteristics[ii].Label;
+          // console.log(this.newDataObject[this.dateLabel]);
+
         }
       }
 
@@ -192,6 +198,8 @@ export class EditPage {
      this.dataHandler.updateDataObject(this.dataObject, this.hierarchyDepth, this.uniqueIdentifier);
      this.hierarchyGlobals.setHierarchyIsUpdatedStatus(false, this.hierarchyDepth);
      this.dataHandler.presetOnlineAlert("Save", "Data saved to device.");
+
+     console.log(this.dateLabel);
    }
 
    /**

@@ -35,6 +35,7 @@ export class AddPage {
   photoLabel: any;
   base64Data: any;
   image:any;
+  dateLabel: any;
 
 // navParams.data contains the following:
 //  [0] - JSON containing:
@@ -66,6 +67,14 @@ export class AddPage {
         {
            this.photoLabel = characteristics[ii].Label;
            this.isImage = true;
+           // console.log(characteristics[ii]);
+        }
+        else if(characteristics[ii].datatype == "xsd:datetime")
+        {
+          this.dateLabel = characteristics[ii].Label;
+          // console.log(this.newDataObject[this.dateLabel]);
+          let now = new Date();
+          this.newDataObject[this.dateLabel] = now.toISOString();
         }
       }
 

@@ -28,6 +28,7 @@ import { Network } from '@ionic-native/network';
 import { NetworkProvider } from '../providers/network/network';
 import { Geolocation } from '@ionic-native/geolocation';
 import { Camera } from '@ionic-native/camera';
+import { DatePicker } from '@ionic-native/date-picker';
 import { LoginServiceProvider } from '../providers/login-service/login-service';
 
 @NgModule({
@@ -81,7 +82,8 @@ import { LoginServiceProvider } from '../providers/login-service/login-service';
     NetworkProvider,
     Camera,
     Geolocation,
-    LoginServiceProvider
+    LoginServiceProvider,
+    DatePicker
   ]
 })
 export class AppModule {}
