@@ -29,8 +29,8 @@ export class EditPage {
   uniqueIDCheck = "Unique Identifier";
   uniqueIdentifier: any;
   photoLabel:any;
-
   tzOffset: any;
+  public selectedTheme: String;
 
 // navParams.data contains the following:
 //  [0] - JSON containing:
@@ -48,6 +48,7 @@ export class EditPage {
       // this.dataObject = navParams.data[1];
       this.hierarchyDepth = navParams.data[2];
       this.uniqueIdentifier = navParams.data[3];
+      this.gvars.getTheme().subscribe(val => this.selectedTheme = val);
       // DEBUG:
       //console.log("nav Params \n" + navParams.data[3]);
       //console.log(this.dataURI);
@@ -68,6 +69,21 @@ export class EditPage {
       if(navParams.data[1][this.photoLabel] != null){
         this.image = "data:image/png;base64,"+ navParams.data[1][this.photoLabel];
         // this.isImage = true;
+      }
+
+      else if(this.isImage)
+      {
+
+        if (this.selectedTheme == 'light-theme')
+        {
+          this.image = "../assets/imgs/nophoto_black.png";
+        }
+
+        else
+        {
+          this.image = "../assets/imgs/nophoto_white.png";
+        }
+
       }
 
       // console.log(this.gvars.getPlatform());

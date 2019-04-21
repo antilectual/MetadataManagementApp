@@ -23,6 +23,7 @@ export class ReadPage {
   isDataPresent: boolean;
   // base64Data: any;
   image: any;
+  isImage: boolean;
   //String for filtering in html
   uniqueIDCheck = "Unique Identifier";
 
@@ -50,6 +51,8 @@ export class ReadPage {
           this.currentDisplayPath = navParams.data[3];
           this.gvars.getTheme().subscribe(val => this.selectedTheme = val);
 
+          this.isImage = false;
+
           let characteristics = this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Characteristics;
           let i = 0;
           for(i = 0; i < characteristics.length; i++)
@@ -57,6 +60,7 @@ export class ReadPage {
             let ii = i;
             if(characteristics[ii].datatype == "xsd:hexBinary")
             {
+              this.isImage = true;
                this.photoLabel = characteristics[ii].Label;
             }
           }
@@ -67,7 +71,7 @@ export class ReadPage {
             this.image = "data:image/png;base64,"+ navParams.data[1][this.photoLabel];
           }
 
-          else
+          else if(this.isImage)
           {
 
             if (this.selectedTheme == 'light-theme')
