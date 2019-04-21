@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { EditPage } from '../edit/edit';
 import { GlobalDataHandlerProvider } from '../../../providers/global-data-handler/global-data-handler';
 import { HomePage } from '../../home/home';
+import { GlobalvarsProvider } from '../../../providers/globalvars/globalvars';
 
 // import { Base64 } from '@ionic-native/base64/ngx';
 
@@ -30,6 +31,7 @@ export class ReadPage {
   currentDisplayPath: any;
   photoLabel: any;
   // displayTime: any;
+  public selectedTheme: String;
 
 // navParams.data contains the following:
 //  [0] - JSON containing:
@@ -40,12 +42,13 @@ export class ReadPage {
 //  [1] - The URI to retrieve the metadata from (dataURI)
 //  [2] - JSON Containing the info for the next level
   //private base64: Base64
-  constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, public dataHandler: GlobalDataHandlerProvider) {
+  constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, public dataHandler: GlobalDataHandlerProvider, public gvars: GlobalvarsProvider) {
 
           this.item = navParams.data[0];
           this.dataObject = navParams.data[1];
           this.hierarchyDepth = navParams.data[2];
           this.currentDisplayPath = navParams.data[3];
+          this.gvars.getTheme().subscribe(val => this.selectedTheme = val);
 
           let characteristics = this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Characteristics;
           let i = 0;
@@ -62,6 +65,21 @@ export class ReadPage {
           //If there is a photo, display image
           if(navParams.data[1][this.photoLabel] != null){
             this.image = "data:image/png;base64,"+ navParams.data[1][this.photoLabel];
+          }
+
+          else
+          {
+
+            if (this.selectedTheme == 'light-theme')
+            {
+              this.image = "../assets/imgs/nophoto_black.png";
+            }
+
+            else
+            {
+              this.image = "../assets/imgs/nophoto_white.png";
+            }
+
           }
           this.editDateFields();
           //console.log(this.image);
