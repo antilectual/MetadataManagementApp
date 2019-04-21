@@ -7,7 +7,6 @@ import { HierarchyControllerProvider } from '../../../providers/hierarchy-contro
 import { HomePage } from '../../home/home';
 //import { Base64 } from '@ionic-native/base64/ngx';
 import { Camera, CameraOptions } from '@ionic-native/camera';
-import { DatePicker } from '@ionic-native/date-picker/ngx';
 
 @IonicPage()
 @Component({
@@ -42,7 +41,7 @@ export class EditPage {
 //  [2] - The depth of the Hierarchy the edit page is reading from
 //  [3] - The unique identifier of the specific object being edited
 // private base64: Base64
-  constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, public dataHandler: GlobalDataHandlerProvider, public gvars: GlobalvarsProvider, public hierarchyGlobals: HierarchyControllerProvider, public camera: Camera, public datePicker: DatePicker) {
+  constructor(public navCtrl: NavController, public http: HttpClient, public navParams: NavParams, public dataHandler: GlobalDataHandlerProvider, public gvars: GlobalvarsProvider, public hierarchyGlobals: HierarchyControllerProvider, public camera: Camera) {
       this.item = navParams.data[0];
       this.dataObject = Object.assign({}, navParams.data[1]);
       // this.dataObject = navParams.data[1];

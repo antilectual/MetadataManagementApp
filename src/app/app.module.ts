@@ -28,7 +28,7 @@ import { Network } from '@ionic-native/network';
 import { NetworkProvider } from '../providers/network/network';
 
 import { Camera } from '@ionic-native/camera';
-import { DatePicker } from '@ionic-native/date-picker/ngx';
+import { DatePicker } from '@ionic-native/date-picker';
 
 @NgModule({
   declarations: [
