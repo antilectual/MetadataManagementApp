@@ -44,10 +44,13 @@ export class ScrollIndicatorDirective {
     */
     ngOnInit()
     {
-      // Hide the indicator
-      this.renderer.setStyle(this.scrollIndicator, "margin-bottom", "-" + this.scrollIndicator.offsetHeight + "px");
-      // Initial height of the page as read for scrolling
-      this.prevScrollHeight = this.scrollContent.getScrollElement().scrollHeight;
+      if(this.scrollIndicator != null && this.scrollIndicator != undefined)
+      {
+        // Hide the indicator
+        this.renderer.setStyle(this.scrollIndicator, "margin-bottom", "-" + this.scrollIndicator.offsetHeight + "px");
+        // Initial height of the page as read for scrolling
+        this.prevScrollHeight = this.scrollContent.getScrollElement().scrollHeight;
+      }
     }
 
     /**
@@ -61,13 +64,15 @@ export class ScrollIndicatorDirective {
     */
     ngAfterContentChecked()
     {
-      // Check if the height of the page has changed since init
-      if(this.prevScrollHeight != 0 && this.scrollContent.getScrollElement().scrollHeight > this.prevScrollHeight)
+      if(this.scrollIndicator != null && this.scrollIndicator != undefined)
       {
-          // if it's scrolliable, show the indicator again.
-          this.renderer.setStyle(this.scrollIndicator, "margin-bottom", "0px");
+        // Check if the height of the page has changed since init
+        if(this.prevScrollHeight != 0 && this.scrollContent.getScrollElement().scrollHeight > this.prevScrollHeight)
+        {
+            // if it's scrolliable, show the indicator again.
+            this.renderer.setStyle(this.scrollIndicator, "margin-bottom", "0px");
+        }
       }
-
     }
 
 
@@ -81,14 +86,17 @@ export class ScrollIndicatorDirective {
     */
     onContentScroll(event)
     {
-      let heightAdjust = (this.scrollContent.getScrollElement().scrollHeight - (this.scrollContent.getScrollElement().offsetHeight + this.scrollContent.getScrollElement().scrollTop));
-      if(heightAdjust < this.scrollIndicator.offsetHeight)
+      if(this.scrollIndicator != null && this.scrollIndicator != undefined)
       {
-        this.renderer.setStyle(this.scrollIndicator, "margin-bottom", "-" + (this.scrollIndicator.offsetHeight + 1) + "px");
-      }
-      else
-      {
-          this.renderer.setStyle(this.scrollIndicator, "margin-bottom", "0px");
+        let heightAdjust = (this.scrollContent.getScrollElement().scrollHeight - (this.scrollContent.getScrollElement().offsetHeight + this.scrollContent.getScrollElement().scrollTop));
+        if(heightAdjust < this.scrollIndicator.offsetHeight)
+        {
+          this.renderer.setStyle(this.scrollIndicator, "margin-bottom", "-" + (this.scrollIndicator.offsetHeight + 1) + "px");
+        }
+        else
+        {
+            this.renderer.setStyle(this.scrollIndicator, "margin-bottom", "0px");
+        }
       }
     }
 }

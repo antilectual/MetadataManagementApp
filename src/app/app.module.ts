@@ -5,7 +5,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import { IonicStorageModule } from '@ionic/storage';
 import { HttpClientModule } from '@angular/common/http';
-import { Base64 } from '@ionic-native/base64/ngx';
+// import { Base64 } from '@ionic-native/base64/ngx';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
@@ -24,6 +24,12 @@ import { GlobalvarsProvider } from '../providers/globalvars/globalvars';
 import { GlobalDataHandlerProvider } from '../providers/global-data-handler/global-data-handler';
 import { HierarchyControllerProvider } from '../providers/hierarchy-controller/hierarchy-controller';
 import { ScrollIndicatorDirective } from '../directives/scroll-indicator/scroll-indicator';
+import { Network } from '@ionic-native/network';
+import { NetworkProvider } from '../providers/network/network';
+import { Geolocation } from '@ionic-native/geolocation';
+import { Camera } from '@ionic-native/camera';
+import { DatePicker } from '@ionic-native/date-picker';
+import { LoginServiceProvider } from '../providers/login-service/login-service';
 
 @NgModule({
   declarations: [
@@ -69,9 +75,15 @@ import { ScrollIndicatorDirective } from '../directives/scroll-indicator/scroll-
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     GlobalvarsProvider,
-    Base64,
+    // Base64,
     GlobalDataHandlerProvider,
-    HierarchyControllerProvider
+    HierarchyControllerProvider,
+    Network,
+    NetworkProvider,
+    Camera,
+    Geolocation,
+    LoginServiceProvider,
+    DatePicker
   ]
 })
 export class AppModule {}

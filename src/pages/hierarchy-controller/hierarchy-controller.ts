@@ -14,6 +14,8 @@ import { HierarchyPage } from '../hierarchy/hierarchy';
 import { GlobalDataHandlerProvider } from '../../providers/global-data-handler/global-data-handler';
 import { HierarchyControllerProvider } from '../../providers/hierarchy-controller/hierarchy-controller';
 import { Storage } from '@ionic/storage';
+import imageCompression from 'browser-image-compression';
+import b64toBlob from 'b64-to-blob';
 
 @IonicPage()
 @Component({
@@ -28,7 +30,15 @@ export class HierarchyControllerPage {
   subURI: any;
   loadingScreens = [];
   isError = false;
-  isTest = false;
+  appDefaultName: string;
+  // isTest = false;
+  imageOptions = {
+    maxSizeMB: 6,          // (default: Number.POSITIVE_INFINITY)
+     maxWidthOrHeight: 1000,   // compressedFile will scale down by ratio to a point that width or height is smaller than maxWidthOrHeight (default: undefined)
+     useWebWorker: true,      // optional, use multi-thread web worker, fallback to run in main-thread (default: true)
+     maxIteration: 10        // optional, max number of iteration to compress the image (default: 10)
+  }
+  dataRemote = 'http://sensor.nevada.edu/Services/NRDC/Infrastructure/Services/';
 
   /**
   * @brief Constructor for the hierarchy-controller
@@ -38,6 +48,7 @@ export class HierarchyControllerPage {
   */
   constructor(public http: HttpClient, public navCtrl: NavController, public navParams: NavParams, public loadingController: LoadingController,
     public gvars: GlobalvarsProvider, public dataHandler: GlobalDataHandlerProvider, public hierarchyGlobals: HierarchyControllerProvider, public storage: Storage) {
+      // DEBUG:
       this.loadAll();
   }
 
@@ -59,35 +70,31 @@ export class HierarchyControllerPage {
   */
   async loadAll()
   {
-    if(this.gvars.getOnline())
+    this.appDefaultName = this.hierarchyGlobals.appDefaultName;
+    this.loadOntologyWaiting();
+    try { await this.getOntology();}
+    catch (err) {return;}
+    await this.loadDataWaiting();
+    try { await this.getAllData();}
+    catch (err) {return;}
+    while(!this.hierarchyGlobals.getOntologyDoneLoading() && !this.isError){await this.delay(100);}
+    await this.loadingScreens[this.loadingScreens.length - 2].dismiss();
+    while(!this.hierarchyGlobals.getDataDoneLoading() && !this.isError){await this.delay(100);}
+    await this.loadingScreens[this.loadingScreens.length - 1].dismiss();
+    this.loadingScreens.pop();
+    this.loadingScreens.pop();
+    if(!this.isError)
     {
-      this.loadOntologyWaiting();
-      try { await this.getOntology();}
-      catch (err) {return;}
-      await this.loadDataWaiting();
-      try { await this.getAllData();}
-      catch (err) {return;}
-      while(!this.hierarchyGlobals.getOntologyDoneLoading() && !this.isError){await this.delay(100);}
-      await this.loadingScreens[this.loadingScreens.length - 2].dismiss();
-      while(!this.hierarchyGlobals.getDataDoneLoading() && !this.isError){await this.delay(100);}
-      await this.loadingScreens[this.loadingScreens.length - 1].dismiss();
-      this.loadingScreens.pop();
-      this.loadingScreens.pop();
-      if(!this.isError)
-      {
-        if(this.isTest)
-        {
-          this.goHierachyPageTest();
-        }
-        else
-        {
-          this.goHierachyPage();
-        }
-      }
-    }
-    else
-    {
-      await this.showError({status: 'Offline'}, 'Connection');
+      await this.dataHandler.storeLocal();
+      this.goHierachyPage();
+      // if(this.isTest)
+      // {
+      //   this.goHierachyPageTest();
+      // }
+      // else
+      // {
+      //   this.goHierachyPage();
+      // }
     }
   }
 
@@ -122,7 +129,7 @@ export class HierarchyControllerPage {
       //let localValues = {hierarchydepth:0, name:"NRDC", pageData:this.dataObject, hierarchyData:this.hierarchyTiers, identifier:null, pathName:this.hierarchyTiers[0].Plural};
       // DEBUG
       // console.log(this.dataHandler.getDataObjects());
-      let localValues = {hierarchydepth:0, name:"NRDC", identifier:null, pathName:this.dataHandler.getHierarchyTiers()[0].Plural};
+      let localValues = {hierarchydepth:0, name:this.appDefaultName, identifier:null, pathName:this.dataHandler.getHierarchyTiers()[0].Plural};
       this.navCtrl.setRoot(HierarchyPage,localValues);
   }
 
@@ -264,33 +271,67 @@ export class HierarchyControllerPage {
   * @return none
   */
   async getAllData(){
-    // Sync for data is a potentially common event
-    if(!this.hierarchyGlobals.getDataSynced()){
-      if(!this.hierarchyGlobals.getDataLoaded()){
-        try {this.getData();}
-        catch(error) {console.log('error = ' + error); throw error;}
-        this.hierarchyGlobals.setDataSynced(true);
-        this.hierarchyGlobals.setDataLoaded(true);
+
+    if(this.gvars.getOnline())
+    {
+      // console.log("DataSynced = " + this.hierarchyGlobals.getDataSynced());
+      // console.log("DataLoaded = " + this.hierarchyGlobals.getDataLoaded());
+      // Sync for data is a potentially common event
+      if(!this.hierarchyGlobals.getDataSynced()){   // Have not retrieved data from server
+        if(!this.hierarchyGlobals.getDataLoaded()){
+          // console.log("GetData = " + this.hierarchyGlobals.getDataLoaded());
+          try {this.getData();}
+          catch(error) {console.log('error = ' + error); throw error;}
+          this.hierarchyGlobals.setDataSynced(true);
+          this.hierarchyGlobals.setDataLoaded(true);
+        }
+        else{  // Data is not loaded
+          // internal
+          // ask user to confirm sync
+          // perform sync
+          let confirmSync = (this.dataHandler.getDataObjects() == null); // TODO: Set by user
+          if(confirmSync)
+          {
+            // Upload changed data (with conflict checks)
+            // Download all data over
+            // console.log("GetData = " + this.hierarchyGlobals.getDataLoaded());
+              try {this.getData();}
+              catch(error) {console.log('error = ' + error); throw error;}
+              this.hierarchyGlobals.setDataSynced(true);
+              this.hierarchyGlobals.setDataLoaded(true);
+          }
+          else  // User wants to re-sync
+          {
+              await this.getDataFromStorage('Online, Not Synced, Not Loaded');
+          }
+        }
       }
-      else{
-        // internal
-        // ask user to confirm sync
+      else  // Data should be synced.  - Grab it locally
+      {
+        if(!this.hierarchyGlobals.getDataLoaded())
+        {
+            let dataRemote = this.dataRemote;
+            let i = 0;
+            let hierarchyTiers = this.dataHandler.getHierarchyTiers();
+            for (i; i < hierarchyTiers.length; i++)
+            {
+              // re-indexing. required to index appropriately due to JS scoping
+              let ii = i;
+              // Proper viewing name of header
+              let subURI = hierarchyTiers[ii].Plural;
+              // Create URL for the hierarchyTiers from this header (removing spaces first)
+              subURI = subURI.replace(/ +/g, "");
+              // e.g. http://sensor.nevada.edu/Services/NRDC/Infrastructure/Services/Sites.svc/
+              this.dataHandler.subURIPush(dataRemote + subURI + ".svc/", ii);
+            }
+            await this.getDataFromStorage('Online, Synced');
+            return;
+        }
       }
     }
     else
     {
-      if(!this.hierarchyGlobals.getDataLoaded())
-      {
-          this.storage.get('localDataObject').then( data =>
-          {
-            console.log(data);
-            let localData = data;
-            this.dataHandler.setDataObject(localData);
-            this.isTest = true;
-            this.hierarchyGlobals.setDataDoneLoading(true);
-            this.hierarchyGlobals.setDataLoaded(true);
-          });
-      }
+        await this.getDataFromStorage('Not Online');
     }
   }
 
@@ -395,7 +436,15 @@ export class HierarchyControllerPage {
     // let local = '../../assets/data/test.json';
     // Remote service containing the ontology
     //let remote = 'http://sensor.nevada.edu/GS/Services/Ragnarok/';
-    let remote = '../../assets/data/ontology.json';
+    let remote: any;
+    if(this.gvars.getUserName() == 'Matt' || this.gvars.getUserName() == 'matt' || this.gvars.getUserName() == 'MATT')
+    {
+      remote = '../../assets/data/ontology_short.json';
+    }
+    else
+    {
+      remote = '../../assets/data/ontology.json';
+    }
     let data: Observable<any> = this.http.get(remote);
     this.hierarchyGlobals.setOntologyDoneLoading(false);
     // this.isOntologyDoneLoading = false;
@@ -442,7 +491,7 @@ export class HierarchyControllerPage {
   {
     // TODO: Create a confi setting for this
     // Remote database service containing the metadata
-    let dataRemote = 'http://sensor.nevada.edu/Services/NRDC/Infrastructure/Services/';
+    let dataRemote = this.dataRemote;
     // the fun synchronous asynchronous code block -----------
     // -----------
     let i = 0;
@@ -464,23 +513,124 @@ export class HierarchyControllerPage {
       let data: Observable<any> = this.http.get(this.subURI);
       // let data: Observable<any> = this.storage.get('localDataObject').then(result =>
 
-      await data.subscribe(result =>
-        {
-        // LABEL: GLOBAL DATA
-        this.dataHandler.dataObjectPush(result, ii);
+      await data.subscribe(result => {
+           let hierarchyTier =  this.dataHandler.getHierarchyTiers()[ii];
+           //console.log(this.item["Characteristics"].length);
+           for( var l = 0 ; l < hierarchyTier["Characteristics"].length ; l++ ) // Searching for images to compress
+           {
+             let ll = l;
+              //console.log(this.item["Characteristics"][i]["datatype"]);
+             if(hierarchyTier["Characteristics"][ll]["datatype"] == 'xsd:hexBinary')
+             {
+               let label = hierarchyTier["Characteristics"][ll]["Label"];
+               // console.log("result:");
+               // console.log(result);
+               for(var item in result)
+               {
+                 let itemitem = item;
+                 //if( ddatasize > 3mb)
 
-         if(i == hierarchyTiers.length)
-         {
-           this.hierarchyGlobals.setDataDoneLoading(true);
-         }
+
+                 // console.log(subItem);
+                 // console.log(result[itemitem][label]);
+                 // result[itemitem][label] = await imageCompression(result[itemitem][label], this.imageOptions); // compression code
+                 // item[label] = await imageCompression(item[label], options); // compression code
+                 if(result[itemitem][label] != null)
+                 {
+
+                   // THIS IF STATEMENT FAILS IF THE IMAGE IS BASE16 (or not BASE64)
+                   if(result[itemitem][label].length / 1024 / 1024 >= this.imageOptions.maxSizeMB)
+                   {
+                    let contentType = 'image/png';
+                    let b64Data = result[itemitem][label];
+
+                    let blob = b64toBlob(b64Data, contentType);
+
+                    // console.log('Old Blob');
+                    // console.log(blob);
+                    // result[itemitem][label] =
+
+
+                    imageCompression(blob, this.imageOptions).then(data => {
+                      // console.log("DataURL")
+                      // console.log("THIS:")
+                      // console.log(imageCompression.getDataUrlFromFile(blob));
+                      // console.log(imageCompression.getDataUrlFromFile(data));
+
+                      let base64data: any;
+                      var reader = new FileReader();
+                      reader.readAsDataURL(data);
+
+                      reader.onloadend = function() {
+                          // base64data = reader.result;
+                          base64data = reader.result.split(',')[1];
+                          // console.log("base64");
+                          // console.log(base64data);
+                          // Set image as base 64 compressed
+                          result[itemitem][label] = base64data;
+                          // console.log("THIS");
+                          // console.log(result[itemitem][label]);
+                      }
+                    }); // compression code
+                   }
+                   //
+                   // console.log("Original Photo Name");
+                   // console.log(result[itemitem]["Name"]);
+                   // console.log('Original Photo size ' + result[itemitem][label].length / 1024 / 1024 + ' MB');
+                   // if(result[itemitem]["Name"] == "Dinah's Pen" )
+                   // {
+                   //   console.log(result[itemitem][label]);
+                   // }
+                   // console.log(result[itemitem]["Name"]);
+                 }
+               }
+             }
+           }
+           // LABEL: GLOBAL DATA
+           this.dataHandler.dataObjectPush(result, ii);
+           // console.log("Pushing Depth:");
+           // console.log(ii);
+           if(ii == hierarchyTiers.length - 1)
+           {
+             this.hierarchyGlobals.setDataDoneLoading(true);
+           }
         },
         error =>
         {
           this.showError(error, '' + hierarchyTiers[ii].Plural);
         }
       );
+
       // Pulled data from server so it is synced to server by default
-      this.hierarchyGlobals.setHierarchyUpdateStatus(false, ii);
+      this.hierarchyGlobals.setHierarchyIsUpdatedStatus(true, ii);
     }
+  }
+
+  async getDataFromStorage(msg)
+  {
+    this.storage.get('localDataObject').then( data =>
+    {
+
+      console.log("Data from storage: ");
+      console.log(msg);
+      console.log(data);
+      let localData = data;
+      if(localData == null && (this.hierarchyGlobals.getDataSynced() == true))  // No data saved (and it should have been!), nothing to load!
+      {
+          this.showError({status: 'No Local Data (Try Again): ' + msg}, 'Storage');
+          this.hierarchyGlobals.setDataSynced(false);
+          return;
+      }
+
+      if(localData == null)  // No data saved, nothing to load!
+      {
+          this.showError({status: 'No Local Data: ' + msg}, 'Storage');
+          return;
+      }
+      this.dataHandler.setDataObject(localData);
+      // this.isTest = true;
+      this.hierarchyGlobals.setDataDoneLoading(true);
+      this.hierarchyGlobals.setDataLoaded(true);
+    });
   }
 }

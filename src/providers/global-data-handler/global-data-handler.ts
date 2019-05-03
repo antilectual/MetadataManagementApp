@@ -1,8 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
+import { AlertController } from 'ionic-angular';
 import { HierarchyControllerProvider } from '../hierarchy-controller/hierarchy-controller';
 import { GlobalvarsProvider } from '../../providers/globalvars/globalvars';
+
+
+import imageCompression from 'browser-image-compression';
+import b64toBlob from 'b64-to-blob';
 
 /*
   Generated class for the GlobalDataHandlerProvider provider.
@@ -19,86 +24,136 @@ export class GlobalDataHandlerProvider {
   dataObject: any;
   // URL for getting the specific data
   subURIs: any;
+  // list of hierarchy levels, each with a list which unique identifier that need to be pushed to remote server'
+  uniqueIdentifierUpdateList = {};
+  // String that identifies the label for Unique Identifier.
+  uniqueIDLabel = "Unique Identifier";
 
-  public testObject: any;
+  b16image:  any;
+  public testJSONString: string;
 
-  constructor(public http: HttpClient, public storage: Storage, private hierarchyGlobals: HierarchyControllerProvider, public gvars: GlobalvarsProvider) {
+  imageOptions = {
+    maxSizeMB: .2,          // (default: Number.POSITIVE_INFINITY)
+     maxWidthOrHeight: 700,   // compressedFile will scale down by ratio to a point that width or height is smaller than maxWidthOrHeight (default: undefined)
+     useWebWorker: true,      // optional, use multi-thread web worker, fallback to run in main-thread (default: true)
+     maxIteration: 20        // optional, max number of iteration to compress the image (default: 10)
+  }
+
+  constructor(public http: HttpClient, public storage: Storage, private hierarchyGlobals: HierarchyControllerProvider, public gvars: GlobalvarsProvider, public alertCtrl: AlertController) {
     // console.log('Hello GlobalDataHandlerProvider Provider');
   }
 
   // *********** SET FUNCTIONS ************************
-  setHierarchyTiers(val)
-  {
+  setHierarchyTiers(val) {
     this.hierarchyTiers = val;
   }
 
-  setDataObject(val)
-  {
+  setDataObject(val) {
     this.dataObject = val;
   }
 
-  setSubUris(val)
-  {
+  setSubUris(val) {
     this.subURIs = val;
   }
 
+  setUpdateUniqueIdentifier(depth, uniqueID) {
+    if(this.uniqueIdentifierUpdateList[depth] == null)
+    {
+      this.uniqueIdentifierUpdateList[depth] = [];
+    }
+    this.uniqueIdentifierUpdateList[depth].push(uniqueID);
+    console.log("Saving UIDs");
+    console.log(this.uniqueIdentifierUpdateList);
+    this.hierarchyGlobals.setHierarchyIsUpdatedStatus(false, depth);
+  }
+
   // *********** GET FUNCTIONS ************************
-  getHierarchyTiers()
-  {
+  getHierarchyTiers() {
     return this.hierarchyTiers;
   }
 
-  getDataObjects()
-  {
+  getDataObjects() {
     return this.dataObject;
   }
 
-  getSubUris()
-  {
+  getSubUris() {
     return this.subURIs;
   }
 
-  // *********** UPDATE FUNCTIONS ************************
-  updateDataObject(object, hierachyDepth, uniqueID)
-  {
-
-    let i = 0;
-    for(i = 0; i < this.dataObject[hierachyDepth].length; i++)
+  getDataObjectFromUniqueID(depth, uniqueID) {
+    for(var dataObjectIndex in this.dataObject[depth])
     {
-      if (this.dataObject[hierachyDepth][i] == uniqueID)
+      let d = this.dataObject[depth][dataObjectIndex];
+      if(d[this.uniqueIDLabel] == uniqueID)
+      {
+        return d;
+      }
+    }
+  }
+
+  // *********** UPDATE FUNCTIONS ************************
+  updateDataObject(object, hierarchyDepth, uniqueID) {
+    // DEBU
+    // console.log("update HierarchyDepth = " + hierarchyDepth);
+    // console.log("Data Object");
+    // console.log(object);
+    let i = 0;
+    for(i = 0; i < this.dataObject[hierarchyDepth].length; i++)
+    {
+
+      // console.log(this.dataObject[hierarchyDepth][i]);
+      if (this.dataObject[hierarchyDepth][i][this.uniqueIDLabel] == uniqueID)
       {
         // DEBUG
         // console.log("object \n" + object);
         // console.log("dataObject \n" + this.dataObject);
         // console.log("dataObject Item \n" + this.dataObject[hierachyDepth][i]);
-        this.dataObject[hierachyDepth][i] = object;
+        this.dataObject[hierarchyDepth][i] = object;
       }
     }
 
     this.storage.set('localDataObject', this.dataObject).then( data => {
       this.hierarchyGlobals.saveConfiguration();
-      // DEBUG
-      // this.storage.get('localDataObject').then( data => {this.testObject = data; console.log(this.testObject);});
     });
 
-    this.hierarchyGlobals.setHierarchyUpdateStatus(false, hierachyDepth);
+    this.hierarchyGlobals.setHierarchyIsUpdatedStatus(false, hierarchyDepth);
+    this.setUpdateUniqueIdentifier(hierarchyDepth, uniqueID);
+    this.hierarchyGlobals.storeUniqueIdentifiers(this.uniqueIdentifierUpdateList);
     // DEBUG
     // this.storage.set('localDataObject', this.dataObject);
     // this.hierarchyGlobals.setDataSynced(true);
     // this.hierarchyGlobals.saveConfiguration();
   }
 
-  addDataObject(object, hierachyDepth)
-  {
+  // *********** ADD FUNCTIONS *************************
+  addDataObject(object, hierachyDepth) {
     this.dataObject[hierachyDepth].push(object);
     this.storage.set('localDataObject', this.dataObject).then( data => {
       this.hierarchyGlobals.saveConfiguration();
     });
+    this.hierarchyGlobals.setHierarchyIsUpdatedStatus(false, hierachyDepth);
+    this.setUpdateUniqueIdentifier(hierachyDepth, object[this.uniqueIDLabel]);
+    this.hierarchyGlobals.storeUniqueIdentifiers(this.uniqueIdentifierUpdateList);
+  }
+
+    // *********** REMOVE FUNCTIONS ********************
+  removeUniqueIDFromUpdater(depth, uniqueID) {
+    for(var key in this.uniqueIdentifierUpdateList[depth])
+    {
+      let k = key;
+      if(this.uniqueIdentifierUpdateList[depth][k] == uniqueID)
+      {
+        delete this.uniqueIdentifierUpdateList[depth][k];
+        if(this.uniqueIdentifierUpdateList[depth].length == 0)
+        {
+            this.hierarchyGlobals.setHierarchyIsUpdatedStatus(true, depth);
+        }
+      }
+    }
   }
 
   // *********** PUSH FUNCTIONS ************************
-  dataObjectPush(val,i)
-  {
+  dataObjectPush(val,i) {
     if(this.dataObject == null)
     {
       this.dataObject = [];
@@ -110,8 +165,7 @@ export class GlobalDataHandlerProvider {
     }
   }
 
-  subURIPush(val, i)
-  {
+  subURIPush(val, i) {
 
     if(this.subURIs == null)
     {
@@ -123,9 +177,9 @@ export class GlobalDataHandlerProvider {
       this.subURIs[i] = val;
     }
   }
-
-  pushSavedData(depth)
-  {
+  // ******************** REMOTE PUSH FUNCTIONS *************************
+  // These Push Functions involve sending data directly to the server for remote storage
+  async pushSavedData(depth, dataObject) {
 
    // DEBUG
    // console.log("URL(S) \n" + this.dataHandler.getSubUris());
@@ -134,6 +188,7 @@ export class GlobalDataHandlerProvider {
        // remote = remote + "POST/" + this.uniqueIdentifier; // Doesn't exist
    remote = remote + "Post";
    let i = 0;
+   // let dataObject16 = Object.assign({}, dataObject);
    // DEBUG
    // console.log("URL \n" + remote);
    // console.log("dataobjectlength = " + Object.keys(this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Characteristics).length);
@@ -149,29 +204,257 @@ export class GlobalDataHandlerProvider {
      // console.log("dataObjectName = \n" + this.dataObject[this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Characteristics[i].Label]);
        if(characteristics[i].datatype == "xsd:hexBinary")
        {
-         delete this.dataObject[characteristics[i].Label];
+         // delete dataObject[characteristics[i].Label];
+
+         // console.log("Before:");
+         // console.log(dataObject[characteristics[i].Label]);
+
+         // COMPRESS BASE64 DATA
+         // var base64Compressed = "";
+         // base64Compressed = this.compressB64Img(dataObject[characteristics[i].Label]);
+         // while(base64Compressed == ""){await this.delay(100);}
+         // console.log(base64Compressed);
+
+         // await this.compressB64Img(dataObject[characteristics[i].Label]);
+
+         let img = dataObject[characteristics[i].Label];
+         if(img == null)
+         {
+           dataObject[characteristics[i].Label] = "";
+         }
+         if(img != null)
+         {
+           // console.log("IMAGE LEN");
+           // console.log(img.length / 1024 / 1024);
+           // this.b16image = dataObject16[characteristics[i].Label] = this.baseSwap_64_to_16(img);
+         }//if not null...
+         // console.log("PushImG");
+         // console.log(this.b16image);
+         // //CONVERT BASE 64 TO BASE 16
+         // var base16Img: any
+         // base16Img = this.baseSwap_64_to_16(base64Compressed);
+         // console.log(base16Img);
+         // dataObject[characteristics[i].Label] = base16Img;
+
+         // console.log("After:");
+         // console.log(dataObject[characteristics[i].Label]);
+
+
        }
    }
    // DEBUG
    // console.log("DataObject \n" + JSON.stringify(this.dataObject));
    // console.log("WhereToPost \n" + this.dataHandler.getHierarchyTiers()[this.hierarchyDepth].Name);
-   this.http.post(remote, this.dataObject[depth], {headers: {"Accept":'application/json', 'Content-Type':'application/json'}}).subscribe(data => {
+    // console.log("Pushing data:");
+    // console.log(dataObject);
+   // TODO: REMOVE TEST
+   this.testJSONString = JSON.stringify(dataObject);
+    // console.log("Test String:");
+    // console.log(this.testJSONString);
+   // this.file.writeFile('e:/jsonsave/', 'updatedJSON.json', this.testJSONString, {replace: true}).then(_ => console.log('Directory exists')).catch(err => console.log('Directory doesn\'t exist'));
+   // this.file.checkDir('e:/', 'jsonsave').then(_ => console.log('Directory exists')).catch(err =>
+   //   console.log('Directory doesn\'t exist'));
+
+   // Pushing 64 bit photo in object
+   await this.http.post(remote, dataObject, {headers: {"Accept":'application/json', 'Content-Type':'application/json'}}).subscribe(data => {
        // DEBUG
-       console.log("data = \n " + data);
-       this.hierarchyGlobals.setHierarchyUpdateStatus(false, depth);
+       console.log("Posting");
+       console.log(dataObject);
+       console.log(data);
+       this.hierarchyGlobals.setHierarchyIsUpdatedStatus(false, depth);
+       this.removeUniqueIDFromUpdater(depth, dataObject[this.uniqueIDLabel]);
+       // add update success to udpate message
     }, error => {
        console.log(error);
    });
+
+   // pushing 16 bit photo in object
+   // this.http.post(remote, dataObject16, {headers: {"Accept":'application/json', 'Content-Type':'application/json'}}).subscribe(data => {
+   //     // DEBUG
+   //
+   //     this.hierarchyGlobals.setHierarchyIsUpdatedStatus(false, depth);
+   //     this.removeUniqueIDFromUpdater(depth, dataObject[this.uniqueIDLabel]);
+   //     // add update success to udpate message
+   //  }, error => {
+   //     console.log(error);
+   // });
+
+   // localhost flask service saveEditedData
+   // DEBUG: useful for debugging http requests
+   // this.http.post('http://localhost:8300/saveJSON/', dataObject, {headers: {"Accept":'application/json', 'Content-Type':'application/json'}}).subscribe(data => {
+   //   console.log("Saved to localhost");
+   //  }, error => {
+   //     console.log(error);
+   // });
+
  }
 
- pushAllData()
- {
+ pushAllData() {
    let i = 0;
-   for(i = 0; i < this.hierarchyTiers.length; i++ )
+   // Must be 0 to length. Starts at top of hierarchy and goes down
+   if(this.hierarchyTiers != null)
    {
-     let ii = i;
-     this.pushSavedData(ii);
+     for(i = 0; i < this.hierarchyTiers.length; i++ )
+     {
+        let depth = i;
+        this.pushDataTier(depth);
+     }
+      this.hierarchyGlobals.setDataSynced(true);
    }
-   this.hierarchyGlobals.setDataSynced(true);
  }
+
+ pushDataTier(depth) {
+
+   // console.log("Pushing Tier: " + depth + ", Index: " + index);
+   // check each identifier against the list of identifiers needing syncronizing
+   var dataObjectToPush: any;
+   for(var index in this.uniqueIdentifierUpdateList[depth])
+   {
+     let i = index;
+     // console.log("Pushing Tier: " + depth + ", Index: " + i);
+     dataObjectToPush = this.getDataObjectFromUniqueID(depth, this.uniqueIdentifierUpdateList[depth][i]);
+     // <DEBUG>
+     // this.removeUniqueIDFromUpdater(depth, dataObject[this.uniqueIDLabel]);
+     // <?DEBUG>
+     if(dataObjectToPush != null)
+     {
+       // console.log("pushDataObject");
+       // console.log(dataObjectToPush);
+      this.pushSavedData(depth, dataObjectToPush);
+     }
+
+   }
+ }
+
+ clearLocalData() {
+   this.storage.remove('localDataObject').then( data => {
+     this.hierarchyGlobals.setDataSynced(false);
+     this.hierarchyGlobals.setDataSyncedToServer(false);
+     this.hierarchyGlobals.setOntologyLoaded(false);
+     this.hierarchyGlobals.setOntologySynced(false);
+     this.hierarchyGlobals.setOntologyDoneLoading(false);
+     this.hierarchyGlobals.setDataSyncedToServer(false);
+     this.hierarchyGlobals.setDataLoaded(false);
+     this.hierarchyGlobals.setDataDoneLoading(false);
+     this.setDataObject(null);
+     this.presetOnlineAlert("Local Data Cleared", "");
+   });
+ }
+
+  baseSwap_64_to_16 (rawImage) {
+           if(rawImage === null){
+               return rawImage;
+           }
+
+           // convert image
+           var raw = atob(rawImage);
+           var HEX = '';
+           let i=0;
+           for ( i = 0; i < raw.length; i++ ) {
+               var _hex = raw.charCodeAt(i).toString(16)
+               HEX += (_hex.length==2?_hex:'0'+_hex);
+           }
+           return HEX.toUpperCase();
+  }
+
+  async compressB64Img(img) {
+    if(img != null)
+    {
+      // console.log("IMAGE LEN");
+      // console.log(img.length / 1024 / 1024);
+      // console.log(this.imageOptions.maxSizeMB);
+      if(img.length / 1024 / 1024 >= this.imageOptions.maxSizeMB)
+      {
+        // console.log("HERE");
+       let contentType = 'image/png';
+       let b64Data = img;
+       let blob = b64toBlob(b64Data, contentType);
+
+       // console.log('Old Blob');
+       // console.log(blob);
+       // result[itemitem][label] =
+       imageCompression(blob, this.imageOptions).then(data => {
+         // console.log("DataURL")
+         // console.log("THIS:")
+         // console.log(imageCompression.getDataUrlFromFile(blob));
+         // console.log(imageCompression.getDataUrlFromFile(data));
+
+         let base64data: any;
+         var reader = new FileReader();
+         reader.onloadend = function() {
+             // base64data = reader.result;
+             base64data = reader.result.split(',')[1];
+             // console.log("base64");
+             // console.log(base64data);
+             // Set image as base 64 compressed
+             // this.b16image = base64data;
+             // console.log("ReaderImg");
+             // console.log(this.b16image);
+             // console.log("THIS");
+             // console.log(result[itemitem][label]);
+         }
+         reader.readAsDataURL(data);
+
+         console.log("BASE");
+         console.log(base64data);
+        //  let i = 0;
+        // while(this.image == ""){await this.delay(100); i++; console.log(i); console.log(this.image);}
+         // console.log("Img");
+         // console.log(imageCompression.getDataUrlFromFile(data));
+       }); // compression code
+       console.log("ReaderImg2");
+       console.log(this.b16image);
+     }//if img size...
+    }//if not null...
+  }//function
+
+  async delay(ms: number) {
+      return new Promise( resolve => setTimeout(resolve, ms) );
+  }
+
+  setUniqueIdentifierUpdateList(val) {
+     this.uniqueIdentifierUpdateList = Object.assign({}, val);
+  }
+
+  async presetOnlineAlert(title, msg) {
+    let alert = await this.alertCtrl.create({
+      title: title,
+      subTitle: msg,
+      buttons: ['OK']
+    });
+    await alert.present();
+  }
+
+  storeLocal() {
+    this.storage.set('localDataObject', this.getDataObjects()).then( data => {
+      console.log("Storing data locally:");
+      console.log(data);
+      // this.hierarchyGlobals.saveConfiguration();
+    });
+  }
+
+  async presetGPSAlert(title, longitude, latitude, altitude) {
+    let alert = await this.alertCtrl.create({
+      title: title,
+      subTitle: "Longitude, Latitude, Altitude",
+      buttons: ['OK'],
+      inputs: [
+        {
+          name: 'longitude',
+          value: longitude
+        },
+        {
+          name: 'latitude',
+          value: latitude
+        },
+        {
+          name: 'altitude',
+          value: altitude
+        }
+      ]
+    });
+    await alert.present();
+  }
+
+
 }

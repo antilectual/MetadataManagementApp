@@ -2,7 +2,7 @@
 
   <ion-navbar>
       <div text-center>
-        <ion-title><img width="200" height="50" src="../../assets/imgs/white_logo.png"></ion-title>
+        <ion-title (click)="goHome()"><img width="200" height="50" src="../../assets/imgs/white_logo.png"></ion-title>
       </div>
   </ion-navbar>
   <!-- <ion-navbar #scrollFooter>
@@ -16,18 +16,20 @@
 
 
 <ion-content #pageContent [scroll-content]="pageContent" [scroll-indicator]="scrollFooter" >
-  <!-- <p text-center><img src="{{image}}"></p> -->
+  <p text-center><img src="{{image}}"></p>
+  <button ion-button  *ngIf="isImage" (click)="takePicture()">Take Photo</button>
+  <br><button ion-button (click) = "getLocation()">Location</button>
 
   <!-- <div *ngIf="hierarchyDepth <= maxIndex">{{hierarchyTiers[hierarchyDepth]?.Plural}}</div> -->
-  <h6> Add New {{item['Name']}}</h6>
+  <div style="padding-left: 10px;"><h6>Add new {{camelize(item['Name'])}} for {{referredItemName}}</h6></div>
   <page-formfields-add
     [hierarchy]='item["Characteristics"]'
     [data]="dataObject" [newData]="newDataObject">
   </page-formfields-add>
   <div text-right>
     <button ion-button (click) = "saveEditedData()">Add</button>
-    <!-- <button [disabled] = "!gvars.getOnline()" ion-button (click) = "uploadEditedData()">Upload</button> -->
-    <button [disabled] = "true" ion-button (click) = "uploadEditedData()">Upload</button>
+    <button [disabled] = "!gvars.getOnline()" ion-button (click) = "uploadEditedData()">Upload</button>
+    <!-- <button [disabled] = "true" ion-button (click) = "uploadEditedData()">Upload</button> -->
   </div>
 
 </ion-content>

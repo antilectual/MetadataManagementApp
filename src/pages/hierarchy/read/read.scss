@@ -1,9 +1,24 @@
 page-read {
-  
+
+  ion-label {
+      font-family: $font-family-label;
+  }
 
 }
 
 ion-icon
 {
   font-size: 30px;
+}
+
+.textcolor {
+    font-family: $font-family-base;
+}
+.edit-footer {
+  background-color: rgba(0, 0, 0, 0.20);
+  color: black;
+  width: 100%;
+  float: right;
+  position: relative;
+  text-align: center;
 }

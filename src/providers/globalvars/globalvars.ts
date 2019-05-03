@@ -17,6 +17,8 @@ export class GlobalvarsProvider {
   private theme: BehaviorSubject<String>;
   userName: string = "User Name";
   platform: string;
+  menuOptions = ['Bottom Bar', 'Top Bar', 'Horizontal Buttons', 'Vertical Buttons', 'Short Bar'];
+  public menuChoice = 'Bottom Bar';
   //an array for boolean values for the hierachy update status
 
 
@@ -77,6 +79,11 @@ export class GlobalvarsProvider {
   getUserName()
   {
     return this.userName;
+  }
+
+  getMenuOptions()
+  {
+    return this.menuOptions;
   }
 
 

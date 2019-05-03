@@ -2,7 +2,7 @@
 
   <ion-navbar>
     <div text-center>
-      <ion-title><img width="200" height="50" src="../../assets/imgs/white_logo.png"></ion-title>
+      <ion-title (click)="goHome()" ><img width="200" height="50" src="../../assets/imgs/white_logo.png"></ion-title>
     </div>
   </ion-navbar>
 
@@ -15,7 +15,8 @@
   <!-- <img [src]="image" width="200px" height="248px"> -->
   <p text-center><img src="{{image}}"></p>
   <ng-container *ngFor="let char of item.Characteristics">
-  <ng-container *ngIf = 'char.Label != "Photo"'>
+  <ng-container *ngIf = 'char.datatype != "xsd:hexBinary"'>
+  <ng-container *ngIf ='char.datatype != "xsd:datetime"' >
   <ng-container *ngIf="dataObject[char.Label] !=''">
   <ng-container *ngIf="dataObject[char.Label] != null">
   <ng-container *ngIf="dataObject[char.Label] != ' '">
@@ -32,6 +33,7 @@
 
         <ion-input type="text" placeholder={{char?.Label}}></ion-input>
       </ion-item-->
+  </ng-container>
   </ng-container>
   </ng-container>
   </ng-container>
