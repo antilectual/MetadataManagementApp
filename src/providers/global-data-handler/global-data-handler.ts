@@ -427,6 +427,8 @@ export class GlobalDataHandlerProvider {
 
   storeLocal() {
     this.storage.set('localDataObject', this.getDataObjects()).then( data => {
+      console.log("Storing data locally:");
+      console.log(data);
       // this.hierarchyGlobals.saveConfiguration();
     });
   }

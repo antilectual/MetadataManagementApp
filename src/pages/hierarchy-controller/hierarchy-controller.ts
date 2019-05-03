@@ -85,7 +85,7 @@ export class HierarchyControllerPage {
     this.loadingScreens.pop();
     if(!this.isError)
     {
-      this.dataHandler.storeLocal();
+      await this.dataHandler.storeLocal();
       this.goHierachyPage();
       // if(this.isTest)
       // {
@@ -610,7 +610,9 @@ export class HierarchyControllerPage {
   {
     this.storage.get('localDataObject').then( data =>
     {
+
       console.log("Data from storage: ");
+      console.log(msg);
       console.log(data);
       let localData = data;
       if(localData == null && (this.hierarchyGlobals.getDataSynced() == true))  // No data saved (and it should have been!), nothing to load!
