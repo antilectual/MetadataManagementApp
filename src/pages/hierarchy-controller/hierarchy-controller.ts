@@ -302,7 +302,7 @@ export class HierarchyControllerPage {
           }
           else  // User wants to re-sync
           {
-              this.getDataFromStorage('Online, Not Synced, Not Loaded');
+              await this.getDataFromStorage('Online, Not Synced, Not Loaded');
           }
         }
       }
@@ -324,14 +324,14 @@ export class HierarchyControllerPage {
               // e.g. http://sensor.nevada.edu/Services/NRDC/Infrastructure/Services/Sites.svc/
               this.dataHandler.subURIPush(dataRemote + subURI + ".svc/", ii);
             }
-            this.getDataFromStorage('Online, Synced');
+            await this.getDataFromStorage('Online, Synced');
             return;
         }
       }
     }
     else
     {
-        this.getDataFromStorage('Not Online');
+        await this.getDataFromStorage('Not Online');
     }
   }
 
@@ -610,8 +610,8 @@ export class HierarchyControllerPage {
   {
     this.storage.get('localDataObject').then( data =>
     {
-      // console.log("Data from storage: ");
-      // console.log(data);
+      console.log("Data from storage: ");
+      console.log(data);
       let localData = data;
       if(localData == null && (this.hierarchyGlobals.getDataSynced() == true))  // No data saved (and it should have been!), nothing to load!
       {
